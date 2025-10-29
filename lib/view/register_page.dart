@@ -273,7 +273,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           // );
                         },
                         child: Text(
-                          "Sign Up",
+                          "Sign In",
                           style: TextStyle(color: Color(0xff8B5CF6)),
                         ),
                       ),

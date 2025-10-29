@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    FinanceRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FinancePage(),
+      );
+    },
     LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -33,7 +39,33 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const RegisterPage(),
       );
     },
+    SplashRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SplashPage(),
+      );
+    },
+    StockTransRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const StockTransPage(),
+      );
+    },
   };
+}
+
+/// generated route for
+/// [FinancePage]
+class FinanceRoute extends PageRouteInfo<void> {
+  const FinanceRoute({List<PageRouteInfo>? children})
+      : super(
+          FinanceRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FinanceRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -74,6 +106,34 @@ class RegisterRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'RegisterRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<void> {
+  const SplashRoute({List<PageRouteInfo>? children})
+      : super(
+          SplashRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SplashRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [StockTransPage]
+class StockTransRoute extends PageRouteInfo<void> {
+  const StockTransRoute({List<PageRouteInfo>? children})
+      : super(
+          StockTransRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'StockTransRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

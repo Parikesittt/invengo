@@ -284,6 +284,7 @@ class _StockPageState extends State<StockPage>
               SizedBox(
                 height: screenHeight * 0.4, // misal 70% tinggi layar
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: _tabController,
                   children: [
                     _tabContent("Tab 1 Content"),
@@ -302,8 +303,10 @@ class _StockPageState extends State<StockPage>
   Widget _tabContent(String text) {
     // Scroll masing-masing tab
     return ListView.builder(
+      padding: EdgeInsets.zero,
       itemCount: 10,
       itemBuilder: (context, index) => Card(
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

@@ -25,6 +25,7 @@ class _InputFormState extends State<InputForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: widget.isPassword ? _obscureText : !_obscureText,
       controller: widget.controller,
       decoration: InputDecoration(
         hintText: widget.hint,

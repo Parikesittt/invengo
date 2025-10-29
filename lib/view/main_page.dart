@@ -1,13 +1,15 @@
-
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:invengo/components/gradient_fab.dart';
+import 'package:invengo/route.dart';
 import 'package:invengo/view/dashboard_page.dart';
+import 'package:invengo/view/finance_page.dart';
 import 'package:invengo/view/grid.dart';
 import 'package:invengo/view/stock_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/view/tugas2.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-
 
 @RoutePage()
 class MainPage extends StatefulWidget {
@@ -22,14 +24,23 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _page = [
     DashboardPage(),
     StockPage(),
-    TugasGridWidget(),
+    FinancePage(),
     Tugas2Widget(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _page[_selectedIndex],
+      floatingActionButton: GradientFab(
+        onPressed: () {
+          context.pushRoute(const StockTransRoute());
+        },
+        gradientColors: [Color(0xff8C5CF5), Color(0xffEB489A)],
+        child: Icon(FontAwesomeIcons.plus, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: StylishBottomBar(
+        fabLocation: StylishBarFabLocation.center,
         items: [
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.house, size: 20),
@@ -65,6 +76,8 @@ class _MainPageState extends State<MainPage> {
             _selectedIndex = index;
           });
         },
+        hasNotch: true,
+        notchStyle: NotchStyle.circle,
       ),
     );
   }
