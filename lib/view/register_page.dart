@@ -1,8 +1,15 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:invengo/components/auth/auth_container.dart';
+import 'package:invengo/components/auth/auth_divider.dart';
+import 'package:invengo/components/auth/auth_footer.dart';
+import 'package:invengo/components/auth/auth_header.dart';
+import 'package:invengo/components/auth/auth_social_button.dart';
 import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/components/custome_image_button.dart';
+import 'package:invengo/components/auth/label_form_auth.dart';
+import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/user_model.dart';
 import 'package:invengo/route.dart';
@@ -37,66 +44,20 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: 64,
-                        width: 64,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xff8C5CF5), Color(0xffEB489A)],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        alignment: AlignmentGeometry.center,
-                        child: Text(
-                          "I",
-                          style: TextStyle(fontSize: 32, color: Colors.white),
-                        ),
-                      ),
-                      height(16),
-                      Text(
-                        "Create Account",
-                        style: TextStyle(
-                          color: Color(0xff101828),
-                          fontSize: 30,
-                        ),
-                      ),
-                      height(8),
-                      Text(
-                        "Start managing your inventory today",
-                        style: TextStyle(
-                          color: Color(0x60101828),
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+                  AuthHeader(
+                    title: "Create Account",
+                    subtitle: "Start managing your inventory today",
                   ),
-                  height(32),
-                  Container(
-                    padding: EdgeInsets.all(24),
-                    width: 343,
-                    // height: 453,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.fromBorderSide(
-                        BorderSide(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                    ),
+                  h(32),
+                  AuthContainer(
                     child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          height(8),
-                          Text(
-                            "Full Name",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          height(8),
+                          h(8),
+                          LabelAuth(title: "Full Name"),
+                          h(8),
                           InputForm(
                             hint: "Enter your full name",
                             prefixIcon: Icon(Icons.person_2_outlined),
@@ -108,12 +69,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          height(24),
-                          Text(
-                            "Username",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          height(8),
+                          h(24),
+                          LabelAuth(title: "Username"),
+                          h(8),
                           InputForm(
                             hint: "Enter your username",
                             prefixIcon: Icon(Icons.person_2_outlined),
@@ -125,12 +83,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          height(24),
-                          Text(
-                            "Email Address",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          height(8),
+                          h(24),
+                          LabelAuth(title: "Email"),
+                          h(8),
                           InputForm(
                             hint: "Enter your email",
                             prefixIcon: Icon(Icons.email_outlined),
@@ -142,12 +97,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          height(24),
-                          Text(
-                            "Password",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          height(8),
+                          h(24),
+                          LabelAuth(title: "Password"),
+                          h(8),
                           InputForm(
                             hint: "Enter your password",
                             prefixIcon: Icon(Icons.lock_outline),
@@ -163,12 +115,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          height(24),
-                          Text(
-                            "Confirm Password",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          height(8),
+                          h(24),
+                          LabelAuth(title: "Confirm Password"),
+                          h(8),
                           InputForm(
                             hint: "Confirm your password",
                             isPassword: true,
@@ -180,7 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                          height(16),
+                          h(16),
                           Button(
                             buttonText: "Sign In",
                             height: 48,
@@ -216,69 +165,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                           ),
-                          height(24),
-                          Row(
-                            spacing: 8,
-                            children: [
-                              Expanded(
-                                child: Divider(color: Color(0x20101828)),
-                              ),
-                              Text(
-                                "Or login with",
-                                style: TextStyle(color: Color(0x60101828)),
-                              ),
-                              Expanded(
-                                child: Divider(color: Color(0x20101828)),
-                              ),
-                            ],
-                          ),
-                          height(24),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 12,
-                            children: [
-                              ImageButton(
-                                image: 'assets/images/iconGoogle.png',
-                                buttonText: "Google",
-                                onPressed: () {},
-                              ),
-                              ImageButton(
-                                image: 'assets/images/Vector.png',
-                                buttonText: "Github",
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
+                          h(24),
+                          AuthDivider(text: "register"),
+                          h(24),
+                          AuthSocialButton(),
                         ],
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: TextStyle(color: Color(0x60101828)),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.pushRoute(const LoginRoute());
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return LoginPage();
-                          //     },
-                          //   ),
-                          // );
-                        },
-                        child: Text(
-                          "Sign In",
-                          style: TextStyle(color: Color(0xff8B5CF6)),
-                        ),
-                      ),
-                    ],
-                  ),
+                  AuthFooter(isRegister: true),
                 ],
               ),
             ),
@@ -287,7 +182,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-  SizedBox height(double height) => SizedBox(height: height);
-  SizedBox width(double width) => SizedBox(width: width);
 }

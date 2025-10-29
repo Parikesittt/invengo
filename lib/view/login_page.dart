@@ -1,8 +1,15 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:invengo/components/auth/auth_container.dart';
+import 'package:invengo/components/auth/auth_divider.dart';
+import 'package:invengo/components/auth/auth_footer.dart';
+import 'package:invengo/components/auth/auth_header.dart';
+import 'package:invengo/components/auth/auth_social_button.dart';
 import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/components/custome_image_button.dart';
+import 'package:invengo/components/auth/label_form_auth.dart';
+import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/preferences/preference_handler.dart';
 import 'package:invengo/route.dart';
@@ -29,55 +36,17 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                Container(
-                  height: 64,
-                  width: 64,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xff8C5CF5), Color(0xffEB489A)],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: AlignmentGeometry.center,
-                  child: Text(
-                    "I",
-                    style: TextStyle(fontSize: 32, color: Colors.white),
-                  ),
-                ),
-                height(16),
-                Text(
-                  "Welcome Back",
-                  style: TextStyle(color: Color(0xff101828), fontSize: 30),
-                ),
-                height(8),
-                Text(
-                  "Sign in to continue to Invengo",
-                  style: TextStyle(color: Color(0x60101828), fontSize: 16),
-                ),
-              ],
+            AuthHeader(
+              title: "Welcome Back",
+              subtitle: "Sign in to continue to Invengo",
             ),
             height(32),
-            Container(
-              padding: EdgeInsets.all(24),
-              width: 343,
-              // height: 453,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.fromBorderSide(
-                  BorderSide(color: Color(0xffe5e7eb)),
-                ),
-              ),
+            AuthContainer(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   height(8),
-                  Text(
-                    "Email Address",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  LabelAuth(title: "Email"),
                   height(8),
                   InputForm(
                     hint: "Enter your email",
@@ -85,10 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: emailC,
                   ),
                   height(24),
-                  Text(
-                    "Password",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  LabelAuth(title: "Password"),
                   height(8),
                   InputForm(
                     hint: "Enter your password",
@@ -132,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                               "Remember Me",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0x80101828),
+                                color: AppColor.primaryTextLightOpacity80,
                               ),
                             ),
                           ),
@@ -175,63 +141,13 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   height(24),
-                  Row(
-                    spacing: 8,
-                    children: [
-                      Expanded(child: Divider(color: Color(0x20101828))),
-                      Text(
-                        "Or login with",
-                        style: TextStyle(color: Color(0x60101828)),
-                      ),
-                      Expanded(child: Divider(color: Color(0x20101828))),
-                    ],
-                  ),
+                  AuthDivider(text: "continue"),
                   height(24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 12,
-                    children: [
-                      ImageButton(
-                        image: 'assets/images/iconGoogle.png',
-                        buttonText: "Google",
-                        onPressed: () {},
-                      ),
-                      ImageButton(
-                        image: 'assets/images/Vector.png',
-                        buttonText: "Github",
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                  AuthSocialButton(),
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account?",
-                  style: TextStyle(color: Color(0x60101828)),
-                ),
-                TextButton(
-                  onPressed: () {
-                    context.pushRoute(const RegisterRoute());
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) {
-                    //       return RegisterPage();
-                    //     },
-                    //   ),
-                    // );
-                  },
-                  child: Text(
-                    "Sign Up",
-                    style: TextStyle(color: Color(0xff8B5CF6)),
-                  ),
-                ),
-              ],
-            ),
+            AuthFooter(isRegister: false),
           ],
         ),
       ),

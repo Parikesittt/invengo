@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invengo/constant/app_color.dart';
 
 class ImageButton extends StatelessWidget {
   const ImageButton({
@@ -20,14 +21,17 @@ class ImageButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: Color(0x20364153)),
+            side: BorderSide(color: AppColor.borderLight),
           ),
         ),
         child: Row(
           spacing: 16,
           children: [
-            Image.asset(image, color: Color(0xff101828), width: 20),
-            Text(buttonText, style: TextStyle(color: Color(0xff101828))),
+            Image.asset(image, color: AppColor.primaryTextLight, width: 20),
+            Text(
+              buttonText,
+              style: TextStyle(color: AppColor.primaryTextLight),
+            ),
           ],
         ),
       ),

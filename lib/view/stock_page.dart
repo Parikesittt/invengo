@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invengo/components/page_header.dart';
+import 'package:invengo/components/spacing_helper.dart';
+import 'package:invengo/constant/app_color.dart';
 import 'package:standard_searchbar/old/standard_searchbar.dart';
 
 class StockPage extends StatefulWidget {
@@ -39,15 +42,11 @@ class _StockPageState extends State<StockPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Stock Management",
-                style: TextStyle(fontSize: 30, color: Color(0xff101828)),
+              PageHeader(
+                title: "Stock Management",
+                subtitle: "Manage your inventory",
               ),
-              Text(
-                "Manage your inventory",
-                style: TextStyle(color: Color(0x60101828), fontSize: 16),
-              ),
-              height(24),
+              h(24),
               Row(
                 spacing: 12,
                 children: [
@@ -64,7 +63,7 @@ class _StockPageState extends State<StockPage>
                   ),
                 ],
               ),
-              height(16),
+              h(16),
               Row(
                 spacing: 8,
                 children: [
@@ -74,7 +73,7 @@ class _StockPageState extends State<StockPage>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(28),
                       gradient: LinearGradient(
-                        colors: [Color(0xff8C5CF5), Color(0xffeb489a)],
+                        colors: AppColor.primaryGradient,
                       ),
                     ),
                     child: TextButton(
@@ -93,11 +92,11 @@ class _StockPageState extends State<StockPage>
                       _tabController.animateTo(1);
                     },
                     style: ElevatedButton.styleFrom(
-                      side: BorderSide(color: Color(0xffe5e7eb)),
+                      side: BorderSide(color: AppColor.borderLight),
                     ),
                     child: Text(
                       "Low Stock (2)",
-                      style: TextStyle(color: Color(0x80101828)),
+                      style: TextStyle(color: AppColor.primaryTextLightOpacity80),
                     ),
                   ),
                   ElevatedButton(
@@ -105,16 +104,16 @@ class _StockPageState extends State<StockPage>
                       _tabController.animateTo(2);
                     },
                     style: ElevatedButton.styleFrom(
-                      side: BorderSide(color: Color(0xffe5e7eb)),
+                      side: BorderSide(color: AppColor.borderLight),
                     ),
                     child: Text(
                       "Out (1)",
-                      style: TextStyle(color: Color(0x80101828)),
+                      style: TextStyle(color: AppColor.primaryTextLightOpacity80),
                     ),
                   ),
                 ],
               ),
-              height(16),
+              h(16),
               Row(
                 spacing: 8,
                 children: [
@@ -141,15 +140,15 @@ class _StockPageState extends State<StockPage>
                               "6",
                               style: TextStyle(
                                 fontSize: 24,
-                                color: Color(0xff101828),
+                                color: AppColor.primaryTextLight,
                               ),
                             ),
-                            height(28),
+                            h(28),
                             Text(
                               "Total",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0x80101828),
+                                color: AppColor.primaryTextLightOpacity80,
                               ),
                             ),
                           ],
@@ -180,15 +179,15 @@ class _StockPageState extends State<StockPage>
                               "3",
                               style: TextStyle(
                                 fontSize: 24,
-                                color: Color(0xff101828),
+                                color: AppColor.primaryTextLight,
                               ),
                             ),
-                            height(28),
+                            h(28),
                             Text(
                               "In Stock",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0x80101828),
+                                color: AppColor.primaryTextLightOpacity80,
                               ),
                             ),
                           ],
@@ -222,7 +221,7 @@ class _StockPageState extends State<StockPage>
                                 color: Color(0xff101828),
                               ),
                             ),
-                            height(28),
+                            h(28),
                             Text(
                               "Low",
                               style: TextStyle(
@@ -261,7 +260,7 @@ class _StockPageState extends State<StockPage>
                                 color: Color(0xff101828),
                               ),
                             ),
-                            height(28),
+                            h(28),
                             Text(
                               "Total",
                               style: TextStyle(
@@ -276,7 +275,7 @@ class _StockPageState extends State<StockPage>
                   ),
                 ],
               ),
-              height(24),
+              h(24),
               Text(
                 "Product (6)",
                 style: TextStyle(fontSize: 18, color: Color(0xff101828)),
@@ -396,61 +395,8 @@ class _StockPageState extends State<StockPage>
               ),
             ],
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         Text("Kopi Sachet"),
-          //         height(8),
-          //         Text("Minuman"),
-          //         height(12),
-          //         Row(
-          //           children: [
-          //             Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [Text("Stock"), height(4), Text("25")],
-          //             ),
-          //             width(16),
-          //             Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [Text("Price"), height(4), Text("Rp 5.000")],
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //     // Spacer(),
-          //     Column(
-          //       crossAxisAlignment: CrossAxisAlignment.end,
-          //       children: [
-          //         Icon(
-          //           FontAwesomeIcons.ellipsisVertical,
-          //           color: Color(0xff99A1AF),
-          //           size: 20,
-          //         ),
-          //         height(40),
-          //         // Spacer(),
-          //         Row(
-          //           children: [
-          //             Icon(
-          //               FontAwesomeIcons.arrowTrendUp,
-          //               color: Color(0xff00C950),
-          //               size: 16,
-          //             ),
-          //             Text("+12%"),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );
   }
-
-  SizedBox height(double height) => SizedBox(height: height);
-  SizedBox width(double width) => SizedBox(width: width);
 }

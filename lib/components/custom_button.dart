@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invengo/constant/app_color.dart';
 
 class Button extends StatefulWidget {
   const Button({
@@ -33,7 +34,7 @@ class _ButtonState extends State<Button> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xff8C5CF5), Color(0xffEB489A)],
+                    colors: AppColor.primaryGradient,
                   ),
                 ),
               ),
@@ -56,23 +57,5 @@ class _ButtonState extends State<Button> {
         ),
       ),
     );
-    // SizedBox(
-    //   width: widget.width,
-    //   height: widget.height,
-    //   child: ElevatedButton(
-    //     onPressed: widget.click,
-    //     style: ElevatedButton.styleFrom(
-    //       // foregroundColor: Theme.of(context).colorScheme.primary,
-    //       backgroundColor: Theme.of(context).colorScheme.primary,
-    //       // disabledBackgroundColor: Theme.of(
-    //       //   context,
-    //       // ).colorScheme.onSurfaceVariant,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(12),
-    //       ),
-    //     ),
-    //     child: Text(widget.buttonText, style: TextStyle(fontSize: 12)),
-    //   ),
-    // );
   }
 }

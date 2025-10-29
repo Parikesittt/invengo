@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invengo/components/dashboard/activity_tile.dart';
+import 'package:invengo/components/dashboard/info_card.dart';
+import 'package:invengo/components/dashboard/low_stock_card.dart';
+import 'package:invengo/components/page_header.dart';
+import 'package:invengo/components/spacing_helper.dart';
+import 'package:invengo/constant/app_color.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -19,199 +25,63 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Invengo",
-                        style: TextStyle(
-                          fontSize: 28,
-                          color: Color(0xff101828),
-                        ),
-                      ),
-                      Text(
-                        "Welcome back, Admin",
-                        style: TextStyle(color: Color(0x60101828)),
-                      ),
-                    ],
+              PageHeader(
+                title: "Invengo",
+                subtitle: "Welcome back, Admin",
+                trailing: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: AppColor.primaryGradient),
                   ),
-                  Spacer(),
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Color(0xff8C5CF5), Color(0xffEB489A)],
-                      ),
-                    ),
-                    alignment: AlignmentGeometry.center,
-                    child: Text("A", style: TextStyle(color: Colors.white)),
-                  ),
-                ],
+                  alignment: AlignmentGeometry.center,
+                  child: Text("A", style: TextStyle(color: Colors.white)),
+                ),
               ),
-              height(32),
+              h(32),
               Row(
                 spacing: 12,
                 children: [
                   Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Color(0xffe5e7eb)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      height: 202,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Color(0xff8043EF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              FontAwesomeIcons.boxOpen,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                          height(24),
-                          Text("24", style: TextStyle(fontSize: 18)),
-                          height(24),
-                          Text(
-                            "Total Product",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0x60101828),
-                            ),
-                          ),
-                          height(24),
-                          Row(
-                            children: [
-                              Icon(Icons.trending_up, color: Color(0xff05DF72)),
-                              Text(
-                                "+12%",
-                                style: TextStyle(color: Color(0xff05DF72)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    child: InfoCard(
+                      icon: FontAwesomeIcons.boxOpen,
+                      iconBgColor: AppColor.primary,
+                      value: "24",
+                      label: "Total Product",
+                      percentage: "+12%",
+                      percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Color(0xffe5e7eb)),
-                      ),
-                      height: 202,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Color(0xffEF9509),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              FontAwesomeIcons.triangleExclamation,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                          height(24),
-                          Text("24", style: TextStyle(fontSize: 18)),
-                          height(24),
-                          Text(
-                            "Total Product",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0x60101828),
-                            ),
-                          ),
-                          height(24),
-                          Row(
-                            children: [
-                              Icon(Icons.trending_up, color: Color(0xff05DF72)),
-                              Text(
-                                "+12%",
-                                style: TextStyle(color: Color(0xff05DF72)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    child: InfoCard(
+                      icon: FontAwesomeIcons.users,
+                      iconBgColor: Color(0xffEF9509),
+                      value: "24",
+                      label: "Total Product",
+                      percentage: "+12%",
+                      percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Color(0xffe5e7eb)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      height: 202,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Color(0xff0EB07B),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              FontAwesomeIcons.dollarSign,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                          height(24),
-                          Text("24", style: TextStyle(fontSize: 18)),
-                          height(24),
-                          Text(
-                            "Total Product",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0x60101828),
-                            ),
-                          ),
-                          height(24),
-                          Row(
-                            children: [
-                              Icon(Icons.trending_up, color: Color(0xff05DF72)),
-                              Text(
-                                "+12%",
-                                style: TextStyle(color: Color(0xff05DF72)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    child: InfoCard(
+                      icon: FontAwesomeIcons.dollarSign,
+                      iconBgColor: Color(0xff0EB07B),
+                      value: "24",
+                      label: "Total Product",
+                      percentage: "+12%",
+                      percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
                 ],
               ),
-              height(32),
+              h(32),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Color(0xffe5e7eb)),
+                  border: Border.all(color: AppColor.borderLight),
                 ),
                 child: Column(
                   children: [
@@ -223,14 +93,14 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               "Revenue Overview",
                               style: TextStyle(
-                                color: Color(0xff101828),
+                                color: AppColor.primaryTextLight,
                                 fontSize: 16,
                               ),
                             ),
                             Text(
                               "Last 30 days",
                               style: TextStyle(
-                                color: Color(0x60101828),
+                                color: AppColor.primaryTextLightOpacity60,
                                 fontSize: 12,
                               ),
                             ),
@@ -239,10 +109,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         Spacer(),
                         Row(
                           children: [
-                            Icon(Icons.trending_up, color: Color(0xff05DF72)),
+                            Icon(
+                              Icons.trending_up,
+                              color: AppColor.iconTrendUp,
+                            ),
                             Text(
                               "+12%",
-                              style: TextStyle(color: Color(0xff05DF72)),
+                              style: TextStyle(color: AppColor.iconTrendUp),
                             ),
                           ],
                         ),
@@ -252,7 +125,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              height(32),
+              h(32),
               Row(
                 spacing: 16,
                 children: [
@@ -262,15 +135,15 @@ class _DashboardPageState extends State<DashboardPage> {
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        border: Border.all(color: Color(0xffe5e7eb)),
+                        border: Border.all(color: AppColor.borderLight),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Column(
                         children: [
                           Text("Categories"),
-                          height(36),
+                          h(36),
                           Image.asset('assets/images/pie_chart_dummy.png'),
-                          height(24),
+                          h(24),
                           Column(
                             children: [
                               Row(
@@ -280,12 +153,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                     height: 8,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Color(0xff8B5CF6),
+                                      color: AppColor.primary,
                                     ),
                                   ),
-                                  width(8),
+                                  w(8),
                                   Text("Test"),
-                                  width(32),
+                                  w(32),
                                   Text("55%"),
                                 ],
                               ),
@@ -299,9 +172,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                       color: Color(0xffEC4899),
                                     ),
                                   ),
-                                  width(8),
+                                  w(8),
                                   Text("Test"),
-                                  width(32),
+                                  w(32),
                                   Text("55%"),
                                 ],
                               ),
@@ -315,9 +188,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                       color: Color(0xff06B6D4),
                                     ),
                                   ),
-                                  width(8),
+                                  w(8),
                                   Text("Test"),
-                                  width(32),
+                                  w(32),
                                   Text("55%"),
                                 ],
                               ),
@@ -328,140 +201,12 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      height: 294,
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        // color: Colors.white,
-                        gradient: LinearGradient(
-                          begin: AlignmentGeometry.topLeft,
-                          end: AlignmentGeometry.bottomRight,
-                          colors: [Color(0xffFEF2C5), Color(0xffFDE78C)],
-                        ),
-                        border: Border.all(color: Color(0x30F59E0B)),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.triangleExclamation,
-                                size: 16,
-                                color: Color(0xffF59E0B),
-                              ),
-                              width(8),
-                              Text("Low Stock"),
-                            ],
-                          ),
-                          height(36),
-                          Column(
-                            spacing: 12,
-                            children: [
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("Kopi Sachet"),
-                                      Spacer(),
-                                      Text("5/50"),
-                                    ],
-                                  ),
-                                  height(4),
-                                  Container(
-                                    height: 4,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  // Expanded(child: Divider(thickness: 4)),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("Kopi Sachet"),
-                                      Spacer(),
-                                      Text("5/50"),
-                                    ],
-                                  ),
-                                  height(4),
-                                  Container(
-                                    height: 4,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  // Expanded(child: Divider(thickness: 4)),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("Kopi Sachet"),
-                                      Spacer(),
-                                      Text("5/50"),
-                                    ],
-                                  ),
-                                  height(4),
-                                  Container(
-                                    height: 4,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  // Expanded(child: Divider(thickness: 4)),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("Kopi Sachet"),
-                                      Spacer(),
-                                      Text("5/50"),
-                                    ],
-                                  ),
-                                  height(4),
-                                  Container(
-                                    height: 4,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  // Expanded(child: Divider(thickness: 4)),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("Kopi Sachet"),
-                                      Spacer(),
-                                      Text("5/50"),
-                                    ],
-                                  ),
-                                  height(4),
-                                  Container(
-                                    height: 4,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  // Expanded(child: Divider(thickness: 4)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    child: LowStockCard(
+                      items: [
+                        {'name': 'Product A', 'stock': 5, 'max': 20},
+                        {'name': 'Product B', 'stock': 2, 'max': 15},
+                        {'name': 'Product C', 'stock': 8, 'max': 30},
+                      ],
                     ),
                   ),
                 ],
@@ -480,12 +225,12 @@ class _DashboardPageState extends State<DashboardPage> {
                               onPressed: () {},
                               child: Text(
                                 "View All",
-                                style: TextStyle(color: Color(0xff8B5CF6)),
+                                style: TextStyle(color: AppColor.primary),
                               ),
                             ),
                             Icon(
                               Icons.arrow_outward,
-                              color: Color(0xff8B5CF6),
+                              color: AppColor.primary,
                               size: 16,
                             ),
                           ],
@@ -494,166 +239,38 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     // height(12),
                     ListView(
+                      padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       children: [
-                        ListTile(
-                          // minVerticalPadding: 15,
-                          titleTextStyle: TextStyle(
-                            fontSize: 13.7,
-                            color: Color(0xff101828),
-                          ),
-                          // minTileHeight: 66,
-                          subtitleTextStyle: TextStyle(
-                            color: Color(0x60101828),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            side: BorderSide(color: Color(0xffe5e7eb)),
-                          ),
-                          tileColor: Colors.white,
-                          leading: Container(
-                            // margin: EdgeInsets.all(13),
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Color(0x2000C950),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              Icons.trending_up,
-                              color: Color(0xff05DF72),
-                              size: 20,
-                            ),
-                          ),
-                          title: Text("Stock Added"),
-                          subtitle: Text("Kopi Sachet"),
-                          trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "+12",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xff101828),
-                                ),
-                              ),
-                              Text(
-                                "2h ago",
-                                style: TextStyle(
-                                  color: Color(0x60101828),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
+                        ActivityTile(
+                          title: "Stock Added",
+                          subtitle: "Kopi Sachet",
+                          value: "+12",
+                          time: "2h ago",
+                          icon: Icons.trending_up,
+                          iconColor: AppColor.iconTrendUp,
+                          bgColor: Color(0x2000C950),
                         ),
-                        height(8),
-                        ListTile(
-                          // minVerticalPadding: 15,
-                          titleTextStyle: TextStyle(
-                            fontSize: 13.7,
-                            color: Color(0xff101828),
-                          ),
-                          // minTileHeight: 66,
-                          subtitleTextStyle: TextStyle(
-                            color: Color(0x60101828),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            side: BorderSide(color: Color(0xffe5e7eb)),
-                          ),
-                          tileColor: Colors.white,
-                          leading: Container(
-                            // margin: EdgeInsets.all(13),
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Color(0x2000C950),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              Icons.trending_up,
-                              color: Color(0xff05DF72),
-                              size: 20,
-                            ),
-                          ),
-                          title: Text("Stock Added"),
-                          subtitle: Text("Kopi Sachet"),
-                          trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "+12",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xff101828),
-                                ),
-                              ),
-                              Text(
-                                "2h ago",
-                                style: TextStyle(
-                                  color: Color(0x60101828),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
+                        h(8),
+                        ActivityTile(
+                          title: "Stock Added",
+                          subtitle: "Kopi Sachet",
+                          value: "+12",
+                          time: "2h ago",
+                          icon: Icons.trending_up,
+                          iconColor: AppColor.iconTrendUp,
+                          bgColor: Color(0x2000C950),
                         ),
-                        height(8),
-                        ListTile(
-                          // minVerticalPadding: 15,
-                          titleTextStyle: TextStyle(
-                            fontSize: 13.7,
-                            color: Color(0xff101828),
-                          ),
-                          // minTileHeight: 66,
-                          subtitleTextStyle: TextStyle(
-                            color: Color(0x60101828),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            side: BorderSide(color: Color(0xffe5e7eb)),
-                          ),
-                          tileColor: Colors.white,
-                          leading: Container(
-                            // margin: EdgeInsets.all(13),
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Color(0x2000C950),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              Icons.trending_up,
-                              color: Color(0xff05DF72),
-                              size: 20,
-                            ),
-                          ),
-                          title: Text("Stock Added"),
-                          subtitle: Text("Kopi Sachet"),
-                          trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "+12",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xff101828),
-                                ),
-                              ),
-                              Text(
-                                "2h ago",
-                                style: TextStyle(
-                                  color: Color(0x60101828),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
+                        h(8),
+                        ActivityTile(
+                          title: "Stock Added",
+                          subtitle: "Kopi Sachet",
+                          value: "+12",
+                          time: "2h ago",
+                          icon: Icons.trending_up,
+                          iconColor: AppColor.iconTrendUp,
+                          bgColor: Color(0x2000C950),
                         ),
                       ],
                     ),
@@ -666,7 +283,4 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
-
-  SizedBox height(double height) => SizedBox(height: height);
-  SizedBox width(double width) => SizedBox(width: width);
 }
