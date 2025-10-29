@@ -1,9 +1,11 @@
 import 'package:auto_route/annotations.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
+import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/custom_input_form.dart';
+import 'package:invengo/model/stock_dropdown_model.dart';
 
 @RoutePage()
 class StockTransPage extends StatefulWidget {
@@ -21,6 +23,13 @@ class _StockTransPageState extends State<StockTransPage> {
     'Pakaian',
     'Makanan',
     'Perabotan',
+  ];
+
+  final List<StockDropdownModel> _list = [
+    StockDropdownModel('Engineer', Icons.engineering),
+    StockDropdownModel('Artist', Icons.palette),
+    StockDropdownModel('Manager', Icons.business_center),
+    StockDropdownModel('Intern', Icons.school),
   ];
   @override
   Widget build(BuildContext context) {
@@ -212,34 +221,29 @@ class _StockTransPageState extends State<StockTransPage> {
                             BorderSide(color: Color(0xffe5e7eb)),
                           ),
                         ),
-                        // child: DropDownState<String>(dropDown: DropDown<String>(data: <SelectedListItem<String>>[
-                        //   SelectedListItem(data: 'Tokyo'),
-                        //   SelectedListItem(data: 'London'),
-                        //   SelectedListItem(data: 'New York'),
-                        // ],
-                        // onSelected: (selectedItems){
-                        //   List<String> list = [];
-                        //   for
-                        // }
-                        // )),
-                        child: DropdownButton(
-                          // iconSize: 18,
-                          // icon: Icon(FontAwesomeIcons.box),
-                          hint: Text("Pilih barang..."),
-                          borderRadius: BorderRadius.circular(12),
-                          value: valueDropdown,
-                          items: listCategory.map((String val) {
-                            return DropdownMenuItem(
-                              value: val,
-                              child: Text(val),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              valueDropdown = value;
-                            });
-                          },
+                        child: DropdownFlutter<StockDropdownModel>.search(
+                          items: _list,
+                          onChanged: (v) {},
+                          hintText: 'Pilih barang ...',
                         ),
+                        // child: DropdownButton(
+                        //   // iconSize: 18,
+                        //   // icon: Icon(FontAwesomeIcons.box),
+                        //   hint: Text("Pilih barang..."),
+                        //   borderRadius: BorderRadius.circular(12),
+                        //   value: valueDropdown,
+                        //   items: listCategory.map((String val) {
+                        //     return DropdownMenuItem(
+                        //       value: val,
+                        //       child: Text(val),
+                        //     );
+                        //   }).toList(),
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       valueDropdown = value;
+                        //     });
+                        //   },
+                        // ),
                       ),
                       height(16),
                       Text("Jumlah"),
