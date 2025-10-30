@@ -4,7 +4,14 @@ import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invengo/components/app_container.dart';
+import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
+import 'package:invengo/components/date_picker.dart';
+import 'package:invengo/components/spacing_helper.dart';
+import 'package:invengo/components/stock/stock_button.dart';
+import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/constant/app_text_style.dart';
 import 'package:invengo/model/stock_dropdown_model.dart';
 
 @RoutePage()
@@ -16,7 +23,12 @@ class StockTransPage extends StatefulWidget {
 }
 
 class _StockTransPageState extends State<StockTransPage> {
+  DateTime? selectedDate = DateTime.now();
   String? valueDropdown;
+  bool isAdd = true;
+  final TextEditingController totalC = TextEditingController();
+  final TextEditingController priceC = TextEditingController();
+  final TextEditingController dateC = TextEditingController();
 
   final List<String> listCategory = [
     'Elektronik',
@@ -40,7 +52,7 @@ class _StockTransPageState extends State<StockTransPage> {
           children: [
             Text(
               "Transaksi Stok",
-              style: TextStyle(color: Color(0xff101828), fontSize: 18),
+              style: TextStyle(color: AppColor.primaryTextLight, fontSize: 18),
             ),
             Text(
               "Catat barang masuk atau keluar",
@@ -54,140 +66,40 @@ class _StockTransPageState extends State<StockTransPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.all(17),
+              AppContainer(
+                withBorder: true,
                 height: 214,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.fromBorderSide(
-                    BorderSide(color: Color(0xffe5e7eb)),
-                  ),
-                ),
+                padding: EdgeInsets.all(17),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Tipe Transaksi",
-                      style: TextStyle(
-                        color: Color(0xff101828),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    height(24),
+                    Text("Tipe Transaksi", style: AppTextStyle.sectionTitle),
+                    h(24),
                     Row(
                       spacing: 12,
                       children: [
                         Expanded(
-                          child: InkWell(
-                            child: Container(
-                              padding: EdgeInsets.all(18),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.fromBorderSide(
-                                  BorderSide(color: Color(0xff8B5CF6)),
-                                ),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0x108B5CF6),
-                                    Color(0x10EC4899),
-                                  ],
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xff8C5CF5),
-                                          Color(0xffEB489A),
-                                        ],
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      FontAwesomeIcons.plus,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  height(12),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Barang Masuk",
-                                        style: TextStyle(
-                                          color: Color(0xff101828),
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Tambah stok",
-                                        style: TextStyle(
-                                          color: Color(0x80101828),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                          child: StockButton(
+                            onTap: () {
+                              isAdd = !isAdd;
+                              setState(() {});
+                            },
+                            isEnable: isAdd,
+                            icon: FontAwesomeIcons.plus,
+                            title: "Barang Masuk",
+                            subtitle: "Tambah stok",
                           ),
                         ),
                         Expanded(
-                          child: InkWell(
-                            child: Container(
-                              padding: EdgeInsets.all(18),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.fromBorderSide(
-                                  BorderSide(color: Color(0xffe5e7eb)),
-                                ),
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffF3F4F6),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(
-                                      FontAwesomeIcons.minus,
-                                      color: Color(0xff4A5565),
-                                    ),
-                                  ),
-                                  height(12),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Barang Keluar",
-                                        style: TextStyle(
-                                          color: Color(0xff101828),
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Kurangi stok",
-                                        style: TextStyle(
-                                          color: Color(0x80101828),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                          child: StockButton(
+                            onTap: () {
+                              isAdd = !isAdd;
+                              setState(() {});
+                            },
+                            isEnable: !isAdd,
+                            icon: FontAwesomeIcons.minus,
+                            title: "Barang Keluar",
+                            subtitle: "Kurangi stok",
                           ),
                         ),
                       ],
@@ -195,7 +107,7 @@ class _StockTransPageState extends State<StockTransPage> {
                   ],
                 ),
               ),
-              height(18),
+              h(18),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(17),
@@ -203,22 +115,22 @@ class _StockTransPageState extends State<StockTransPage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.fromBorderSide(
-                    BorderSide(color: Color(0xffe5e7eb)),
+                    BorderSide(color: AppColor.borderLight),
                   ),
                 ),
                 child: Form(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Pilih Barang"),
-                      height(8),
+                      Text("Pilih Barang", style: AppTextStyle.sectionSubtitle),
+                      h(8),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Color(0xfff9fafb),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.fromBorderSide(
-                            BorderSide(color: Color(0xffe5e7eb)),
+                            BorderSide(color: AppColor.borderLight),
                           ),
                         ),
                         child: DropdownFlutter<StockDropdownModel>.search(
@@ -245,14 +157,24 @@ class _StockTransPageState extends State<StockTransPage> {
                         //   },
                         // ),
                       ),
-                      height(16),
-                      Text("Jumlah"),
-                      height(8),
+                      h(16),
+                      Text("Jumlah", style: AppTextStyle.sectionSubtitle),
+                      h(8),
                       InputForm(hint: "Masukkan jumlah"),
-                      height(16),
-                      Text("Harga"),
-                      height(8),
+                      h(16),
+                      Text("Harga", style: AppTextStyle.sectionSubtitle),
+                      h(8),
                       InputForm(hint: "(Opsional jika harga berubah)"),
+                      h(16),
+                      Text("Tanggal", style: AppTextStyle.sectionSubtitle),
+                      h(8),
+                      DatePickerFormField(controller: dateC),
+                      h(16),
+                      Button(
+                        buttonText: isAdd ? "Tambah Stok" : "Kurangi Stok",
+                        height: 48,
+                        width: double.infinity,
+                      ),
                     ],
                   ),
                 ),
@@ -263,7 +185,4 @@ class _StockTransPageState extends State<StockTransPage> {
       ),
     );
   }
-
-  SizedBox height(double height) => SizedBox(height: height);
-  SizedBox width(double width) => SizedBox(width: width);
 }

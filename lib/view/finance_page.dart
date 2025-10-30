@@ -1,8 +1,11 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
+import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/constant/app_text_style.dart';
 
 @RoutePage()
 class FinancePage extends StatefulWidget {
@@ -206,7 +209,7 @@ class _FinancePageState extends State<FinancePage>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(28),
                       gradient: LinearGradient(
-                        colors: [Color(0xff8C5CF5), Color(0xffeb489a)],
+                        colors: AppColor.primaryGradient,
                       ),
                     ),
                     child: TextButton(
@@ -225,11 +228,15 @@ class _FinancePageState extends State<FinancePage>
                       _tabController.animateTo(1);
                     },
                     style: ElevatedButton.styleFrom(
-                      side: BorderSide(color: Color(0xffe5e7eb)),
+                      backgroundColor: AppColor.surfaceLight,
+
+                      side: BorderSide(color: AppColor.borderLight),
                     ),
                     child: Text(
                       "Month",
-                      style: TextStyle(color: Color(0x80101828)),
+                      style: TextStyle(
+                        color: AppColor.primaryTextLightOpacity80,
+                      ),
                     ),
                   ),
                   ElevatedButton(
@@ -237,6 +244,7 @@ class _FinancePageState extends State<FinancePage>
                       _tabController.animateTo(2);
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.surfaceLight,
                       side: BorderSide(color: Color(0xffe5e7eb)),
                     ),
                     child: Text(
@@ -262,11 +270,15 @@ class _FinancePageState extends State<FinancePage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Recent Transaction"),
+                        Text(
+                          "Recent Transaction",
+                          style: AppTextStyle.sectionTitle,
+                        ),
                         TextButton(onPressed: () {}, child: Text("View All")),
                       ],
                     ),
                     ListView.builder(
+                      padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: 5,
@@ -274,6 +286,9 @@ class _FinancePageState extends State<FinancePage>
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             contentPadding: EdgeInsets.all(12),
                             tileColor: Colors.white,
                             leading: Card(
@@ -348,81 +363,73 @@ class _FinancePageState extends State<FinancePage>
     return Column(
       spacing: 32,
       children: [
-        Card(
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Revenue vs Expenses"),
-                    Row(
-                      spacing: 8,
-                      children: [
-                        Row(
-                          spacing: 2,
-                          children: [
-                            Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: Color(0xff8B5CF6),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
+        AppContainer(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Revenue vs Expenses",
+                    style: TextStyle(color: AppColor.textPrimaryLight),
+                  ),
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Row(
+                        spacing: 2,
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: AppColor.primary,
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                            Text(
-                              "Income",
-                              style: TextStyle(color: Color(0x60101828)),
+                          ),
+                          Text(
+                            "Income",
+                            style: TextStyle(
+                              color: AppColor.primaryTextLightOpacity60,
                             ),
-                          ],
-                        ),
-                        Row(
-                          spacing: 2,
-                          children: [
-                            Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: Color(0xffEC4899),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        spacing: 2,
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: Color(0xffEC4899),
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                            Text(
-                              "Expense",
-                              style: TextStyle(color: Color(0x60101828)),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Image.asset('assets/images/bar_chart_dummy.png'),
-              ],
-            ),
+                          ),
+                          Text(
+                            "Expense",
+                            style: TextStyle(color: Color(0x60101828)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Image.asset('assets/images/bar_chart_dummy.png'),
+            ],
           ),
         ),
-        Card(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 40,
-              children: [
-                Text(
-                  "Weekly Trend",
-                  style: TextStyle(
-                    color: Color(0xff101828),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Image.asset('assets/images/line_chart_dummy.png'),
-              ],
-            ),
+        AppContainer(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 40,
+            children: [
+              Text("Weekly Trend", style: AppTextStyle.sectionTitle),
+              Image.asset('assets/images/line_chart_dummy.png'),
+            ],
           ),
         ),
       ],

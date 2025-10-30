@@ -28,6 +28,11 @@ class DBHelper {
     );
   }
 
+  // static Future<void> getUser(UserModel user) async {
+  //   final dbs = await db();
+  //   final
+  // }
+
   static Future<UserModel?> loginUser({
     required String email,
     required String password,
@@ -39,6 +44,7 @@ class DBHelper {
       whereArgs: [email, password],
     );
     if (results.isNotEmpty) {
+      print(UserModel.fromMap(results.first));
       return UserModel.fromMap(results.first);
     }
     return null;

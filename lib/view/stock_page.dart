@@ -1,3 +1,4 @@
+import 'package:animated_search_bar/animated_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/page_header.dart';
@@ -15,6 +16,8 @@ class StockPage extends StatefulWidget {
 class _StockPageState extends State<StockPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  String searchText = "";
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -33,7 +36,6 @@ class _StockPageState extends State<StockPage>
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Color(0xfff3f4ff),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Padding(
@@ -50,7 +52,39 @@ class _StockPageState extends State<StockPage>
               Row(
                 spacing: 12,
                 children: [
-                  Expanded(child: StandardSearchBar(borderRadius: 8)),
+                  Expanded(
+                    child: AnimatedSearchBar(
+                      label: 'Search Something Here',
+                      controller: _controller,
+                      labelStyle: const TextStyle(fontSize: 16),
+                      searchStyle: const TextStyle(
+                        color: AppColor.primaryTextLight,
+                      ),
+                      cursorColor: Colors.white,
+                      textInputAction: TextInputAction.done,
+                      autoFocus: true,
+                      searchDecoration: const InputDecoration(
+                        hintText: 'Search',
+                        alignLabelWithHint: true,
+                        fillColor: Colors.white,
+                        focusColor: Colors.white,
+                        hintStyle: TextStyle(color: Colors.white70),
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (value) {
+                        debugPrint('value on Change');
+                        setState(() {
+                          searchText = value;
+                        });
+                      },
+                      onFieldSubmitted: (value) {
+                        debugPrint('value on Field Submitted');
+                        setState(() {
+                          searchText = value;
+                        });
+                      },
+                    ),
+                  ),
                   IconButton(
                     onPressed: () {},
                     style: IconButton.styleFrom(
@@ -59,7 +93,11 @@ class _StockPageState extends State<StockPage>
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    icon: Icon(FontAwesomeIcons.filter, size: 20),
+                    icon: Icon(
+                      FontAwesomeIcons.filter,
+                      size: 20,
+                      color: AppColor.primaryTextLight,
+                    ),
                   ),
                 ],
               ),
@@ -92,11 +130,14 @@ class _StockPageState extends State<StockPage>
                       _tabController.animateTo(1);
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.surfaceLight,
                       side: BorderSide(color: AppColor.borderLight),
                     ),
                     child: Text(
                       "Low Stock (2)",
-                      style: TextStyle(color: AppColor.primaryTextLightOpacity80),
+                      style: TextStyle(
+                        color: AppColor.primaryTextLightOpacity80,
+                      ),
                     ),
                   ),
                   ElevatedButton(
@@ -104,11 +145,14 @@ class _StockPageState extends State<StockPage>
                       _tabController.animateTo(2);
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.surfaceLight,
                       side: BorderSide(color: AppColor.borderLight),
                     ),
                     child: Text(
                       "Out (1)",
-                      style: TextStyle(color: AppColor.primaryTextLightOpacity80),
+                      style: TextStyle(
+                        color: AppColor.primaryTextLightOpacity80,
+                      ),
                     ),
                   ),
                 ],
@@ -292,6 +336,7 @@ class _StockPageState extends State<StockPage>
                   ],
                 ),
               ),
+              // h(24),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invengo/route.dart';
+import 'package:invengo/theme/theme.dart';
 import 'package:invengo/view/login_page.dart';
 import 'package:invengo/view/main_page.dart';
 import 'package:invengo/view/register_page.dart';
@@ -19,9 +20,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       // initialRoute: '/splash',
       // routes: {
       //   '/': (context) => const MainPage(),

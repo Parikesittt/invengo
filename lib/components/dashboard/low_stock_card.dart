@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invengo/constant/app_text_style.dart';
 
 class LowStockCard extends StatelessWidget {
   final List<Map<String, dynamic>> items;
@@ -24,31 +25,39 @@ class LowStockCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(FontAwesomeIcons.triangleExclamation,
-                  size: 16, color: Color(0xffF59E0B)),
+              Icon(
+                FontAwesomeIcons.triangleExclamation,
+                size: 16,
+                color: Color(0xffF59E0B),
+              ),
               SizedBox(width: 8),
-              Text("Low Stock"),
+              Text("Low Stock", style: AppTextStyle.cardTitle),
             ],
           ),
           SizedBox(height: 24),
-          ...items.map((item) => Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(item['name']),
-                      Spacer(),
-                      Text("${item['stock']}/${item['max']}"),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Container(
-                    height: 4,
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.white),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              )),
+          ...items.map(
+            (item) => Column(
+              children: [
+                Row(
+                  children: [
+                    Text(item['name'], style: AppTextStyle.cardTitle),
+                    Spacer(),
+                    Text(
+                      "${item['stock']}/${item['max']}",
+                      style: AppTextStyle.cardTitle,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Container(
+                  height: 4,
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: Colors.white),
+                ),
+                SizedBox(height: 8),
+              ],
+            ),
+          ),
         ],
       ),
     );

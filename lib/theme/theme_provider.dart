@@ -2,7 +2,7 @@ import 'package:invengo/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeData _themeData = lightTheme;
+  ThemeData _themeData = AppTheme.lightTheme;
 
   ThemeData get themeData => _themeData;
 
@@ -12,10 +12,10 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   void toogleTheme() {
-    if (_themeData == lightTheme) {
-      themeData = darkTheme;
+    if (_themeData == AppTheme.lightTheme) {
+      themeData = AppTheme.darkTheme;
     } else {
-      themeData = lightTheme;
+      themeData = AppTheme.lightTheme;
     }
   }
 }

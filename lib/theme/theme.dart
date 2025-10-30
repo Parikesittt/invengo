@@ -1,101 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:invengo/constant/app_color.dart';
 
-final ThemeData lightTheme = ThemeData(
-  brightness: Brightness.light,
-  primaryColor: const Color(0xFF8B5CF6), // Violet
-  colorScheme: const ColorScheme.light(
-    primary: Color(0xFF8B5CF6),
-    secondary: Color(0xFFEC4899), // Pink accent
-    surface: Color(0xFFFFFFFF),
-    background: Color(0xFFF8F9FA),
-    error: Color(0xFFEF4444),
-    onPrimary: Colors.white,
-    onSecondary: Colors.white,
-    onSurface: Color(0xFF111827),
-    onBackground: Color(0xFF111827),
-    onError: Colors.white,
-  ),
-  scaffoldBackgroundColor: const Color(0xFFF8F9FA),
-  cardColor: Colors.white,
-  dividerColor: const Color(0xFFE5E7EB),
-  shadowColor: Colors.black.withValues(alpha: 0.1),
-
-  textTheme: const TextTheme(
-    bodyLarge: TextStyle(color: Color(0xFF111827)), // primary text
-    bodyMedium: TextStyle(color: Color(0xFF6B7280)), // secondary text
-    bodySmall: TextStyle(color: Color(0xFF9CA3AF)), // muted text
-  ),
-
-  iconTheme: const IconThemeData(color: Color(0xFF374151)), // moon icon
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFFFFFFFF),
-    foregroundColor: Color(0xFF111827),
-    elevation: 1,
-  ),
-
-  // Accent buttons or elevated buttons
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Color(0xFF8B5CF6),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+class AppTheme {
+  static ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: AppColor.backgroundLight,
+    fontFamily: 'Poppins',
+    colorScheme: ColorScheme.light(
+      primary: AppColor.primary,
+      secondary: AppColor.secondary,
+      surface: AppColor.surfaceLight,
+      onPrimary: Colors.white,
+      onSecondary: Colors.white,
+      onSurface: AppColor.textPrimaryLight,
+      outline: AppColor.borderLight,
     ),
-  ),
-
-  // Glassmorphism-style container
-  dialogTheme: DialogThemeData(
-    backgroundColor: Colors.white.withValues(alpha: 0.9),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  ),
-);
-
-final ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
-  primaryColor: const Color(0xFF8B5CF6),
-  colorScheme: const ColorScheme.dark(
-    primary: Color(0xFF8B5CF6),
-    secondary: Color(0xFFEC4899),
-    surface: Color(0xFF1E293B),
-    background: Color(0xFF0F172A),
-    error: Color(0xFFEF4444),
-    onPrimary: Colors.white,
-    onSecondary: Colors.white,
-    onSurface: Colors.white,
-    onBackground: Colors.white,
-    onError: Colors.white,
-  ),
-  scaffoldBackgroundColor: const Color(0xFF0F172A),
-  cardColor: const Color(0xFF1E293B),
-  dividerColor: Colors.white.withValues(alpha: 0.1),
-
-  textTheme: const TextTheme(
-    bodyLarge: TextStyle(color: Colors.white), // primary text
-    bodyMedium: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.6)), // secondary
-    bodySmall: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.4)), // muted
-  ),
-
-  iconTheme: const IconThemeData(color: Color(0xFFFBBF24)), // sun icon
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFF1E293B),
-    foregroundColor: Colors.white,
-    elevation: 0,
-  ),
-
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Color(0xFF8B5CF6),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColor.backgroundLight,
+      elevation: 0,
+      iconTheme: IconThemeData(color: AppColor.textPrimaryLight),
+      titleTextStyle: TextStyle(
+        color: AppColor.textPrimaryLight,
+        fontWeight: FontWeight.w600,
+        fontSize: 18,
+      ),
     ),
-  ),
-
-  // Glassmorphism style
-  dialogTheme: DialogThemeData(
-    backgroundColor: Colors.white.withValues(alpha: 0.1),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
-      side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+    textTheme: TextTheme(
+      displayLarge: TextStyle(color: AppColor.textPrimaryLight),
+      displayMedium: TextStyle(color: AppColor.textPrimaryLight),
+      displaySmall: TextStyle(color: AppColor.textPrimaryLight),
+      headlineMedium: TextStyle(color: AppColor.textPrimaryLight),
+      headlineSmall: TextStyle(color: AppColor.textPrimaryLight),
+      titleLarge: TextStyle(color: AppColor.textPrimaryLight),
+      bodyLarge: TextStyle(color: AppColor.textPrimaryLight),
+      bodyMedium: TextStyle(color: AppColor.textSecondaryLight),
+      labelLarge: TextStyle(color: AppColor.textPrimaryLight),
     ),
-  ),
-);
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: AppColor.surfaceLight,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColor.borderLight),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColor.borderLight),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColor.primary),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.primary,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    cardTheme: CardThemeData(
+      color: AppColor.surfaceLight,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0,
+    ),
+  );
 
+  static ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: AppColor.backgroundDark,
+    fontFamily: 'Poppins',
+    colorScheme: ColorScheme.dark(
+      primary: AppColor.primaryDark,
+      secondary: AppColor.secondaryDark,
+      surface: AppColor.surfaceDark,
+      onPrimary: Colors.white,
+      onSecondary: Colors.white,
+      onSurface: AppColor.textPrimaryDark,
+      outline: AppColor.borderDark,
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColor.backgroundDark,
+      elevation: 0,
+      iconTheme: IconThemeData(color: AppColor.textPrimaryDark),
+      titleTextStyle: TextStyle(
+        color: AppColor.textPrimaryDark,
+        fontWeight: FontWeight.w600,
+        fontSize: 18,
+      ),
+    ),
+    textTheme: TextTheme(
+      displayLarge: TextStyle(color: AppColor.textPrimaryDark),
+      displayMedium: TextStyle(color: AppColor.textPrimaryDark),
+      displaySmall: TextStyle(color: AppColor.textPrimaryDark),
+      headlineMedium: TextStyle(color: AppColor.textPrimaryDark),
+      headlineSmall: TextStyle(color: AppColor.textPrimaryDark),
+      titleLarge: TextStyle(color: AppColor.textPrimaryDark),
+      bodyLarge: TextStyle(color: AppColor.textPrimaryDark),
+      bodyMedium: TextStyle(color: AppColor.textSecondaryDark),
+      labelLarge: TextStyle(color: AppColor.textPrimaryDark),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: AppColor.surfaceDark,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColor.borderDark),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColor.borderDark),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColor.primaryDark),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.primaryDark,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    cardTheme: CardThemeData(
+      color: AppColor.surfaceDark,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0,
+    ),
+  );
+}

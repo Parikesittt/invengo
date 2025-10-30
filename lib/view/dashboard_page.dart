@@ -6,6 +6,8 @@ import 'package:invengo/components/dashboard/low_stock_card.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/preferences/preference_handler.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -15,6 +17,22 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  String? username;
+
+  @override
+  void initState() {
+    super.initState();
+    PreferenceHandler.getUsername().then((value) {
+      setState(() {
+        username = value ?? 'Guest';
+      });
+    });
+  }
+
+  getUserData() async {
+    username = await PreferenceHandler.getUsername();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +45,7 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               PageHeader(
                 title: "Invengo",
-                subtitle: "Welcome back, Admin",
+                subtitle: "Welcome back, $username",
                 trailing: Container(
                   width: 48,
                   height: 48,
@@ -140,7 +158,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       child: Column(
                         children: [
-                          Text("Categories"),
+                          Text("Categories", style: AppTextStyle.sectionTitle),
                           h(36),
                           Image.asset('assets/images/pie_chart_dummy.png'),
                           h(24),
@@ -217,7 +235,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     Row(
                       children: [
-                        Text("Recent Activity"),
+                        Text(
+                          "Recent Activity",
+                          style: AppTextStyle.sectionTitle,
+                        ),
                         Spacer(),
                         Row(
                           children: [

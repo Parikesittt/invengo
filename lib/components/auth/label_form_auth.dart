@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invengo/constant/app_text_style.dart';
 
 class LabelAuth extends StatelessWidget {
   final String title;
@@ -6,6 +7,6 @@ class LabelAuth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyle(fontWeight: FontWeight.bold),);
+    return Text(title, style: AppTextStyle.sectionTitle);
   }
 }
