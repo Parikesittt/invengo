@@ -138,24 +138,6 @@ class _StockTransPageState extends State<StockTransPage> {
                           onChanged: (v) {},
                           hintText: 'Pilih barang ...',
                         ),
-                        // child: DropdownButton(
-                        //   // iconSize: 18,
-                        //   // icon: Icon(FontAwesomeIcons.box),
-                        //   hint: Text("Pilih barang..."),
-                        //   borderRadius: BorderRadius.circular(12),
-                        //   value: valueDropdown,
-                        //   items: listCategory.map((String val) {
-                        //     return DropdownMenuItem(
-                        //       value: val,
-                        //       child: Text(val),
-                        //     );
-                        //   }).toList(),
-                        //   onChanged: (value) {
-                        //     setState(() {
-                        //       valueDropdown = value;
-                        //     });
-                        //   },
-                        // ),
                       ),
                       h(16),
                       Text("Jumlah", style: AppTextStyle.sectionSubtitle),

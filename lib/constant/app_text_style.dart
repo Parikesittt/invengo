@@ -50,4 +50,41 @@ class AppTextStyle {
     fontWeight: FontWeight.w500,
     color: AppColor.textPrimaryLight,
   );
+
+  static const h1 = TextStyle(
+    fontSize: 24,
+    color: AppColor.primaryTextLight,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const h2 = TextStyle(
+    fontSize: 20,
+    color: AppColor.primaryTextLight,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const h3 = TextStyle(
+    fontSize: 18,
+    color: AppColor.primaryTextLight,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const h4 = TextStyle(
+    fontSize: 16,
+    color: AppColor.primaryTextLight,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const p = TextStyle(fontSize: 16, color: AppColor.primaryTextLight);
+
+  static const pPrice = TextStyle(fontSize: 16, color: AppColor.primary);
+
+  static const button = TextStyle(
+    fontSize: 16,
+    color: AppColor.textPrimaryDark,
+  );
+  static const label = TextStyle(
+    fontSize: 12,
+    color: AppColor.textPrimaryLight,
+  );
 }

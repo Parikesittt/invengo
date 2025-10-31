@@ -33,7 +33,7 @@ class AppTheme {
       headlineSmall: TextStyle(color: AppColor.textPrimaryLight),
       titleLarge: TextStyle(color: AppColor.textPrimaryLight),
       bodyLarge: TextStyle(color: AppColor.textPrimaryLight),
-      bodyMedium: TextStyle(color: AppColor.textSecondaryLight),
+      bodyMedium: TextStyle(color: AppColor.textPrimaryLight),
       labelLarge: TextStyle(color: AppColor.textPrimaryLight),
     ),
     inputDecorationTheme: InputDecorationTheme(

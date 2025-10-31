@@ -43,6 +43,7 @@ dependencies:
   standard_searchbar: ^2.1.1
   stylish_bottom_bar: ^1.1.1
   animated_search_bar: ^2.8.0
+  searchbar_animation: ^0.0.4
 
 dev_dependencies:
   auto_route_generator: ^8.1.0

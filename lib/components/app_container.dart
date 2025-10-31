@@ -7,6 +7,7 @@ class AppContainer extends StatelessWidget {
   final double? height;
   final Color? color;
   final bool withBorder;
+  final Gradient? gradient;
 
   const AppContainer({
     super.key,
@@ -16,6 +17,7 @@ class AppContainer extends StatelessWidget {
     this.height,
     this.color,
     this.withBorder = true,
+    this.gradient,
   });
 
   @override
@@ -25,6 +27,7 @@ class AppContainer extends StatelessWidget {
       height: height,
       padding: padding ?? const EdgeInsets.all(24),
       decoration: BoxDecoration(
+        gradient: gradient,
         color: color ?? Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: withBorder

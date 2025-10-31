@@ -5,6 +5,9 @@ import 'package:invengo/view/register_page.dart';
 import 'package:invengo/view/finance_page.dart';
 import 'package:invengo/view/splash_screen.dart';
 import 'package:invengo/view/stock_trans_page.dart';
+import 'package:invengo/view/stock_management_page.dart';
+import 'package:invengo/view/stock_create_page.dart';
+import 'package:invengo/view/list_user.dart';
 
 part 'route.gr.dart';
 
@@ -21,5 +24,8 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: FinanceRoute.page, path: '/finance'),
     AutoRoute(page: StockTransRoute.page, path: '/stock_trans'),
     AutoRoute(page: SplashRoute.page, path: '/splash', initial: true),
+    AutoRoute(page: StockManagementRoute.page, path: '/stock_management'),
+    AutoRoute(page: StockCreateRoute.page, path: '/stock_create'),
+    AutoRoute(page: ListCategoryRoute.page, path: '/list'),
   ];
 }

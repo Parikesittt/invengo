@@ -1,9 +1,12 @@
 import 'package:animated_search_bar/animated_search_bar.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/route.dart';
 import 'package:standard_searchbar/old/standard_searchbar.dart';
 
 class StockPage extends StatefulWidget {
@@ -47,6 +50,19 @@ class _StockPageState extends State<StockPage>
               PageHeader(
                 title: "Stock Management",
                 subtitle: "Manage your inventory",
+                trailing: IconButton(
+                  iconSize: 20,
+                  style: IconButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(12),
+                    ),
+                    backgroundColor: AppColor.surfaceLight,
+                  ),
+                  onPressed: () {
+                    context.pushRoute(StockManagementRoute());
+                  },
+                  icon: Icon(FontAwesomeIcons.gear),
+                ),
               ),
               h(24),
               Row(

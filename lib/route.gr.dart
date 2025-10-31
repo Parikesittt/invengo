@@ -21,6 +21,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const FinancePage(),
       );
     },
+    ListCategoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ListCategoryPage(),
+      );
+    },
     LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -45,6 +51,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashPage(),
       );
     },
+    StockCreateRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const StockCreatePage(),
+      );
+    },
+    StockManagementRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const StockManagementPage(),
+      );
+    },
     StockTransRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -64,6 +82,20 @@ class FinanceRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'FinanceRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ListCategoryPage]
+class ListCategoryRoute extends PageRouteInfo<void> {
+  const ListCategoryRoute({List<PageRouteInfo>? children})
+      : super(
+          ListCategoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ListCategoryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -120,6 +152,34 @@ class SplashRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SplashRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [StockCreatePage]
+class StockCreateRoute extends PageRouteInfo<void> {
+  const StockCreateRoute({List<PageRouteInfo>? children})
+      : super(
+          StockCreateRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'StockCreateRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [StockManagementPage]
+class StockManagementRoute extends PageRouteInfo<void> {
+  const StockManagementRoute({List<PageRouteInfo>? children})
+      : super(
+          StockManagementRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'StockManagementRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
