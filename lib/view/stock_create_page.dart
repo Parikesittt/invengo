@@ -200,7 +200,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                       ),
                       Expanded(
                         child: InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (_formKey.currentState!.validate()) {
                               final ItemModel data = ItemModel(
                                 id: widget.isUpdate ? widget.item!.id : null,
@@ -210,12 +210,23 @@ class _StockCreatePageState extends State<StockCreatePage> {
                                 sellingPrice: int.parse(sellPriceC.text),
                                 stock: int.parse(stockC.text),
                               );
-                              DBHelper.createItems(data);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Data berhasil ditambahkan"),
-                                ),
-                              );
+                              if (widget.isUpdate) {
+                                // 🔹 UPDATE DATA
+                                await DBHelper.updateItems(data);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Data berhasil diperbarui"),
+                                  ),
+                                );
+                              } else {
+                                // 🔹 CREATE DATA BARU
+                                await DBHelper.createItems(data);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Data berhasil ditambahkan"),
+                                  ),
+                                );
+                              }
                               Navigator.pop(context);
                               // Navigator.pushNamed(context, '/home');
                             } else {

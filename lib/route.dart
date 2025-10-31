@@ -25,7 +25,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: StockTransRoute.page, path: '/stock_trans'),
     AutoRoute(page: SplashRoute.page, path: '/splash', initial: true),
     AutoRoute(page: StockManagementRoute.page, path: '/stock_management'),
-    AutoRoute(page: StockCreateRoute.page, path: '/stock_create'),
+    AutoRoute(page: StockCreateRoute.page, path: '/stock_create', ),
     AutoRoute(page: ListCategoryRoute.page, path: '/list'),
   ];
 }

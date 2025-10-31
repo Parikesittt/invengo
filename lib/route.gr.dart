@@ -52,9 +52,15 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     StockCreateRoute.name: (routeData) {
+      final args = routeData.argsAs<StockCreateRouteArgs>(
+          orElse: () => const StockCreateRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const StockCreatePage(),
+        child: StockCreatePage(
+          key: args.key,
+          isUpdate: args.isUpdate,
+          item: args.item,
+        ),
       );
     },
     StockManagementRoute.name: (routeData) {
@@ -158,16 +164,45 @@ class SplashRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [StockCreatePage]
-class StockCreateRoute extends PageRouteInfo<void> {
-  const StockCreateRoute({List<PageRouteInfo>? children})
-      : super(
+class StockCreateRoute extends PageRouteInfo<StockCreateRouteArgs> {
+  StockCreateRoute({
+    Key? key,
+    bool isUpdate = false,
+    ItemModel? item,
+    List<PageRouteInfo>? children,
+  }) : super(
           StockCreateRoute.name,
+          args: StockCreateRouteArgs(
+            key: key,
+            isUpdate: isUpdate,
+            item: item,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'StockCreateRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<StockCreateRouteArgs> page =
+      PageInfo<StockCreateRouteArgs>(name);
+}
+
+class StockCreateRouteArgs {
+  const StockCreateRouteArgs({
+    this.key,
+    this.isUpdate = false,
+    this.item,
+  });
+
+  final Key? key;
+
+  final bool isUpdate;
+
+  final ItemModel? item;
+
+  @override
+  String toString() {
+    return 'StockCreateRouteArgs{key: $key, isUpdate: $isUpdate, item: $item}';
+  }
 }
 
 /// generated route for

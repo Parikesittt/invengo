@@ -10,6 +10,7 @@ import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/item_model.dart';
+import 'package:invengo/route.dart';
 import 'package:searchbar_animation/searchbar_animation.dart';
 import 'package:standard_searchbar/old/standard_searchbar.dart';
 
@@ -164,6 +165,9 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                     children: [
                                       Expanded(
                                         child: InkWell(
+                                          onTap: () {
+                                            // context.router.push(StockCreateRoute())
+                                          },
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                               vertical: 6,
