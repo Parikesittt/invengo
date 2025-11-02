@@ -15,18 +15,50 @@ class DBHelper {
     return openDatabase(
       join(dbPath, 'test.db'),
       onCreate: (db, version) async {
-        await db.execute(
-          "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, name TEXT, email TEXT, phone_number TEXT, password TEXT)",
-        );
+        await db.execute('''
+          CREATE TABLE $tableUser(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            name TEXT,
+            email TEXT,
+            phone_number TEXT,
+            password TEXT
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE $tableCategories(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT
+          )
+        ''');
+
+        await db.execute('''
+          INSERT INTO $tableCategories (id, name) VALUES
+          (1, 'Makanan'),
+          (2, 'Minuman')
+        ''');
+
+        await db.execute('''
+          CREATE TABLE $tableItems(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            category_id INTEGER,
+            stock INTEGER,
+            cost_price INTEGER,
+            selling_price INTEGER,
+            FOREIGN KEY (category_id) REFERENCES $tableCategories(id)
+          )
+        ''');
       },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          await db.execute('''
-            DELETE FROM $tableItems WHERE id=1;
-          ''');
-        }
-      },
-      version: 6,
+      // onUpgrade: (db, oldVersion, newVersion) async {
+      //   if (oldVersion < newVersion) {
+      //     await db.execute('''
+      //       DELETE FROM $tableItems WHERE id=1;
+      //     ''');
+      //   }
+      // },
+      version: 1,
     );
   }
 

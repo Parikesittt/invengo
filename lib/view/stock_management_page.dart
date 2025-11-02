@@ -69,8 +69,9 @@ class _StockManagementPageState extends State<StockManagementPage> {
               height: 40,
               width: 40,
               child: InkWell(
-                onTap: () {
-                  context.router.pushNamed('/stock_create');
+                onTap: () async {
+                  await context.router.pushNamed('/stock_create');
+                  getData();
                 },
                 child: Icon(
                   FontAwesomeIcons.plus,
@@ -165,8 +166,14 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                     children: [
                                       Expanded(
                                         child: InkWell(
-                                          onTap: () {
-                                            // context.router.push(StockCreateRoute())
+                                          onTap: () async {
+                                            await context.router.push(
+                                              StockCreateRoute(
+                                                isUpdate: true,
+                                                item: item,
+                                              ),
+                                            );
+                                            getData();
                                           },
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
@@ -201,7 +208,10 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                       ),
                                       IconButton(
                                         color: Colors.red,
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          await DBHelper.deleteItems(item.id!);
+                                          getData();
+                                        },
                                         icon: Icon(FontAwesomeIcons.trashCan),
                                       ),
                                     ],
