@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class ItemModel {
+import 'package:dropdown_flutter/custom_dropdown.dart';
+
+class ItemModel with CustomDropdownListFilter {
   int? id;
   int categoryId;
   String name;
@@ -19,6 +21,12 @@ class ItemModel {
     required this.stock,
     this.categoryName,
   });
+
+  @override
+  String toString() => name;
+
+  @override
+  bool filter(String query) => name.toLowerCase().contains(query.toLowerCase());
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

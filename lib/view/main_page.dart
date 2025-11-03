@@ -39,6 +39,8 @@ class _MainPageState extends State<MainPage> {
         child: Icon(FontAwesomeIcons.plus, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonAnimator: null,
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: StylishBottomBar(
         fabLocation: StylishBarFabLocation.center,
         items: [

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/annotations.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/auth/label_form_auth.dart';
@@ -213,17 +214,38 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               if (widget.isUpdate) {
                                 // 🔹 UPDATE DATA
                                 await DBHelper.updateItems(data);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Data berhasil diperbarui"),
-                                  ),
+                                Fluttertoast.showToast(
+                                  msg: "Data berhasil diperbarui",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: AppColor.surfaceLight,
+                                  textColor: AppColor.textSecondaryLight,
+                                  fontSize: 12.0,
                                 );
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   const SnackBar(
+                                //     content: Text("Data berhasil diperbarui"),
+                                //     behavior: SnackBarBehavior.floating,
+                                //     margin: EdgeInsets.only(
+                                //       bottom: 80,
+                                //       left: 16,
+                                //       right: 16,
+                                //     ),
+                                //   ),
+                                // );
                               } else {
                                 // 🔹 CREATE DATA BARU
                                 await DBHelper.createItems(data);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Data berhasil ditambahkan"),
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: EdgeInsets.only(
+                                      bottom: 80,
+                                      left: 16,
+                                      right: 16,
+                                    ),
                                   ),
                                 );
                               }
@@ -233,6 +255,12 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Semua field harus diisi"),
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: EdgeInsets.only(
+                                    bottom: 80,
+                                    left: 16,
+                                    right: 16,
+                                  ),
                                 ),
                               );
                             }

@@ -23,15 +23,6 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      // initialRoute: '/splash',
-      // routes: {
-      //   '/': (context) => const MainPage(),
-      //   '/splash': (context) => const SplashScreen(),
-      //   '/login': (context) => const LoginPage(),
-      //   '/register': (context) => const RegisterPage(),
-      //   // '/': (context) => const MainPage(),
-      //   // '/': (context) => const MainPage(),
-      // },
       routerConfig: _appRouter.config(),
     );
   }

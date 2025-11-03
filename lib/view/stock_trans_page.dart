@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
@@ -12,7 +13,11 @@ import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/components/stock/stock_button.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/database/db_helper.dart';
+import 'package:invengo/model/item_model.dart';
 import 'package:invengo/model/stock_dropdown_model.dart';
+import 'package:invengo/model/transaction_model.dart';
+import 'package:invengo/refresh_notifier.dart';
 
 @RoutePage()
 class StockTransPage extends StatefulWidget {
@@ -23,9 +28,14 @@ class StockTransPage extends StatefulWidget {
 }
 
 class _StockTransPageState extends State<StockTransPage> {
+  // late Future<List<StockDropdownModel>> _stockListFuture;
+  final _formKey = GlobalKey<FormState>();
+  List<ItemModel> _stockList = [];
   DateTime? selectedDate = DateTime.now();
   String? valueDropdown;
   bool isAdd = true;
+  int? selectedItemId;
+  late ItemModel selectedItems;
   final TextEditingController totalC = TextEditingController();
   final TextEditingController priceC = TextEditingController();
   final TextEditingController dateC = TextEditingController();
@@ -37,12 +47,28 @@ class _StockTransPageState extends State<StockTransPage> {
     'Perabotan',
   ];
 
-  final List<StockDropdownModel> _list = [
-    StockDropdownModel('Engineer', Icons.engineering),
-    StockDropdownModel('Artist', Icons.palette),
-    StockDropdownModel('Manager', Icons.business_center),
-    StockDropdownModel('Intern', Icons.school),
-  ];
+  // final List<StockDropdownModel> _list = [
+  //   StockDropdownModel('Engineer', Icons.engineering),
+  //   StockDropdownModel('Artist', Icons.palette),
+  //   StockDropdownModel('Manager', Icons.business_center),
+  //   StockDropdownModel('Intern', Icons.school),
+  // ];
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    final items = await DBHelper.getAllItems();
+    setState(() {
+      _stockList = items;
+      print(_stockList);
+    });
+    // DBHelper.getAllItems();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +145,7 @@ class _StockTransPageState extends State<StockTransPage> {
                   ),
                 ),
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -133,20 +160,30 @@ class _StockTransPageState extends State<StockTransPage> {
                             BorderSide(color: AppColor.borderLight),
                           ),
                         ),
-                        child: DropdownFlutter<StockDropdownModel>.search(
-                          items: _list,
-                          onChanged: (v) {},
+                        child: DropdownFlutter<ItemModel>.search(
+                          items: _stockList,
+                          onChanged: (v) {
+                            final selectedItem = _stockList.firstWhere(
+                              (e) => e.id == v!.id,
+                            );
+                            setState(() {
+                              selectedItems = selectedItem;
+                            });
+                          },
                           hintText: 'Pilih barang ...',
                         ),
                       ),
                       h(16),
                       Text("Jumlah", style: AppTextStyle.sectionSubtitle),
                       h(8),
-                      InputForm(hint: "Masukkan jumlah"),
+                      InputForm(hint: "Masukkan jumlah", controller: totalC),
                       h(16),
                       Text("Harga", style: AppTextStyle.sectionSubtitle),
                       h(8),
-                      InputForm(hint: "(Opsional jika harga berubah)"),
+                      InputForm(
+                        hint: "(Opsional jika harga berubah)",
+                        controller: priceC,
+                      ),
                       h(16),
                       Text("Tanggal", style: AppTextStyle.sectionSubtitle),
                       h(8),
@@ -156,6 +193,27 @@ class _StockTransPageState extends State<StockTransPage> {
                         buttonText: isAdd ? "Tambah Stok" : "Kurangi Stok",
                         height: 48,
                         width: double.infinity,
+                        click: () async {
+                          if (_formKey.currentState!.validate()) {
+                            final TransactionModel data = TransactionModel(
+                              itemId: selectedItems.id!,
+                              transactionType: isAdd ? 0 : 1,
+                              total:
+                                  int.parse(totalC.text) *
+                                  selectedItems.sellingPrice,
+                              quantity: int.parse(totalC.text),
+                            );
+                            await DBHelper.createTransaction(data);
+                            refreshStockNotifier.value = true;
+                            context.router.pop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Semua field harus diisi"),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ],
                   ),

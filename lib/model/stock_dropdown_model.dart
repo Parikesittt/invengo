@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class StockDropdownModel with CustomDropdownListFilter {
   final String name;
-  final IconData icon;
-  const StockDropdownModel(this.name, this.icon);
+  final int id;
+  const StockDropdownModel(this.id, this.name);
 
   @override
   String toString() => name;

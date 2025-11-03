@@ -1,11 +1,15 @@
 import 'package:animated_search_bar/animated_search_bar.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/database/db_helper.dart';
+import 'package:invengo/model/item_model.dart';
+import 'package:invengo/refresh_notifier.dart';
 import 'package:invengo/route.dart';
 import 'package:standard_searchbar/old/standard_searchbar.dart';
 
@@ -17,21 +21,44 @@ class StockPage extends StatefulWidget {
 }
 
 class _StockPageState extends State<StockPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutoRouteAwareStateMixin<StockPage> {
   late TabController _tabController;
   String searchText = "";
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController search = TextEditingController();
+  late Future<List<ItemModel>> _listItems;
+  late Map<String, dynamic> _dataTotal;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    getData();
+    refreshStockNotifier.addListener(() {
+      if (refreshStockNotifier.value) {
+        getData();
+        refreshStockNotifier.value = false; // reset
+      }
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Dipanggil setiap kali user balik ke halaman ini dari halaman lain
+    getData();
+    super.didPopNext();
+  }
+
+  getData() async {
+    _listItems = DBHelper.getAllItems();
+    _dataTotal = await DBHelper.getItemsTotal();
+    setState(() {});
   }
 
   @override
@@ -44,8 +71,6 @@ class _StockPageState extends State<StockPage>
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PageHeader(
                 title: "Stock Management",
@@ -69,36 +94,11 @@ class _StockPageState extends State<StockPage>
                 spacing: 12,
                 children: [
                   Expanded(
-                    child: AnimatedSearchBar(
-                      label: 'Search Something Here',
-                      controller: _controller,
-                      labelStyle: const TextStyle(fontSize: 16),
-                      searchStyle: const TextStyle(
-                        color: AppColor.primaryTextLight,
-                      ),
-                      cursorColor: Colors.white,
-                      textInputAction: TextInputAction.done,
-                      autoFocus: true,
-                      searchDecoration: const InputDecoration(
-                        hintText: 'Search',
-                        alignLabelWithHint: true,
-                        fillColor: Colors.white,
-                        focusColor: Colors.white,
-                        hintStyle: TextStyle(color: Colors.white70),
-                        border: InputBorder.none,
-                      ),
-                      onChanged: (value) {
-                        debugPrint('value on Change');
-                        setState(() {
-                          searchText = value;
-                        });
-                      },
-                      onFieldSubmitted: (value) {
-                        debugPrint('value on Field Submitted');
-                        setState(() {
-                          searchText = value;
-                        });
-                      },
+                    child: CupertinoSearchTextField(
+                      backgroundColor: AppColor.surfaceLight,
+                      prefixInsets: EdgeInsetsGeometry.all(12),
+                      borderRadius: BorderRadius.circular(12),
+                      controller: search,
                     ),
                   ),
                   IconButton(
@@ -118,241 +118,291 @@ class _StockPageState extends State<StockPage>
                 ],
               ),
               h(16),
-              Row(
-                spacing: 8,
-                children: [
-                  Container(
-                    width: 66,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(28),
-                      gradient: LinearGradient(
-                        colors: AppColor.primaryGradient,
-                      ),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        _tabController.animateTo(0);
-                      },
+              FutureBuilder(
+                future: _listItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (!snapshot.hasData ||
+                      (snapshot.data as List).isEmpty) {
+                    return const Center(child: Text("Tidak ada data"));
+                  } else {
+                    final data = snapshot.data as List<ItemModel>;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          spacing: 8,
+                          children: [
+                            Container(
+                              width: 66,
+                              height: 38,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                gradient: LinearGradient(
+                                  colors: AppColor.primaryGradient,
+                                ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  _tabController.animateTo(0);
+                                },
 
-                      child: Text(
-                        "All (6)",
-                        style: TextStyle(color: Color(0xffffffff)),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _tabController.animateTo(1);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.surfaceLight,
-                      side: BorderSide(color: AppColor.borderLight),
-                    ),
-                    child: Text(
-                      "Low Stock (2)",
-                      style: TextStyle(
-                        color: AppColor.primaryTextLightOpacity80,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _tabController.animateTo(2);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.surfaceLight,
-                      side: BorderSide(color: AppColor.borderLight),
-                    ),
-                    child: Text(
-                      "Out (1)",
-                      style: TextStyle(
-                        color: AppColor.primaryTextLightOpacity80,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              h(16),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0x208b5cf6)),
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: LinearGradient(
-                          begin: AlignmentGeometry.topLeft,
-                          end: AlignmentGeometry.bottomRight,
-                          colors: [Color(0x208B5CF6), Color(0x207C3AED)],
-                        ),
-                      ),
-                      // color: Color(0x207c3aed),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          // horizontal: 24,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "6",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: AppColor.primaryTextLight,
+                                child: Text(
+                                  "All (${_dataTotal['Total Product'].toString()})",
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                ),
                               ),
                             ),
-                            h(28),
-                            Text(
-                              "Total",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColor.primaryTextLightOpacity80,
+                            ElevatedButton(
+                              onPressed: () {
+                                _tabController.animateTo(1);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.surfaceLight,
+                                side: BorderSide(color: AppColor.borderLight),
+                              ),
+                              child: Text(
+                                "Low Stock (${_dataTotal['Low Stock'].toString()})",
+                                style: TextStyle(
+                                  color: AppColor.primaryTextLightOpacity80,
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                _tabController.animateTo(2);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.surfaceLight,
+                                side: BorderSide(color: AppColor.borderLight),
+                              ),
+                              child: Text(
+                                "Out (${_dataTotal['Low Stock'].toString()})",
+                                style: TextStyle(
+                                  color: AppColor.primaryTextLightOpacity80,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Color(0x2010b981)),
-                        gradient: LinearGradient(
-                          begin: AlignmentGeometry.topLeft,
-                          end: AlignmentGeometry.bottomRight,
-                          colors: [Color(0x2010b981), Color(0x20059669)],
-                        ),
-                      ),
-                      // color: Color(0x207c3aed),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          // horizontal: 24,
-                        ),
-                        child: Column(
+                        h(16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "3",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: AppColor.primaryTextLight,
-                              ),
+                            Row(
+                              spacing: 8,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Color(0x208b5cf6),
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                      gradient: LinearGradient(
+                                        begin: AlignmentGeometry.topLeft,
+                                        end: AlignmentGeometry.bottomRight,
+                                        colors: [
+                                          Color(0x208B5CF6),
+                                          Color(0x207C3AED),
+                                        ],
+                                      ),
+                                    ),
+                                    // color: Color(0x207c3aed),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0,
+                                        // horizontal: 24,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            data.length.toString(),
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: AppColor.primaryTextLight,
+                                            ),
+                                          ),
+                                          h(28),
+                                          Text(
+                                            "Total",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColor
+                                                  .primaryTextLightOpacity80,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Color(0x2010b981),
+                                      ),
+                                      gradient: LinearGradient(
+                                        begin: AlignmentGeometry.topLeft,
+                                        end: AlignmentGeometry.bottomRight,
+                                        colors: [
+                                          Color(0x2010b981),
+                                          Color(0x20059669),
+                                        ],
+                                      ),
+                                    ),
+                                    // color: Color(0x207c3aed),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0,
+                                        // horizontal: 24,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            _dataTotal['In Stock'].toString(),
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: AppColor.primaryTextLight,
+                                            ),
+                                          ),
+                                          h(28),
+                                          Text(
+                                            "In Stock",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColor
+                                                  .primaryTextLightOpacity80,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Color(0x20f59e0b),
+                                      ),
+                                      gradient: LinearGradient(
+                                        begin: AlignmentGeometry.topLeft,
+                                        end: AlignmentGeometry.bottomRight,
+                                        colors: [
+                                          Color(0x20f59e0b),
+                                          Color(0x20d97706),
+                                        ],
+                                      ),
+                                    ),
+                                    // color: Color(0x207c3aed),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0,
+                                        // horizontal: 24,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            _dataTotal['Low Stock'].toString(),
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: Color(0xff101828),
+                                            ),
+                                          ),
+                                          h(28),
+                                          Text(
+                                            "Low",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0x80101828),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Color(0x20ef4444),
+                                      ),
+                                      gradient: LinearGradient(
+                                        begin: AlignmentGeometry.topLeft,
+                                        end: AlignmentGeometry.bottomRight,
+                                        colors: [
+                                          Color(0x20ef4444),
+                                          Color(0x20dc2626),
+                                        ],
+                                      ),
+                                    ),
+                                    // color: Color(0x207c3aed),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0,
+                                        // horizontal: 24,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            _dataTotal['Out of Stock']
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: Color(0xff101828),
+                                            ),
+                                          ),
+                                          h(28),
+                                          Text(
+                                            "Out Stock",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0x80101828),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            h(28),
+                            h(24),
                             Text(
-                              "In Stock",
+                              "Product (${data.length})",
                               style: TextStyle(
-                                fontSize: 12,
-                                color: AppColor.primaryTextLightOpacity80,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Color(0x20f59e0b)),
-                        gradient: LinearGradient(
-                          begin: AlignmentGeometry.topLeft,
-                          end: AlignmentGeometry.bottomRight,
-                          colors: [Color(0x20f59e0b), Color(0x20d97706)],
-                        ),
-                      ),
-                      // color: Color(0x207c3aed),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          // horizontal: 24,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 18,
                                 color: Color(0xff101828),
                               ),
                             ),
-                            h(28),
-                            Text(
-                              "Low",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0x80101828),
-                              ),
-                            ),
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Color(0x20ef4444)),
-                        gradient: LinearGradient(
-                          begin: AlignmentGeometry.topLeft,
-                          end: AlignmentGeometry.bottomRight,
-                          colors: [Color(0x20ef4444), Color(0x20dc2626)],
+                        SizedBox(
+                          height: screenHeight * 0.4, // misal 70% tinggi layar
+                          child: TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: _tabController,
+                            children: [
+                              _tabContent("Tab 1 Content"),
+                              _tabContent("Tab 2 Content"),
+                              _tabContent("Tab 3 Content"),
+                            ],
+                          ),
                         ),
-                      ),
-                      // color: Color(0x207c3aed),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          // horizontal: 24,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "6",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Color(0xff101828),
-                              ),
-                            ),
-                            h(28),
-                            Text(
-                              "Total",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0x80101828),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                        // h(24),
+                      ],
+                    );
+                  }
+                },
               ),
-              h(24),
-              Text(
-                "Product (6)",
-                style: TextStyle(fontSize: 18, color: Color(0xff101828)),
-              ),
-              SizedBox(
-                height: screenHeight * 0.4, // misal 70% tinggi layar
-                child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: _tabController,
-                  children: [
-                    _tabContent("Tab 1 Content"),
-                    _tabContent("Tab 2 Content"),
-                    _tabContent("Tab 3 Content"),
-                  ],
-                ),
-              ),
-              // h(24),
             ],
           ),
         ),
@@ -362,102 +412,180 @@ class _StockPageState extends State<StockPage>
 
   Widget _tabContent(String text) {
     // Scroll masing-masing tab
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: 10,
-      itemBuilder: (context, index) => Card(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            spacing: 12,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return FutureBuilder(
+      future: _listItems,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (!snapshot.hasData || (snapshot.data as List).isEmpty) {
+          return const Center(child: Text("Tidak ada data"));
+        } else {
+          final data = snapshot.data as List<ItemModel>;
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              final item = data[index];
+              return Card(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    spacing: 12,
                     children: [
-                      Text(
-                        "Kopi Sachet",
-                        style: TextStyle(
-                          color: Color(0xff101828),
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        "Minuman",
-                        style: TextStyle(
-                          color: Color(0x60101828),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    FontAwesomeIcons.ellipsisVertical,
-                    color: Color(0xff99A1AF),
-                    size: 20,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    spacing: 16,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Stock",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0x60101828),
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.name,
+                                style: TextStyle(
+                                  color: Color(0xff101828),
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                item.categoryName!,
+                                style: TextStyle(
+                                  color: Color(0x60101828),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "20",
-                            style: TextStyle(color: Color(0xff101828)),
+                          PopupMenuButton<int>(
+                            padding: EdgeInsets.zero,
+                            onSelected: (int v) {
+                              if (v == 0) {
+                                context
+                                    .pushRoute(
+                                      StockCreateRoute(
+                                        isUpdate: true,
+                                        item: item,
+                                      ),
+                                    )
+                                    .then((_) {
+                                      getData();
+                                    });
+                              } else if (v == 1) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("Konfirmasi"),
+                                      content: Text(
+                                        "Anda yakin ingin menghapus item ini?",
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(
+                                              context,
+                                            ).pop(); // Dismiss the dialog
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            // Perform action on confirmation
+                                            DBHelper.deleteItems(item.id!);
+                                            refreshStockNotifier.value = true;
+                                            Navigator.of(
+                                              context,
+                                            ).pop(); // Dismiss the dialog
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            itemBuilder: (context) => <PopupMenuEntry<int>>[
+                              const PopupMenuItem<int>(
+                                value: 0,
+                                child: Text('Edit Item'),
+                              ),
+                              const PopupMenuItem<int>(
+                                value: 1,
+                                child: Text('Delete Item'),
+                              ),
+                            ],
+                            icon: Icon(
+                              FontAwesomeIcons.ellipsisVertical,
+                              color: Color(0xff99A1AF),
+                              size: 20,
+                            ),
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Price",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color(0x60101828),
-                            ),
+                          Row(
+                            spacing: 16,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Stock",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0x60101828),
+                                    ),
+                                  ),
+                                  Text(
+                                    item.stock.toString(),
+                                    style: TextStyle(color: Color(0xff101828)),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Price",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0x60101828),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Rp ${item.sellingPrice}",
+                                    style: TextStyle(color: Color(0xff8B5CF6)),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Rp 5.000",
-                            style: TextStyle(color: Color(0xff8B5CF6)),
+                          Row(
+                            spacing: 4,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.arrowTrendUp,
+                                color: Color(0xff00c950),
+                                size: 16,
+                              ),
+                              Text(
+                                "+12",
+                                style: TextStyle(color: Color(0xff00c950)),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
-                  Row(
-                    spacing: 4,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.arrowTrendUp,
-                        color: Color(0xff00c950),
-                        size: 16,
-                      ),
-                      Text("+12", style: TextStyle(color: Color(0xff00c950))),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+                ),
+              );
+            },
+          );
+        }
+      },
     );
   }
 }

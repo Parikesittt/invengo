@@ -6,6 +6,9 @@ import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/constant/rupiah_formatting.dart';
+import 'package:invengo/database/db_helper.dart';
+import 'package:invengo/model/transaction_model.dart';
 
 @RoutePage()
 class FinancePage extends StatefulWidget {
@@ -17,18 +20,33 @@ class FinancePage extends StatefulWidget {
 
 class _FinancePageState extends State<FinancePage>
     with SingleTickerProviderStateMixin {
+  late Future<List<TransactionModel>> _listTrans;
   late TabController _tabController;
+  Map<String, dynamic>? _dataFinance;
+  int expenses = 0;
+  int revenue = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    getData();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> getData() async {
+    _listTrans = DBHelper.getAllTransaction();
+    _dataFinance = await DBHelper.getTotalTransaction();
+    if (_dataFinance != null) {
+      expenses = int.tryParse(_dataFinance!['expenses'].toString()) ?? 0;
+      revenue = int.tryParse(_dataFinance!['revenue'].toString()) ?? 0;
+    }
+    setState(() {});
   }
 
   @override
@@ -135,7 +153,7 @@ class _FinancePageState extends State<FinancePage>
                                   ),
                                   h(8),
                                   Text(
-                                    "Rp 4.000.000",
+                                    'Rp ${formatRupiahWithoutSymbol(revenue)}',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -178,7 +196,10 @@ class _FinancePageState extends State<FinancePage>
                                   ),
                                   h(8),
                                   Text(
-                                    "Rp 1.000.000",
+                                    'Rp ${formatRupiahWithoutSymbol(expenses)}',
+
+                                    // _dataFinance?['expenses']?.toString() ??
+                                    //     '0',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -277,75 +298,118 @@ class _FinancePageState extends State<FinancePage>
                         TextButton(onPressed: () {}, child: Text("View All")),
                       ],
                     ),
-                    ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: ListTile(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            contentPadding: EdgeInsets.all(12),
-                            tileColor: Colors.white,
-                            leading: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              color: Color(0xffccf4dc),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Icon(
-                                  Icons.arrow_outward,
-                                  color: Color(0xff05df72),
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              "Kopi Sachet Sale",
-                              style: TextStyle(
-                                color: Color(0xff101828),
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: Row(
-                              spacing: 2,
-                              children: [
-                                Text(
-                                  "Minuman",
-                                  style: TextStyle(
-                                    color: Color(0x60101828),
-                                    fontSize: 12,
+                    FutureBuilder(
+                      future: _listTrans,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (!snapshot.hasData ||
+                            (snapshot.data as List).isEmpty) {
+                          return const Center(child: Text("Tidak ada data"));
+                        } else {
+                          final data = snapshot.data as List<TransactionModel>;
+                          return ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              final item = data[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: ListTile(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  contentPadding: EdgeInsets.all(12),
+                                  tileColor: Colors.white,
+                                  leading: item.transactionType == 0
+                                      ? RotatedBox(
+                                          quarterTurns: 1,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                            ),
+                                            color: Color(0xffccf4dc),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                12.0,
+                                              ),
+                                              child: Icon(
+                                                Icons.arrow_outward,
+                                                color: Color(0xff05df72),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : RotatedBox(
+                                          quarterTurns: 0,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                            ),
+                                            color: Color(0xffccf4dc),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                12.0,
+                                              ),
+                                              child: Icon(
+                                                Icons.arrow_outward,
+                                                color: Color(0xff05df72),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                  title: Text(
+                                    "${item.itemName} ${item.transactionType == 0 ? 'Added Stock' : 'Sale'}",
+                                    style: TextStyle(
+                                      color: Color(0xff101828),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  subtitle: Row(
+                                    spacing: 2,
+                                    children: [
+                                      Text(
+                                        "Minuman",
+                                        style: TextStyle(
+                                          color: Color(0x60101828),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      Text(
+                                        "-",
+                                        style: TextStyle(
+                                          color: Color(0x60101828),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Oct 25, 2025",
+                                        style: TextStyle(
+                                          color: Color(0x60101828),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: Text(
+                                    '${item.transactionType == 0 ? "-" : "+"} Rp ${formatRupiahWithoutSymbol(item.total)}',
+                                    style: TextStyle(
+                                      color: Color(0xff05df72),
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
-                                Text(
-                                  "-",
-                                  style: TextStyle(
-                                    color: Color(0x60101828),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                Text(
-                                  "Oct 25, 2025",
-                                  style: TextStyle(
-                                    color: Color(0x60101828),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            trailing: Text(
-                              "+Rp 5.000",
-                              style: TextStyle(
-                                color: Color(0xff05df72),
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        );
+                              );
+                            },
+                          );
+                        }
                       },
                     ),
                   ],

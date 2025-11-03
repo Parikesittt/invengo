@@ -7,6 +7,7 @@ import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/preferences/preference_handler.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -17,7 +18,11 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  int? totalProduct;
+  int? lowStock;
+  int? outStock;
   String? username;
+  Map<String, dynamic>? stockData;
 
   @override
   void initState() {
@@ -27,10 +32,19 @@ class _DashboardPageState extends State<DashboardPage> {
         username = value ?? 'Guest';
       });
     });
+    getData();
   }
 
   getUserData() async {
     username = await PreferenceHandler.getUsername();
+  }
+
+  Future<void> getData() async {
+    final data = await DBHelper.getItemsTotal();
+    setState(() {
+      stockData = data;
+      print(stockData);
+    });
   }
 
   @override
@@ -65,7 +79,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: InfoCard(
                       icon: FontAwesomeIcons.boxOpen,
                       iconBgColor: AppColor.primary,
-                      value: "24",
+                      value: stockData?['Total Product']?.toString() ?? '0',
                       label: "Total Product",
                       percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
@@ -73,10 +87,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   Expanded(
                     child: InfoCard(
-                      icon: FontAwesomeIcons.users,
+                      icon: FontAwesomeIcons.triangleExclamation,
                       iconBgColor: Color(0xffEF9509),
-                      value: "24",
-                      label: "Total Product",
+                      value: stockData?['Low Stock']?.toString() ?? '0',
+                      label: "Low Stock",
                       percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
