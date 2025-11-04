@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/constant/app_text_style.dart';
 
 class InfoCard extends StatelessWidget {
   final IconData icon;
@@ -21,11 +22,12 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Color(0xffe5e7eb)),
+        color: theme.colorScheme.surface,
+        border: Border.all(color: theme.colorScheme.outline),
         borderRadius: BorderRadius.circular(12),
       ),
       height: 202,
@@ -42,23 +44,14 @@ class InfoCard extends StatelessWidget {
             child: Icon(icon, color: Colors.white, size: 16),
           ),
           SizedBox(height: 24),
-          Text(
-            value,
-            style: TextStyle(fontSize: 18, color: AppColor.primaryTextLight),
-          ),
+          Text(value, style: AppTextStyle.h3(context)),
           SizedBox(height: 24),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColor.primaryTextLightOpacity60,
-            ),
-          ),
+          Text(label, style: AppTextStyle.label(context)),
           SizedBox(height: 24),
           Row(
             children: [
               Icon(Icons.trending_up, color: percentageColor),
-              Text(percentage, style: TextStyle(color: percentageColor)),
+              Text(percentage, style: AppTextStyle.growth(context)),
             ],
           ),
         ],

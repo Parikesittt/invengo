@@ -31,7 +31,7 @@ class LowStockCard extends StatelessWidget {
                 color: Color(0xffF59E0B),
               ),
               SizedBox(width: 8),
-              Text("Low Stock", style: AppTextStyle.cardTitle),
+              Text("Low Stock", style: AppTextStyle.cardTitle(context)),
             ],
           ),
           SizedBox(height: 24),
@@ -40,11 +40,11 @@ class LowStockCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(item['name'], style: AppTextStyle.cardTitle),
+                    Text(item['name'], style: AppTextStyle.cardTitle(context)),
                     Spacer(),
                     Text(
                       "${item['stock']}/${item['max']}",
-                      style: AppTextStyle.cardTitle,
+                      style: AppTextStyle.cardTitle(context),
                     ),
                   ],
                 ),

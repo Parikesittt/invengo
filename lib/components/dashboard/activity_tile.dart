@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invengo/constant/app_text_style.dart';
 
 class ActivityTile extends StatelessWidget {
   final String title;
@@ -22,12 +23,13 @@ class ActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ListTile(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: Color(0xffe5e7eb)),
+        side: BorderSide(color: theme.colorScheme.outline),
       ),
-      tileColor: Colors.white,
+      tileColor: theme.colorScheme.surface,
       leading: Container(
         width: 40,
         height: 40,
@@ -37,14 +39,14 @@ class ActivityTile extends StatelessWidget {
         ),
         child: Icon(icon, color: iconColor, size: 20),
       ),
-      title: Text(title, style: TextStyle(fontSize: 13.7, color: Color(0xff101828))),
-      subtitle: Text(subtitle, style: TextStyle(color: Color(0x60101828))),
+      title: Text(title, style: AppTextStyle.cardTitle(context)),
+      subtitle: Text(subtitle, style: AppTextStyle.sectionSubtitle(context)),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(value, style: TextStyle(fontSize: 14, color: Color(0xff101828))),
-          Text(time, style: TextStyle(color: Color(0x60101828), fontSize: 12)),
+          Text(value, style: AppTextStyle.cardTitle(context)),
+          Text(time, style: AppTextStyle.label(context)),
         ],
       ),
     );

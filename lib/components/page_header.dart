@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/constant/app_text_style.dart';
 
 class PageHeader extends StatelessWidget {
   final String title;
@@ -16,13 +17,12 @@ class PageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 28, color: AppColor.primaryTextLight),
-      ),
+      title: Text(title, style: AppTextStyle.header(context)),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: AppColor.primaryTextLightOpacity60),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+        ),
       ),
       trailing: trailing,
     );

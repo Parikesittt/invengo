@@ -99,7 +99,10 @@ class _StockTransPageState extends State<StockTransPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Tipe Transaksi", style: AppTextStyle.sectionTitle),
+                    Text(
+                      "Tipe Transaksi",
+                      style: AppTextStyle.sectionTitle(context),
+                    ),
                     h(24),
                     Row(
                       spacing: 12,
@@ -149,7 +152,10 @@ class _StockTransPageState extends State<StockTransPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Pilih Barang", style: AppTextStyle.sectionSubtitle),
+                      Text(
+                        "Pilih Barang",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
                       Container(
                         width: double.infinity,
@@ -174,18 +180,27 @@ class _StockTransPageState extends State<StockTransPage> {
                         ),
                       ),
                       h(16),
-                      Text("Jumlah", style: AppTextStyle.sectionSubtitle),
+                      Text(
+                        "Jumlah",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
                       InputForm(hint: "Masukkan jumlah", controller: totalC),
                       h(16),
-                      Text("Harga", style: AppTextStyle.sectionSubtitle),
+                      Text(
+                        "Harga",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
                       InputForm(
                         hint: "(Opsional jika harga berubah)",
                         controller: priceC,
                       ),
                       h(16),
-                      Text("Tanggal", style: AppTextStyle.sectionSubtitle),
+                      Text(
+                        "Tanggal",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
                       DatePickerFormField(controller: dateC),
                       h(16),

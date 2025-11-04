@@ -5,6 +5,7 @@ import 'package:invengo/route.dart';
 import 'package:invengo/view/dashboard_page.dart';
 import 'package:invengo/view/finance_page.dart';
 import 'package:invengo/view/grid.dart';
+import 'package:invengo/view/profile_page.dart';
 import 'package:invengo/view/stock_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,7 +26,7 @@ class _MainPageState extends State<MainPage> {
     DashboardPage(),
     StockPage(),
     FinancePage(),
-    Tugas2Widget(),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {

@@ -1,90 +1,153 @@
 import 'package:flutter/material.dart';
-import 'app_color.dart';
 
+/// ✅ AppTextStyle
+/// Semua style otomatis menyesuaikan warna berdasarkan theme (light/dark)
+/// Gunakan dengan cara: `AppTextStyle.h1(context)`
 class AppTextStyle {
-  // Header (seperti "Invengo")
-  static const header = TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.bold,
-    color: AppColor.textPrimaryLight,
-  );
+  /// Header besar, misal "Invengo"
+  static TextStyle header(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  // Subheader (seperti "Welcome back, Admin")
-  static const subHeader = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    color: AppColor.textSecondaryLight,
-  );
+  /// Subheader, misal "Welcome back, Admin"
+  static TextStyle subHeader(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: theme.colorScheme.onSurface.withOpacity(0.8),
+    );
+  }
 
-  // Card title (misal "Total Product")
-  static const cardTitle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: AppColor.textSecondaryLight,
-  );
+  /// Judul kecil di dalam card
+  static TextStyle cardTitle(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: theme.colorScheme.onSurface.withOpacity(0.9),
+    );
+  }
 
-  // Card value (angka “24” di card)
-  static const cardValue = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-    color: AppColor.textPrimaryLight,
-  );
+  /// Nilai utama di card (angka besar)
+  static TextStyle cardValue(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  // Growth text (“+12%” di bawah)
-  static const growth = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: Color(0xFF12B76A), // hijau growth
-  );
+  /// Teks pertumbuhan, misal "+12%"
+  static TextStyle growth(BuildContext context) {
+    return const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: Color(0xFF12B76A), // hijau growth (tetap sama di kedua mode)
+    );
+  }
 
-  // Section title (misal “Revenue Overview”)
-  static const sectionTitle = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    color: AppColor.textPrimaryLight,
-  );
+  /// Section title, misal “Revenue Overview”
+  static TextStyle sectionTitle(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  // Section subtitle (misal “Last 30 days”)
-  static const sectionSubtitle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: AppColor.textPrimaryLight,
-  );
+  /// Section subtitle, misal “Last 30 days”
+  static TextStyle sectionSubtitle(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: theme.colorScheme.onSurface.withOpacity(0.7),
+    );
+  }
 
-  static const h1 = TextStyle(
-    fontSize: 24,
-    color: AppColor.primaryTextLight,
-    fontWeight: FontWeight.w500,
-  );
+  /// Heading 1
+  static TextStyle h1(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w600,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  static const h2 = TextStyle(
-    fontSize: 20,
-    color: AppColor.primaryTextLight,
-    fontWeight: FontWeight.w500,
-  );
+  /// Heading 2
+  static TextStyle h2(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  static const h3 = TextStyle(
-    fontSize: 18,
-    color: AppColor.primaryTextLight,
-    fontWeight: FontWeight.w500,
-  );
+  /// Heading 3
+  static TextStyle h3(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  static const h4 = TextStyle(
-    fontSize: 16,
-    color: AppColor.primaryTextLight,
-    fontWeight: FontWeight.w500,
-  );
+  /// Heading 4
+  static TextStyle h4(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  static const p = TextStyle(fontSize: 16, color: AppColor.primaryTextLight);
+  /// Paragraf umum
+  static TextStyle p(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 16,
+      color: theme.colorScheme.onSurface,
+    );
+  }
 
-  static const pPrice = TextStyle(fontSize: 16, color: AppColor.primary);
+  /// Harga atau teks dengan warna utama
+  static TextStyle pPrice(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 16,
+      color: theme.colorScheme.primary,
+      fontWeight: FontWeight.w600,
+    );
+  }
 
-  static const button = TextStyle(
-    fontSize: 16,
-    color: AppColor.textPrimaryDark,
-  );
-  static const label = TextStyle(
-    fontSize: 12,
-    color: AppColor.textPrimaryLight,
-  );
+  /// Label kecil (seperti caption)
+  static TextStyle label(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 12,
+      color: theme.colorScheme.onSurface.withOpacity(0.7),
+    );
+  }
+
+  /// Tombol (teks di atas button)
+  static TextStyle button(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: theme.colorScheme.onPrimary,
+    );
+  }
 }

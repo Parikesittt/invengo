@@ -118,7 +118,7 @@ class _StockManagementPageState extends State<StockManagementPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(item.name, style: AppTextStyle.h4),
+                                  Text(item.name, style: AppTextStyle.sectionTitle(context)),
                                   h(4),
                                   Container(
                                     padding: EdgeInsets.symmetric(
@@ -131,7 +131,7 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                     ),
                                     child: Text(
                                       item.categoryName!,
-                                      style: AppTextStyle.label,
+                                      style: AppTextStyle.label(context),
                                     ),
                                   ),
                                   h(12),
@@ -142,10 +142,10 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text("Stock", style: AppTextStyle.p),
+                                          Text("Stock", style: AppTextStyle.p(context)),
                                           Text(
                                             item.stock.toString(),
-                                            style: AppTextStyle.p,
+                                            style: AppTextStyle.p(context),
                                           ),
                                         ],
                                       ),
@@ -153,10 +153,10 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text("Price", style: AppTextStyle.p),
+                                          Text("Price", style: AppTextStyle.p(context)),
                                           Text(
                                             "Rp ${item.sellingPrice.toString()}",
-                                            style: AppTextStyle.pPrice,
+                                            style: AppTextStyle.p(context),
                                           ),
                                         ],
                                       ),
@@ -199,7 +199,7 @@ class _StockManagementPageState extends State<StockManagementPage> {
                                                 ),
                                                 Text(
                                                   "Edit",
-                                                  style: AppTextStyle.button,
+                                                  style: AppTextStyle.button(context),
                                                 ),
                                               ],
                                             ),

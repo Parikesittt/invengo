@@ -64,8 +64,8 @@ class _StockCreatePageState extends State<StockCreatePage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Tambah Barang Baru", style: AppTextStyle.h3),
-            Text("Isi informasi produk", style: AppTextStyle.cardTitle),
+            Text("Tambah Barang Baru", style: AppTextStyle.h2(context)),
+            Text("Isi informasi produk", style: AppTextStyle.cardTitle(context)),
           ],
         ),
       ),
@@ -194,7 +194,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
-                              child: Text("Batal", style: AppTextStyle.p),
+                              child: Text("Batal", style: AppTextStyle.p(context)),
                             ),
                           ),
                         ),
@@ -282,7 +282,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                                   size: 16,
                                 ),
                                 w(8),
-                                Text("Simpan", style: AppTextStyle.button),
+                                Text("Simpan", style: AppTextStyle.button(context)),
                               ],
                             ),
                           ),

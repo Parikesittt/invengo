@@ -7,6 +7,6 @@ class LabelAuth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: AppTextStyle.sectionTitle);
+    return Text(title, style: AppTextStyle.sectionTitle(context));
   }
 }

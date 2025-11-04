@@ -293,7 +293,7 @@ class _FinancePageState extends State<FinancePage>
                       children: [
                         Text(
                           "Recent Transaction",
-                          style: AppTextStyle.sectionTitle,
+                          style: AppTextStyle.sectionTitle(context),
                         ),
                         TextButton(onPressed: () {}, child: Text("View All")),
                       ],
@@ -491,7 +491,7 @@ class _FinancePageState extends State<FinancePage>
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 40,
             children: [
-              Text("Weekly Trend", style: AppTextStyle.sectionTitle),
+              Text("Weekly Trend", style: AppTextStyle.sectionTitle(context)),
               Image.asset('assets/images/line_chart_dummy.png'),
             ],
           ),

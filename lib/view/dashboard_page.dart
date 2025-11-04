@@ -50,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff3f4ff),
+      // backgroundColor: Color(0xfff3f4ff),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 48.0, left: 24, right: 24),
@@ -172,7 +172,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       child: Column(
                         children: [
-                          Text("Categories", style: AppTextStyle.sectionTitle),
+                          Text("Categories", style: AppTextStyle.sectionTitle(context)),
                           h(36),
                           Image.asset('assets/images/pie_chart_dummy.png'),
                           h(24),
@@ -251,7 +251,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Text(
                           "Recent Activity",
-                          style: AppTextStyle.sectionTitle,
+                          style: AppTextStyle.sectionTitle(context),
                         ),
                         Spacer(),
                         Row(

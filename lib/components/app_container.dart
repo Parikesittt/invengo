@@ -22,13 +22,14 @@ class AppContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: width ?? double.infinity,
       height: height,
       padding: padding ?? const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: gradient,
-        color: color ?? Colors.white,
+        color: color ?? theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: withBorder
             ? Border.all(color: Theme.of(context).colorScheme.outline)
