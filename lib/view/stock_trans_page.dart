@@ -213,9 +213,11 @@ class _StockTransPageState extends State<StockTransPage> {
                             final TransactionModel data = TransactionModel(
                               itemId: selectedItems.id!,
                               transactionType: isAdd ? 0 : 1,
-                              total:
-                                  int.parse(totalC.text) *
-                                  selectedItems.sellingPrice,
+                              total: isAdd
+                                  ? int.parse(totalC.text) *
+                                        selectedItems.costPrice
+                                  : int.parse(totalC.text) *
+                                        selectedItems.sellingPrice,
                               quantity: int.parse(totalC.text),
                             );
                             await DBHelper.createTransaction(data);
