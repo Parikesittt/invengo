@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:invengo/components/gradient_fab.dart';
+import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/route.dart';
 import 'package:invengo/view/dashboard_page.dart';
 import 'package:invengo/view/finance_page.dart';
@@ -29,6 +30,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: _page[_selectedIndex],
       floatingActionButton: GradientFab(
         onPressed: () {
@@ -41,23 +43,48 @@ class _MainPageState extends State<MainPage> {
       floatingActionButtonAnimator: null,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: StylishBottomBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         fabLocation: StylishBarFabLocation.center,
         items: [
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.house, size: 20),
+            selectedIcon: Icon(
+              FontAwesomeIcons.houseChimney,
+              size: 20,
+              color: AppColor.primary,
+            ),
             title: Text("Dashboard"),
+            selectedColor: AppColor.primary,
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.boxOpen, size: 20),
+            selectedIcon: Icon(
+              FontAwesomeIcons.box,
+              size: 20,
+              color: AppColor.primary,
+            ),
             title: Text("Stock"),
+            selectedColor: AppColor.primary,
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.wallet, size: 20),
+            selectedIcon: Icon(
+              FontAwesomeIcons.sackDollar,
+              size: 20,
+              color: AppColor.primary,
+            ),
             title: Text("Finance"),
+            selectedColor: AppColor.primary,
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.user, size: 20),
+            selectedIcon: Icon(
+              FontAwesomeIcons.user,
+              size: 20,
+              color: AppColor.primary,
+            ),
             title: Text("Profile"),
+            selectedColor: AppColor.primary,
           ),
         ],
         option: AnimatedBarOptions(

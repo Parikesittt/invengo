@@ -243,7 +243,9 @@ class _FinancePageState extends State<FinancePage>
 
                       child: Text(
                         "Week",
-                        style: TextStyle(color: Color(0xffffffff)),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                     ),
                   ),
@@ -252,14 +254,16 @@ class _FinancePageState extends State<FinancePage>
                       _tabController.animateTo(1);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.surfaceLight,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
 
-                      side: BorderSide(color: AppColor.borderLight),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                     child: Text(
                       "Month",
                       style: TextStyle(
-                        color: AppColor.primaryTextLightOpacity80,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -268,12 +272,16 @@ class _FinancePageState extends State<FinancePage>
                       _tabController.animateTo(2);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.surfaceLight,
-                      side: BorderSide(color: Color(0xffe5e7eb)),
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                     child: Text(
                       "Year",
-                      style: TextStyle(color: Color(0x80101828)),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ],
@@ -328,7 +336,9 @@ class _FinancePageState extends State<FinancePage>
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   contentPadding: EdgeInsets.all(12),
-                                  tileColor: Colors.white,
+                                  tileColor: Theme.of(
+                                    context,
+                                  ).colorScheme.surface,
                                   leading: item.transactionType == 0
                                       ? RotatedBox(
                                           quarterTurns: 1,
@@ -371,7 +381,9 @@ class _FinancePageState extends State<FinancePage>
                                   title: Text(
                                     "${item.itemName} ${item.transactionType == 0 ? 'Added Stock' : 'Sale'}",
                                     style: TextStyle(
-                                      color: Color(0xff101828),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
                                       fontSize: 14,
                                     ),
                                   ),
@@ -381,21 +393,27 @@ class _FinancePageState extends State<FinancePage>
                                       Text(
                                         "Minuman",
                                         style: TextStyle(
-                                          color: Color(0x60101828),
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
                                           fontSize: 12,
                                         ),
                                       ),
                                       Text(
                                         "-",
                                         style: TextStyle(
-                                          color: Color(0x60101828),
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
                                           fontSize: 12,
                                         ),
                                       ),
                                       Text(
                                         "Oct 25, 2025",
                                         style: TextStyle(
-                                          color: Color(0x60101828),
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -439,7 +457,9 @@ class _FinancePageState extends State<FinancePage>
                 children: [
                   Text(
                     "Revenue vs Expenses",
-                    style: TextStyle(color: AppColor.textPrimaryLight),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   Row(
                     spacing: 8,
@@ -451,14 +471,16 @@ class _FinancePageState extends State<FinancePage>
                             width: 12,
                             height: 12,
                             decoration: BoxDecoration(
-                              color: AppColor.primary,
+                              color: Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
                           Text(
                             "Income",
                             style: TextStyle(
-                              color: AppColor.primaryTextLightOpacity60,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -476,7 +498,11 @@ class _FinancePageState extends State<FinancePage>
                           ),
                           Text(
                             "Expense",
-                            style: TextStyle(color: Color(0x60101828)),
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),

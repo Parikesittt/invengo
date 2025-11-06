@@ -166,9 +166,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: Container(
                         height: 44,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.surface,
                           border: Border.fromBorderSide(
-                            BorderSide(color: AppColor.borderLight),
+                            BorderSide(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -184,7 +186,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         colors: AppColor.primaryGradient,
                       ),
                       icon: FontAwesomeIcons.floppyDisk,
-                      iconColor: AppColor.surfaceLight,
+                      iconColor: Colors.white,
                       iconSize: 16,
                       textButton: "Simpan",
                       onTap: () async {
@@ -207,8 +209,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 1,
-                            backgroundColor: AppColor.surfaceLight,
-                            textColor: AppColor.textSecondaryLight,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surface,
+                            textColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                             fontSize: 12.0,
                           );
 

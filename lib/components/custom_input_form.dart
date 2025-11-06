@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:invengo/constant/app_color.dart';
 
 class InputForm extends StatefulWidget {
   const InputForm({
@@ -32,7 +31,7 @@ class _InputFormState extends State<InputForm> {
         hintText: widget.hint,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColor.borderLight),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

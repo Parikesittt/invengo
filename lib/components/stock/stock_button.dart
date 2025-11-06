@@ -31,12 +31,19 @@ class _StockButtonState extends State<StockButton> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           border: widget.isEnable
-              ? Border.fromBorderSide(BorderSide(color: AppColor.primary))
-              : Border.fromBorderSide(BorderSide(color: AppColor.borderLight)),
+              ? Border.fromBorderSide(
+                  BorderSide(color: Theme.of(context).colorScheme.primary),
+                )
+              : Border.fromBorderSide(
+                  BorderSide(color: Theme.of(context).colorScheme.outline),
+                ),
           gradient: LinearGradient(
             colors: widget.isEnable
                 ? [Color(0x108B5CF6), Color(0x10EC4899)]
-                : [Colors.white, Colors.white],
+                : [
+                    Theme.of(context).colorScheme.surface,
+                    Theme.of(context).colorScheme.surface,
+                  ],
           ),
         ),
         child: Column(
@@ -53,7 +60,9 @@ class _StockButtonState extends State<StockButton> {
               ),
               child: Icon(
                 widget.icon,
-                color: widget.isEnable ? Colors.white : Color(0xff4a5565),
+                color: widget.isEnable
+                    ? Theme.of(context).colorScheme.surface
+                    : Color(0xff4a5565),
               ),
             ),
             h(12),
@@ -63,14 +72,14 @@ class _StockButtonState extends State<StockButton> {
                 Text(
                   widget.title,
                   style: TextStyle(
-                    color: AppColor.primaryTextLight,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 15,
                   ),
                 ),
                 Text(
                   widget.subtitle,
                   style: TextStyle(
-                    color: AppColor.primaryTextLightOpacity80,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 12,
                   ),
                 ),

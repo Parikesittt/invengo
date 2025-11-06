@@ -53,7 +53,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
+          padding: EdgeInsets.only(
+            right: 24.0,
+            left: 24,
+            bottom: 120.0,
+            top: 48.0,
+          ),
           child: Column(
             children: [
               PageHeader(

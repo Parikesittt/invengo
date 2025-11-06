@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,12 +86,12 @@ class _StockPageState extends State<StockPage>
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadiusGeometry.circular(12),
                     ),
-                    backgroundColor: AppColor.surfaceLight,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                   ),
                   onPressed: () {
                     context.pushRoute(StockCreateRoute());
                   },
-                  icon: Icon(FontAwesomeIcons.gear),
+                  icon: Icon(FontAwesomeIcons.plus),
                 ),
               ),
               h(24),
@@ -101,7 +100,7 @@ class _StockPageState extends State<StockPage>
                 children: [
                   Expanded(
                     child: CupertinoSearchTextField(
-                      backgroundColor: AppColor.surfaceLight,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
                       prefixInsets: EdgeInsetsGeometry.all(12),
                       borderRadius: BorderRadius.circular(12),
                       controller: search,
@@ -110,7 +109,7 @@ class _StockPageState extends State<StockPage>
                   IconButton(
                     onPressed: () {},
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -118,7 +117,7 @@ class _StockPageState extends State<StockPage>
                     icon: Icon(
                       FontAwesomeIcons.filter,
                       size: 20,
-                      color: AppColor.primaryTextLight,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -154,7 +153,6 @@ class _StockPageState extends State<StockPage>
                                 onPressed: () {
                                   _tabController.animateTo(0);
                                 },
-
                                 child: Text(
                                   "All (${_dataTotal['Total Product'].toString()})",
                                   style: TextStyle(color: Color(0xffffffff)),
@@ -166,13 +164,19 @@ class _StockPageState extends State<StockPage>
                                 _tabController.animateTo(1);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColor.surfaceLight,
-                                side: BorderSide(color: AppColor.borderLight),
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surface,
+                                side: BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                               child: Text(
                                 "Low Stock (${_dataTotal['Low Stock'].toString()})",
                                 style: TextStyle(
-                                  color: AppColor.primaryTextLightOpacity80,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                 ),
                               ),
                             ),
@@ -181,13 +185,19 @@ class _StockPageState extends State<StockPage>
                                 _tabController.animateTo(2);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColor.surfaceLight,
-                                side: BorderSide(color: AppColor.borderLight),
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surface,
+                                side: BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                               child: Text(
                                 "Out (${_dataTotal['Low Stock'].toString()})",
                                 style: TextStyle(
-                                  color: AppColor.primaryTextLightOpacity80,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                 ),
                               ),
                             ),
@@ -228,7 +238,9 @@ class _StockPageState extends State<StockPage>
                                             data.length.toString(),
                                             style: TextStyle(
                                               fontSize: 24,
-                                              color: AppColor.primaryTextLight,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                             ),
                                           ),
                                           h(28),
@@ -236,8 +248,9 @@ class _StockPageState extends State<StockPage>
                                             "Total",
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: AppColor
-                                                  .primaryTextLightOpacity80,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -273,7 +286,9 @@ class _StockPageState extends State<StockPage>
                                             _dataTotal['In Stock'].toString(),
                                             style: TextStyle(
                                               fontSize: 24,
-                                              color: AppColor.primaryTextLight,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                             ),
                                           ),
                                           h(28),
@@ -281,8 +296,9 @@ class _StockPageState extends State<StockPage>
                                             "In Stock",
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: AppColor
-                                                  .primaryTextLightOpacity80,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -318,7 +334,9 @@ class _StockPageState extends State<StockPage>
                                             _dataTotal['Low Stock'].toString(),
                                             style: TextStyle(
                                               fontSize: 24,
-                                              color: Color(0xff101828),
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                             ),
                                           ),
                                           h(28),
@@ -326,7 +344,9 @@ class _StockPageState extends State<StockPage>
                                             "Low",
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Color(0x80101828),
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -363,7 +383,9 @@ class _StockPageState extends State<StockPage>
                                                 .toString(),
                                             style: TextStyle(
                                               fontSize: 24,
-                                              color: Color(0xff101828),
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                             ),
                                           ),
                                           h(28),
@@ -371,7 +393,9 @@ class _StockPageState extends State<StockPage>
                                             "Out Stock",
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Color(0x80101828),
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -386,7 +410,7 @@ class _StockPageState extends State<StockPage>
                               "Product (${data.length})",
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Color(0xff101828),
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ],
@@ -433,7 +457,7 @@ class _StockPageState extends State<StockPage>
             itemBuilder: (context, index) {
               final item = data[index];
               return Card(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -448,14 +472,18 @@ class _StockPageState extends State<StockPage>
                               Text(
                                 item.name,
                                 style: TextStyle(
-                                  color: Color(0xff101828),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                   fontSize: 16,
                                 ),
                               ),
                               Text(
                                 item.categoryName!,
                                 style: TextStyle(
-                                  color: Color(0x60101828),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                   fontSize: 12,
                                 ),
                               ),
@@ -541,12 +569,18 @@ class _StockPageState extends State<StockPage>
                                     "Stock",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0x60101828),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
                                     ),
                                   ),
                                   Text(
                                     item.stock.toString(),
-                                    style: TextStyle(color: Color(0xff101828)),
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -557,7 +591,9 @@ class _StockPageState extends State<StockPage>
                                     "Price",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0x60101828),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                   Text(

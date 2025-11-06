@@ -12,8 +12,8 @@ class AppColor {
 
   static const dividerLightOpacity20 = Color(0x20101828);
 
-
   static const iconTrendUp = Color(0xff05DF72);
+  static const iconTrenDown = Color(0xff51A2FF);
 
   // Light mode
   static const backgroundLight = Color(0xfff3f4ff);

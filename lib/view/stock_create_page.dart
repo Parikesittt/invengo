@@ -1,5 +1,3 @@
-
-
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
@@ -94,7 +92,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                     prefixIcon: Icon(
                       FontAwesomeIcons.boxOpen,
                       size: 16,
-                      color: AppColor.primaryTextLightOpacity60,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   h(12),
@@ -140,6 +138,25 @@ class _StockCreatePageState extends State<StockCreatePage> {
                                 : null;
                           }
                           return DropdownFlutter(
+                            decoration: CustomDropdownDecoration(
+                              closedFillColor: Theme.of(
+                                context,
+                              ).colorScheme.surface,
+                              expandedFillColor: Theme.of(
+                                context,
+                              ).colorScheme.surface,
+                              listItemStyle: AppTextStyle.p(context),
+                              closedBorder: BoxBorder.fromBorderSide(
+                                BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                              ),
+                              expandedBorder: BoxBorder.fromBorderSide(
+                                BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                              ),
+                            ),
                             initialItem: selectedCategoryName,
                             items: categories
                                 .map((item) => item.name.toString())
@@ -167,7 +184,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                     prefixIcon: Icon(
                       FontAwesomeIcons.dollarSign,
                       size: 16,
-                      color: AppColor.primaryTextLightOpacity60,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   h(12),
@@ -178,7 +195,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                     prefixIcon: Icon(
                       FontAwesomeIcons.dollarSign,
                       size: 16,
-                      color: AppColor.primaryTextLightOpacity60,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   h(12),
@@ -197,9 +214,11 @@ class _StockCreatePageState extends State<StockCreatePage> {
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.surface,
                               border: Border.fromBorderSide(
-                                BorderSide(color: AppColor.borderLight),
+                                BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),

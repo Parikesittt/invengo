@@ -67,11 +67,17 @@ class _StockTransPageState extends State<StockTransPage> {
           children: [
             Text(
               "Transaksi Stok",
-              style: TextStyle(color: AppColor.primaryTextLight, fontSize: 18),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 18,
+              ),
             ),
             Text(
               "Catat barang masuk atau keluar",
-              style: TextStyle(color: Color(0x60101828), fontSize: 12),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12,
+              ),
             ),
           ],
         ),
@@ -130,10 +136,10 @@ class _StockTransPageState extends State<StockTransPage> {
                 width: double.infinity,
                 padding: EdgeInsets.all(17),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.fromBorderSide(
-                    BorderSide(color: AppColor.borderLight),
+                    BorderSide(color: Theme.of(context).colorScheme.outline),
                   ),
                 ),
                 child: Form(
@@ -152,10 +158,34 @@ class _StockTransPageState extends State<StockTransPage> {
                           color: Color(0xfff9fafb),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.fromBorderSide(
-                            BorderSide(color: AppColor.borderLight),
+                            BorderSide(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
                           ),
                         ),
                         child: DropdownFlutter<ItemModel>.search(
+                          decoration: CustomDropdownDecoration(
+                            searchFieldDecoration: SearchFieldDecoration(
+                              fillColor: Theme.of(context).colorScheme.surface,
+                            ),
+                            closedFillColor: Theme.of(
+                              context,
+                            ).colorScheme.surface,
+                            expandedFillColor: Theme.of(
+                              context,
+                            ).colorScheme.surface,
+                            listItemStyle: AppTextStyle.p(context),
+                            closedBorder: BoxBorder.fromBorderSide(
+                              BorderSide(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                            expandedBorder: BoxBorder.fromBorderSide(
+                              BorderSide(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                          ),
                           items: _stockList,
                           onChanged: (v) {
                             final selectedItem = _stockList.firstWhere(

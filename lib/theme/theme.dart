@@ -13,6 +13,7 @@ class AppTheme {
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: AppColor.textPrimaryLight,
+      onSurfaceVariant: AppColor.textSecondaryLight,
       outline: AppColor.borderLight,
     ),
     appBarTheme: AppBarTheme(
@@ -77,6 +78,7 @@ class AppTheme {
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: AppColor.textPrimaryDark,
+      onSurfaceVariant: AppColor.textSecondaryDark,
       outline: AppColor.borderDark,
     ),
     appBarTheme: AppBarTheme(

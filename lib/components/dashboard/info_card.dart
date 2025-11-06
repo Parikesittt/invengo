@@ -43,7 +43,11 @@ class InfoCard extends StatelessWidget {
             child: Icon(icon, color: Colors.white, size: 16),
           ),
           SizedBox(height: 24),
-          Text(value, style: AppTextStyle.h3(context)),
+          Text(
+            value,
+            style: AppTextStyle.h4(context),
+            overflow: TextOverflow.ellipsis,
+          ),
           SizedBox(height: 24),
           Text(label, style: AppTextStyle.label(context)),
           SizedBox(height: 24),
