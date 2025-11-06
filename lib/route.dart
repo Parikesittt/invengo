@@ -3,7 +3,7 @@ import 'package:invengo/view/login_page.dart';
 import 'package:invengo/view/main_page.dart';
 import 'package:invengo/view/register_page.dart';
 import 'package:invengo/view/finance_page.dart';
-import 'package:invengo/view/splash_screen.dart';
+import 'package:invengo/view/splash_page.dart';
 import 'package:invengo/view/stock_trans_page.dart';
 import 'package:invengo/view/stock_management_page.dart';
 import 'package:invengo/view/stock_create_page.dart';

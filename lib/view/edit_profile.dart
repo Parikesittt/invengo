@@ -123,6 +123,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               h(16),
               AppContainer(
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -149,7 +150,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       h(12),
                       LabelAuth(title: "Password *"),
                       h(8),
-                      InputForm(),
+                      InputForm(controller: passwordC, isPassword: true),
                     ],
                   ),
                 ),

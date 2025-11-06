@@ -13,7 +13,7 @@ import 'package:invengo/preferences/preference_handler.dart';
 import 'package:invengo/route.dart';
 import 'package:invengo/theme/theme.dart';
 import 'package:invengo/theme/theme_provider.dart';
-import 'package:invengo/view/splash_screen.dart';
+import 'package:invengo/view/splash_page.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
