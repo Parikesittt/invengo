@@ -3,8 +3,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:invengo/preferences/preference_handler.dart';
 import 'package:invengo/route.dart';
-import 'package:invengo/view/login_page.dart';
-import 'package:invengo/view/main_page.dart';
 
 @RoutePage()
 class SplashPage extends StatefulWidget {
@@ -67,18 +65,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
       if (isLogin != null && isLogin == true) {
         context.router.replace(const MainRoute());
-        // Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const MainPage()),
-        //   (route) => false,
-        // );
       } else {
         context.router.replace(const LoginRoute());
-        // Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const LoginPage()),
-        //   (route) => false,
-        // );
       }
     });
   }

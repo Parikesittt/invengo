@@ -4,12 +4,10 @@ import 'package:invengo/components/gradient_fab.dart';
 import 'package:invengo/route.dart';
 import 'package:invengo/view/dashboard_page.dart';
 import 'package:invengo/view/finance_page.dart';
-import 'package:invengo/view/grid.dart';
 import 'package:invengo/view/profile_page.dart';
 import 'package:invengo/view/stock_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/view/tugas2.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 @RoutePage()
@@ -66,12 +64,6 @@ class _MainPageState extends State<MainPage> {
           barAnimation: BarAnimation.fade,
           iconStyle: IconStyle.animated,
           opacity: 0.3,
-          // dotStyle: DotStyle.tile,
-          // gradient: const LinearGradient(
-          //   colors: [Colors.deepPurple, Colors.pink],
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          // ),
         ),
         currentIndex: _selectedIndex,
         onTap: (index) {

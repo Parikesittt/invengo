@@ -12,7 +12,6 @@ class AppColor {
 
   static const dividerLightOpacity20 = Color(0x20101828);
 
-  // static const borderLight = Color(0xffe5e7eb);
 
   static const iconTrendUp = Color(0xff05DF72);
 

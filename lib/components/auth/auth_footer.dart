@@ -38,14 +38,6 @@ class AuthFooter extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   context.pushRoute(const RegisterRoute());
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) {
-                  //       return RegisterPage();
-                  //     },
-                  //   ),
-                  // );
                 },
                 child: Text(
                   "Sign Up",

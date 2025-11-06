@@ -50,7 +50,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Color(0xfff3f4ff),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 48.0, left: 24, right: 24),

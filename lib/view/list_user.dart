@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/category_model.dart';
-import 'package:invengo/model/user_model.dart';
 
 @RoutePage()
 class ListCategoryPage extends StatefulWidget {

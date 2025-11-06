@@ -1,9 +1,8 @@
-import 'package:animated_search_bar/animated_search_bar.dart';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
@@ -11,7 +10,6 @@ import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/item_model.dart';
 import 'package:invengo/refresh_notifier.dart';
 import 'package:invengo/route.dart';
-import 'package:standard_searchbar/old/standard_searchbar.dart';
 
 class StockPage extends StatefulWidget {
   const StockPage({super.key});
@@ -24,7 +22,6 @@ class _StockPageState extends State<StockPage>
     with SingleTickerProviderStateMixin, AutoRouteAwareStateMixin<StockPage> {
   late TabController _tabController;
   String searchText = "";
-  final TextEditingController _controller = TextEditingController();
   final TextEditingController search = TextEditingController();
   late Future<List<ItemModel>> _listItems;
   late VoidCallback _refreshListener;

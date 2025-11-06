@@ -1,5 +1,4 @@
 import 'package:dropdown_flutter/custom_dropdown.dart';
-import 'package:flutter/material.dart';
 
 class StockDropdownModel with CustomDropdownListFilter {
   final String name;

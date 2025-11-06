@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
 
 class InfoCard extends StatelessWidget {

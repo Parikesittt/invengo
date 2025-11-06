@@ -1,7 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:drop_down_list/drop_down_list.dart';
-import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +13,6 @@ import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/item_model.dart';
-import 'package:invengo/model/stock_dropdown_model.dart';
 import 'package:invengo/model/transaction_model.dart';
 import 'package:invengo/refresh_notifier.dart';
 
@@ -47,13 +44,6 @@ class _StockTransPageState extends State<StockTransPage> {
     'Perabotan',
   ];
 
-  // final List<StockDropdownModel> _list = [
-  //   StockDropdownModel('Engineer', Icons.engineering),
-  //   StockDropdownModel('Artist', Icons.palette),
-  //   StockDropdownModel('Manager', Icons.business_center),
-  //   StockDropdownModel('Intern', Icons.school),
-  // ];
-
   @override
   void initState() {
     super.initState();
@@ -66,7 +56,6 @@ class _StockTransPageState extends State<StockTransPage> {
       _stockList = items;
       print(_stockList);
     });
-    // DBHelper.getAllItems();
   }
 
   @override

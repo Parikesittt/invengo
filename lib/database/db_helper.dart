@@ -1,6 +1,5 @@
 // import 'package:belajar_ppkd/day_19/model/user_model.dart';
 import 'package:invengo/model/item_model.dart';
-import 'package:invengo/model/stock_dropdown_model.dart';
 import 'package:invengo/model/transaction_model.dart';
 import 'package:invengo/model/user_model.dart';
 import 'package:invengo/model/category_model.dart';
@@ -69,13 +68,6 @@ class DBHelper {
           )
         ''');
       },
-      // onUpgrade: (db, oldVersion, newVersion) async {
-      //   if (oldVersion < newVersion) {
-      //     await db.execute('''
-      //       DELETE FROM $tableItems WHERE id=1;
-      //     ''');
-      //   }
-      // },
       version: 1,
     );
   }

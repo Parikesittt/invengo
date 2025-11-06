@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invengo/route.dart';
-import 'package:invengo/theme/theme.dart';
 import 'package:invengo/theme/theme_provider.dart';
-import 'package:invengo/view/login_page.dart';
-import 'package:invengo/view/main_page.dart';
-import 'package:invengo/view/register_page.dart';
-import 'package:invengo/view/splash_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -29,8 +24,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Flutter Demo',
       theme: themeProvider.themeData,
-      // darkTheme: AppTheme.darkTheme,
-      // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(),
     );

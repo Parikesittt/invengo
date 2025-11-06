@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
@@ -9,12 +9,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/auth/label_form_auth.dart';
 import 'package:invengo/components/button_logo.dart';
-import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/database/db_categories_helper.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/category_model.dart';
 import 'package:invengo/model/item_model.dart';
@@ -247,17 +245,6 @@ class _StockCreatePageState extends State<StockCreatePage> {
                                   textColor: AppColor.textSecondaryLight,
                                   fontSize: 12.0,
                                 );
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   const SnackBar(
-                                //     content: Text("Data berhasil diperbarui"),
-                                //     behavior: SnackBarBehavior.floating,
-                                //     margin: EdgeInsets.only(
-                                //       bottom: 80,
-                                //       left: 16,
-                                //       right: 16,
-                                //     ),
-                                //   ),
-                                // );
                               } else {
                                 // 🔹 CREATE DATA BARU
                                 await DBHelper.createItems(data);

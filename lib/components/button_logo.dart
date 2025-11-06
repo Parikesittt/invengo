@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/model/item_model.dart';
-import 'package:invengo/view/stock_create_page.dart';
 
 class ButtonLogo extends StatelessWidget {
   const ButtonLogo({

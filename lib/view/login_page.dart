@@ -7,13 +7,11 @@ import 'package:invengo/components/auth/auth_header.dart';
 import 'package:invengo/components/auth/auth_social_button.dart';
 import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
-import 'package:invengo/components/custome_image_button.dart';
 import 'package:invengo/components/auth/label_form_auth.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/preferences/preference_handler.dart';
 import 'package:invengo/route.dart';
-import 'package:invengo/view/register_page.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()

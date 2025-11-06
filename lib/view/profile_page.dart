@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/button_logo.dart';
-import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
@@ -13,7 +12,6 @@ import 'package:invengo/preferences/preference_handler.dart';
 import 'package:invengo/route.dart';
 import 'package:invengo/theme/theme.dart';
 import 'package:invengo/theme/theme_provider.dart';
-import 'package:invengo/view/splash_page.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
