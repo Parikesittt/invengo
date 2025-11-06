@@ -11,6 +11,22 @@
 part of 'route.dart';
 
 /// generated route for
+/// [EditProfilePage]
+class EditProfileRoute extends PageRouteInfo<void> {
+  const EditProfileRoute({List<PageRouteInfo>? children})
+    : super(EditProfileRoute.name, initialChildren: children);
+
+  static const String name = 'EditProfileRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const EditProfilePage();
+    },
+  );
+}
+
+/// generated route for
 /// [FinancePage]
 class FinanceRoute extends PageRouteInfo<void> {
   const FinanceRoute({List<PageRouteInfo>? children})

@@ -1,13 +1,19 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/app_container.dart';
+import 'package:invengo/components/button_logo.dart';
+import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/preferences/preference_handler.dart';
+import 'package:invengo/route.dart';
 import 'package:invengo/theme/theme.dart';
 import 'package:invengo/theme/theme_provider.dart';
+import 'package:invengo/view/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -20,6 +26,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isDark = false;
+  String? username;
   void checkTheme() {
     if (Provider.of<ThemeProvider>(context, listen: false).themeData ==
         AppTheme.darkTheme) {
@@ -30,6 +37,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+
+    PreferenceHandler.getUsername().then((value) {
+      setState(() {
+        username = value ?? 'Guest';
+      });
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkTheme();
@@ -49,17 +62,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: "Profile",
                 subtitle: "Manage your account settings",
               ),
+              h(12),
               AppContainer(
                 child: Column(
                   children: [
                     Row(
                       spacing: 12,
                       children: [
-                        CircleAvatar(radius: 32, child: Text("JD")),
+                        CircleAvatar(
+                          radius: 32,
+                          child: Text((username ?? 'Guest')[0].toUpperCase()),
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("John Doe", style: AppTextStyle.h1(context)),
+                            Text('$username', style: AppTextStyle.h1(context)),
                             Card(
                               color: Color(0xfff3e8fa),
                               child: Padding(
@@ -91,6 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Divider(color: Color(0xffe5e7eb)),
                     h(24),
                     ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading: Container(
                         height: 36,
                         width: 36,
@@ -104,10 +122,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: AppColor.primaryTextLightOpacity80,
                         ),
                       ),
-                      title: Text("Email", style: AppTextStyle.cardTitle(context)),
+                      title: Text(
+                        "Email",
+                        style: AppTextStyle.cardTitle(context),
+                      ),
                       subtitle: Text("test@gmail.com"),
                     ),
                     ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading: Container(
                         height: 36,
                         width: 36,
@@ -121,7 +143,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: AppColor.primaryTextLightOpacity80,
                         ),
                       ),
-                      title: Text("Phone", style: AppTextStyle.cardTitle(context)),
+                      title: Text(
+                        "Phone",
+                        style: AppTextStyle.cardTitle(context),
+                      ),
                       subtitle: Text("+628468454"),
                     ),
                   ],
@@ -129,38 +154,97 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               h(16),
               AppContainer(
-                child: ListTile(
-                  leading: Container(
-                    height: 36,
-                    width: 36,
-                    decoration: BoxDecoration(
-                      color: Color(0xffefe9fc),
-                      borderRadius: BorderRadius.circular(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 12,
+                  children: [
+                    Text("Appearance", style: AppTextStyle.h4(context)),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Container(
+                        height: 36,
+                        width: 36,
+                        decoration: BoxDecoration(
+                          color: Color(0xffefe9fc),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.sun,
+                          size: 20,
+                          color: AppColor.primary,
+                        ),
+                      ),
+                      title: Text(
+                        "Dark Mode",
+                        style: AppTextStyle.cardTitle(context),
+                      ),
+                      subtitle: Text(
+                        isDark ? "Enabled" : "Disabled",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
+                      trailing: Switch(
+                        value: isDark,
+                        onChanged: (v) {
+                          setState(() {
+                            Provider.of<ThemeProvider>(
+                              context,
+                              listen: false,
+                            ).toogleTheme();
+                            isDark = v;
+                          });
+                        },
+                      ),
                     ),
-                    child: Icon(
-                      FontAwesomeIcons.sun,
-                      size: 20,
-                      color: AppColor.primary,
-                    ),
-                  ),
-                  title: Text("Dark Mode", style: AppTextStyle.cardTitle(context)),
-                  subtitle: Text(
-                    isDark ? "Enabled" : "Disabled",
-                    style: AppTextStyle.sectionSubtitle(context),
-                  ),
-                  trailing: Switch(
-                    value: isDark,
-                    onChanged: (v) {
-                      setState(() {
-                        Provider.of<ThemeProvider>(
-                          context,
-                          listen: false,
-                        ).toogleTheme();
-                        isDark = v;
-                      });
-                    },
-                  ),
+                  ],
                 ),
+              ),
+              h(12),
+              AppContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 12,
+                  children: [
+                    Text("Settings", style: AppTextStyle.h4(context)),
+                    InkWell(
+                      onTap: () {
+                        context.pushRoute(const EditProfileRoute());
+                      },
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 242, 243, 245),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.user,
+                            size: 20,
+                            color: AppColor.primaryTextLightOpacity80,
+                          ),
+                        ),
+                        title: Text(
+                          "Edit Profile",
+                          style: AppTextStyle.p(context),
+                        ),
+                        trailing: Icon(FontAwesomeIcons.chevronRight, size: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              h(16),
+              ButtonLogo(
+                textButton: "Logout",
+                icon: FontAwesomeIcons.rightFromBracket,
+                iconColor: Colors.white,
+                iconSize: 16,
+                bgColor: Colors.red,
+                onTap: () {
+                  PreferenceHandler.removeLogin();
+                  context.router.replace(const LoginRoute());
+                },
               ),
             ],
           ),

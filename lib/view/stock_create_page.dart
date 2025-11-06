@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/auth/label_form_auth.dart';
+import 'package:invengo/components/button_logo.dart';
 import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/components/spacing_helper.dart';
@@ -16,6 +18,7 @@ import 'package:invengo/database/db_categories_helper.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/category_model.dart';
 import 'package:invengo/model/item_model.dart';
+import 'package:invengo/refresh_notifier.dart';
 
 @RoutePage()
 class StockCreatePage extends StatefulWidget {
@@ -64,8 +67,14 @@ class _StockCreatePageState extends State<StockCreatePage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Tambah Barang Baru", style: AppTextStyle.h2(context)),
-            Text("Isi informasi produk", style: AppTextStyle.cardTitle(context)),
+            Text(
+              widget.isUpdate ? "Edit Barang" : "Tambah Barang Baru",
+              style: AppTextStyle.h2(context),
+            ),
+            Text(
+              "Isi informasi produk",
+              style: AppTextStyle.cardTitle(context),
+            ),
           ],
         ),
       ),
@@ -184,6 +193,9 @@ class _StockCreatePageState extends State<StockCreatePage> {
                     children: [
                       Expanded(
                         child: InkWell(
+                          onTap: () {
+                            context.pop();
+                          },
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
@@ -194,13 +206,23 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
-                              child: Text("Batal", style: AppTextStyle.p(context)),
+                              child: Text(
+                                "Batal",
+                                style: AppTextStyle.p(context),
+                              ),
                             ),
                           ),
                         ),
                       ),
                       Expanded(
-                        child: InkWell(
+                        child: ButtonLogo(
+                          gradient: LinearGradient(
+                            colors: AppColor.primaryGradient,
+                          ),
+                          icon: FontAwesomeIcons.floppyDisk,
+                          iconColor: AppColor.surfaceLight,
+                          iconSize: 16,
+                          textButton: "Simpan",
                           onTap: () async {
                             if (_formKey.currentState!.validate()) {
                               final ItemModel data = ItemModel(
@@ -214,6 +236,8 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               if (widget.isUpdate) {
                                 // 🔹 UPDATE DATA
                                 await DBHelper.updateItems(data);
+                                refreshStockNotifier.value = true;
+
                                 Fluttertoast.showToast(
                                   msg: "Data berhasil diperbarui",
                                   toastLength: Toast.LENGTH_SHORT,
@@ -237,6 +261,8 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               } else {
                                 // 🔹 CREATE DATA BARU
                                 await DBHelper.createItems(data);
+                                refreshStockNotifier.value = true;
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Data berhasil ditambahkan"),
@@ -265,27 +291,6 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               );
                             }
                           },
-                          child: Container(
-                            height: 44,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              gradient: LinearGradient(
-                                colors: AppColor.primaryGradient,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.floppyDisk,
-                                  color: AppColor.surfaceLight,
-                                  size: 16,
-                                ),
-                                w(8),
-                                Text("Simpan", style: AppTextStyle.button(context)),
-                              ],
-                            ),
-                          ),
                         ),
                       ),
                     ],

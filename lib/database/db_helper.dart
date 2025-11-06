@@ -123,6 +123,19 @@ class DBHelper {
     );
   }
 
+  static Future<UserModel?> getUserById(int id) async {
+    final dbs = await db();
+    final List<Map<String, dynamic>> results = await dbs.query(
+      tableUser,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (results.isNotEmpty) {
+      return UserModel.fromMap(results.first);
+    }
+    return null;
+  }
+
   static Future<void> deleteUser(int id) async {
     final dbs = await db();
     await dbs.delete(tableUser, where: 'id = ?', whereArgs: [id]);
@@ -294,13 +307,13 @@ class DBHelper {
     ''');
     if (results.isNotEmpty) {
       final row = results.first;
+      final revenue = (row['revenue'] ?? 0) as num;
+      final expenses = (row['expenses'] ?? 0) as num;
+      final profit = revenue - expenses;
       print(row);
-      return {
-        'revenue': row['revenue'].toString(),
-        'expenses': row['expenses'].toString(),
-      };
+      return {'revenue': revenue, 'expenses': expenses, 'profit': profit};
     } else {
-      return {'revenue': 0, 'expenses': 0};
+      return {'revenue': 0, 'expenses': 0, 'profit': 0};
     }
   }
 }

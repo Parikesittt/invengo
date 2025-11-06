@@ -27,25 +27,27 @@ class _StockPageState extends State<StockPage>
   final TextEditingController _controller = TextEditingController();
   final TextEditingController search = TextEditingController();
   late Future<List<ItemModel>> _listItems;
-  late Map<String, dynamic> _dataTotal;
+  late VoidCallback _refreshListener;
+  Map<String, dynamic> _dataTotal = {
+    'Total Product': 0,
+    'Low Stock': 0,
+    'In Stock': 0,
+    'Out of Stock': 0,
+  };
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
     getData();
-    refreshStockNotifier.addListener(() {
+    _refreshListener = () {
       if (refreshStockNotifier.value) {
         getData();
-        refreshStockNotifier.value = false; // reset
+        refreshStockNotifier.value = false;
       }
-    });
-  }
+    };
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+    refreshStockNotifier.addListener(_refreshListener);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -59,6 +61,13 @@ class _StockPageState extends State<StockPage>
     _listItems = DBHelper.getAllItems();
     _dataTotal = await DBHelper.getItemsTotal();
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    refreshStockNotifier.removeListener(_refreshListener);
+    super.dispose();
   }
 
   @override
@@ -84,7 +93,7 @@ class _StockPageState extends State<StockPage>
                     backgroundColor: AppColor.surfaceLight,
                   ),
                   onPressed: () {
-                    context.pushRoute(StockManagementRoute());
+                    context.pushRoute(StockCreateRoute());
                   },
                   icon: Icon(FontAwesomeIcons.gear),
                 ),
@@ -467,7 +476,7 @@ class _StockPageState extends State<StockPage>
                                       ),
                                     )
                                     .then((_) {
-                                      getData();
+                                      if (mounted) getData();
                                     });
                               } else if (v == 1) {
                                 showDialog(

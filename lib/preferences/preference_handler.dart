@@ -39,4 +39,9 @@ class PreferenceHandler {
     print('📦 Retrieved username: $usn');
     return usn;
   }
+
+  static Future<int?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(userId);
+  }
 }

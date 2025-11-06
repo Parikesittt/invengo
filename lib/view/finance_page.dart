@@ -25,6 +25,7 @@ class _FinancePageState extends State<FinancePage>
   Map<String, dynamic>? _dataFinance;
   int expenses = 0;
   int revenue = 0;
+  int profit = 0;
 
   @override
   void initState() {
@@ -42,9 +43,11 @@ class _FinancePageState extends State<FinancePage>
   Future<void> getData() async {
     _listTrans = DBHelper.getAllTransaction();
     _dataFinance = await DBHelper.getTotalTransaction();
+    print(_dataFinance);
     if (_dataFinance != null) {
       expenses = int.tryParse(_dataFinance!['expenses'].toString()) ?? 0;
       revenue = int.tryParse(_dataFinance!['revenue'].toString()) ?? 0;
+      profit = int.tryParse(_dataFinance!['profit'].toString()) ?? 0;
     }
     setState(() {});
   }
@@ -93,7 +96,7 @@ class _FinancePageState extends State<FinancePage>
                               ),
                             ),
                             Text(
-                              "Rp 3.000.000",
+                              'Rp ${formatRupiahWithoutSymbol(profit)}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 28,
@@ -315,7 +318,7 @@ class _FinancePageState extends State<FinancePage>
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemCount: data.length,
+                            itemCount: data.length > 5 ? 5 : data.length,
                             itemBuilder: (context, index) {
                               final item = data[index];
                               return Padding(

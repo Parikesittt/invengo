@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: 295,
                     icon: Icons.arrow_forward,
                     click: () async {
-                      PreferenceHandler.saveLogin(true);
+                      PreferenceHandler.saveLogin(rememberMe);
                       final data = await DBHelper.loginUser(
                         email: emailC.text,
                         password: passwordC.text,

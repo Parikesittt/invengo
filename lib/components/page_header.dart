@@ -18,12 +18,7 @@ class PageHeader extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(title, style: AppTextStyle.header(context)),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-        ),
-      ),
+      subtitle: Text(subtitle, style: AppTextStyle.subHeader(context)),
       trailing: trailing,
     );
   }

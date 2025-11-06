@@ -9,6 +9,7 @@ import 'package:invengo/view/stock_management_page.dart';
 import 'package:invengo/view/stock_create_page.dart';
 import 'package:invengo/view/list_user.dart';
 import 'package:invengo/view/profile_page.dart';
+import 'package:invengo/view/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:invengo/model/item_model.dart';
 
@@ -31,5 +32,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: StockCreateRoute.page, path: '/stock_create'),
     AutoRoute(page: ListCategoryRoute.page, path: '/list'),
     AutoRoute(page: ProfileRoute.page, path: '/profile'),
+    AutoRoute(page: EditProfileRoute.page, path: '/edit-profile'),
   ];
 }
