@@ -58,7 +58,12 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 48.0, left: 24, right: 24),
+          padding: const EdgeInsets.only(
+            top: 48.0,
+            left: 24,
+            right: 24,
+            bottom: 120,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -116,144 +121,152 @@ class _DashboardPageState extends State<DashboardPage> {
                 ],
               ),
               h(32),
-              // Container(
-              //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.circular(12),
-              //     border: Border.all(color: AppColor.borderLight),
-              //   ),
-              //   child: Column(
-              //     children: [
-              //       Row(
-              //         children: [
-              //           Column(
-              //             crossAxisAlignment: CrossAxisAlignment.start,
-              //             children: [
-              //               Text(
-              //                 "Revenue Overview",
-              //                 style: TextStyle(
-              //                   color: AppColor.primaryTextLight,
-              //                   fontSize: 16,
-              //                 ),
-              //               ),
-              //               Text(
-              //                 "Last 30 days",
-              //                 style: TextStyle(
-              //                   color: AppColor.primaryTextLightOpacity60,
-              //                   fontSize: 12,
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //           Spacer(),
-              //           Row(
-              //             children: [
-              //               Icon(
-              //                 Icons.trending_up,
-              //                 color: AppColor.iconTrendUp,
-              //               ),
-              //               Text(
-              //                 "+12%",
-              //                 style: TextStyle(color: AppColor.iconTrendUp),
-              //               ),
-              //             ],
-              //           ),
-              //         ],
-              //       ),
-              //       Image.asset('assets/images/chart_dummy.png'),
-              //     ],
-              //   ),
-              // ),
-              // h(32),
-              // Row(
-              //   spacing: 16,
-              //   children: [
-              //     Expanded(
-              //       child: Container(
-              //         height: 294,
-              //         padding: EdgeInsets.all(16),
-              //         decoration: BoxDecoration(
-              //           color: Colors.white,
-              //           border: Border.all(color: AppColor.borderLight),
-              //           borderRadius: BorderRadius.circular(14),
-              //         ),
-              //         child: Column(
-              //           children: [
-              //             Text(
-              //               "Categories",
-              //               style: AppTextStyle.sectionTitle(context),
-              //             ),
-              //             h(36),
-              //             Image.asset('assets/images/pie_chart_dummy.png'),
-              //             h(24),
-              //             Column(
-              //               children: [
-              //                 Row(
-              //                   children: [
-              //                     Container(
-              //                       width: 8,
-              //                       height: 8,
-              //                       decoration: BoxDecoration(
-              //                         shape: BoxShape.circle,
-              //                         color: AppColor.primary,
-              //                       ),
-              //                     ),
-              //                     w(8),
-              //                     Text("Test"),
-              //                     w(32),
-              //                     Text("55%"),
-              //                   ],
-              //                 ),
-              //                 Row(
-              //                   children: [
-              //                     Container(
-              //                       width: 8,
-              //                       height: 8,
-              //                       decoration: BoxDecoration(
-              //                         shape: BoxShape.circle,
-              //                         color: Color(0xffEC4899),
-              //                       ),
-              //                     ),
-              //                     w(8),
-              //                     Text("Test"),
-              //                     w(32),
-              //                     Text("55%"),
-              //                   ],
-              //                 ),
-              //                 Row(
-              //                   children: [
-              //                     Container(
-              //                       width: 8,
-              //                       height: 8,
-              //                       decoration: BoxDecoration(
-              //                         shape: BoxShape.circle,
-              //                         color: Color(0xff06B6D4),
-              //                       ),
-              //                     ),
-              //                     w(8),
-              //                     Text("Test"),
-              //                     w(32),
-              //                     Text("55%"),
-              //                   ],
-              //                 ),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //     Expanded(
-              //       child: LowStockCard(
-              //         items: [
-              //           {'name': 'Product A', 'stock': 5, 'max': 20},
-              //           {'name': 'Product B', 'stock': 2, 'max': 15},
-              //           {'name': 'Product C', 'stock': 8, 'max': 30},
-              //         ],
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Revenue Overview",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              "Last 30 days",
+                              style: TextStyle(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.trending_up,
+                              color: AppColor.iconTrendUp,
+                            ),
+                            Text(
+                              "+12%",
+                              style: TextStyle(color: AppColor.iconTrendUp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Image.asset('assets/images/chart_dummy.png'),
+                  ],
+                ),
+              ),
+              h(32),
+              Row(
+                spacing: 16,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 294,
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Categories",
+                            style: AppTextStyle.sectionTitle(context),
+                          ),
+                          h(36),
+                          Image.asset('assets/images/pie_chart_dummy.png'),
+                          h(24),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                  ),
+                                  w(8),
+                                  Text("Test"),
+                                  w(32),
+                                  Text("55%"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xffEC4899),
+                                    ),
+                                  ),
+                                  w(8),
+                                  Text("Test"),
+                                  w(32),
+                                  Text("55%"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xff06B6D4),
+                                    ),
+                                  ),
+                                  w(8),
+                                  Text("Test"),
+                                  w(32),
+                                  Text("55%"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: LowStockCard(
+                      items: [
+                        {'name': 'Product A', 'stock': 5, 'max': 20},
+                        {'name': 'Product B', 'stock': 2, 'max': 15},
+                        {'name': 'Product C', 'stock': 8, 'max': 30},
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Column(
@@ -335,42 +348,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         }
                       },
                     ),
-                    // ListView(
-                    //   padding: EdgeInsets.zero,
-                    //   shrinkWrap: true,
-                    //   physics: NeverScrollableScrollPhysics(),
-                    //   children: [
-                    //     ActivityTile(
-                    //       title: "Stock Added",
-                    //       subtitle: "Kopi Sachet",
-                    //       value: "+12",
-                    //       time: "2h ago",
-                    //       icon: Icons.trending_up,
-                    //       iconColor: AppColor.iconTrendUp,
-                    //       bgColor: Color(0x2000C950),
-                    //     ),
-                    //     h(8),
-                    //     ActivityTile(
-                    //       title: "Stock Added",
-                    //       subtitle: "Kopi Sachet",
-                    //       value: "+12",
-                    //       time: "2h ago",
-                    //       icon: Icons.trending_up,
-                    //       iconColor: AppColor.iconTrendUp,
-                    //       bgColor: Color(0x2000C950),
-                    //     ),
-                    //     h(8),
-                    //     ActivityTile(
-                    //       title: "Stock Added",
-                    //       subtitle: "Kopi Sachet",
-                    //       value: "+12",
-                    //       time: "2h ago",
-                    //       icon: Icons.trending_up,
-                    //       iconColor: AppColor.iconTrendUp,
-                    //       bgColor: Color(0x2000C950),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

@@ -129,7 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           h(16),
                           Button(
-                            buttonText: "Sign In",
+                            buttonText: "Sign Up",
                             height: 48,
                             width: 295,
                             icon: Icons.arrow_forward,
