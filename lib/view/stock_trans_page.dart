@@ -3,13 +3,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/custom_button.dart';
-import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/components/date_picker.dart';
+import 'package:invengo/components/input_form_number.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/components/stock/stock_button.dart';
-import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
 import 'package:invengo/database/db_helper.dart';
 import 'package:invengo/model/item_model.dart';
@@ -26,13 +26,14 @@ class StockTransPage extends StatefulWidget {
 
 class _StockTransPageState extends State<StockTransPage> {
   // late Future<List<StockDropdownModel>> _stockListFuture;
+  final NumberFormat formatter = NumberFormat("#,###", "id_ID");
   final _formKey = GlobalKey<FormState>();
   List<ItemModel> _stockList = [];
   DateTime? selectedDate = DateTime.now();
   String? valueDropdown;
   bool isAdd = true;
   int? selectedItemId;
-  late ItemModel selectedItems;
+  ItemModel? selectedItems;
   final TextEditingController totalC = TextEditingController();
   final TextEditingController priceC = TextEditingController();
   final TextEditingController dateC = TextEditingController();
@@ -48,6 +49,15 @@ class _StockTransPageState extends State<StockTransPage> {
   void initState() {
     super.initState();
     getData();
+    if (selectedItems != null) {
+      final price = isAdd
+          ? selectedItems!.sellingPrice
+          : selectedItems!.costPrice;
+
+      // Format langsung di sini (biar TextField-nya sudah bertitik)
+      final formatted = formatter.format(price);
+      priceC.text = formatted;
+    }
   }
 
   Future<void> getData() async {
@@ -193,6 +203,11 @@ class _StockTransPageState extends State<StockTransPage> {
                             );
                             setState(() {
                               selectedItems = selectedItem;
+                              priceC.text = formatter.format(
+                                isAdd
+                                    ? selectedItems!.costPrice
+                                    : selectedItems!.sellingPrice,
+                              );
                             });
                           },
                           hintText: 'Pilih barang ...',
@@ -204,16 +219,20 @@ class _StockTransPageState extends State<StockTransPage> {
                         style: AppTextStyle.sectionSubtitle(context),
                       ),
                       h(8),
-                      InputForm(hint: "Masukkan jumlah", controller: totalC),
+                      InputFormNumber(
+                        hint: "Masukkan jumlah",
+                        controller: totalC,
+                      ),
                       h(16),
                       Text(
                         "Harga",
                         style: AppTextStyle.sectionSubtitle(context),
                       ),
                       h(8),
-                      InputForm(
+                      InputFormNumber(
                         hint: "(Opsional jika harga berubah)",
                         controller: priceC,
+                        isPrice: true,
                       ),
                       h(16),
                       Text(
@@ -230,16 +249,21 @@ class _StockTransPageState extends State<StockTransPage> {
                         click: () async {
                           if (_formKey.currentState!.validate()) {
                             final TransactionModel data = TransactionModel(
-                              itemId: selectedItems.id!,
+                              itemId: selectedItems!.id!,
                               transactionType: isAdd ? 0 : 1,
                               total: isAdd
                                   ? int.parse(totalC.text) *
-                                        selectedItems.costPrice
+                                        selectedItems!.costPrice
                                   : int.parse(totalC.text) *
-                                        selectedItems.sellingPrice,
+                                        selectedItems!.sellingPrice,
                               quantity: int.parse(totalC.text),
                             );
-                            await DBHelper.createTransaction(data);
+                            await DBHelper.createTransaction(
+                              data,
+                              priceC.text.isNotEmpty
+                                  ? int.parse(priceC.text.replaceAll('.', ''))
+                                  : selectedItems!.sellingPrice,
+                            );
                             refreshStockNotifier.value = true;
                             context.router.pop();
                           } else {

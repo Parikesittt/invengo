@@ -176,7 +176,7 @@ class DBHelper {
     await dbs.insert(tableTransactions, {
       'item_id': id,
       'transaction_type': 0,
-      'total': item.sellingPrice * item.stock,
+      'total': item.costPrice * item.stock,
       'quantity': item.stock,
     });
   }
@@ -233,7 +233,10 @@ class DBHelper {
     await dbs.delete(tableItems, where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<void> createTransaction(TransactionModel trans) async {
+  static Future<void> createTransaction(
+    TransactionModel trans,
+    int newPrice,
+  ) async {
     final dbs = await db();
     final item = await dbs.query(
       'items',

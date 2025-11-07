@@ -8,6 +8,7 @@ import 'package:invengo/components/app_container.dart';
 import 'package:invengo/components/auth/label_form_auth.dart';
 import 'package:invengo/components/button_logo.dart';
 import 'package:invengo/components/custom_input_form.dart';
+import 'package:invengo/components/input_form_number.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
 import 'package:invengo/constant/app_text_style.dart';
@@ -179,29 +180,26 @@ class _StockCreatePageState extends State<StockCreatePage> {
                   h(12),
                   LabelAuth(title: "Harga Modal"),
                   h(8),
-                  InputForm(
+                  InputFormNumber(
                     controller: costPriceC,
-                    prefixIcon: Icon(
-                      FontAwesomeIcons.dollarSign,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                    hint: "Masukkan harga modal",
+                    isPrice: true,
                   ),
                   h(12),
                   LabelAuth(title: "Harga"),
                   h(8),
-                  InputForm(
+                  InputFormNumber(
                     controller: sellPriceC,
-                    prefixIcon: Icon(
-                      FontAwesomeIcons.dollarSign,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                    hint: "Masukkan harga jual",
+                    isPrice: true,
                   ),
                   h(12),
                   LabelAuth(title: "Stok"),
                   h(8),
-                  InputForm(controller: stockC),
+                  InputFormNumber(
+                    controller: stockC,
+                    hint: "Masukkan jumlah stok",
+                  ),
                   h(24),
                   Row(
                     spacing: 16,
@@ -246,9 +244,15 @@ class _StockCreatePageState extends State<StockCreatePage> {
                                 id: widget.isUpdate ? widget.item!.id : null,
                                 categoryId: selectedCategoryId!,
                                 name: nameC.text,
-                                costPrice: int.parse(costPriceC.text),
-                                sellingPrice: int.parse(sellPriceC.text),
-                                stock: int.parse(stockC.text),
+                                costPrice: int.parse(
+                                  costPriceC.text.replaceAll('.', ''),
+                                ),
+                                sellingPrice: int.parse(
+                                  sellPriceC.text.replaceAll('.', ''),
+                                ),
+                                stock: int.parse(
+                                  stockC.text.replaceAll('.', ''),
+                                ),
                               );
                               if (widget.isUpdate) {
                                 // 🔹 UPDATE DATA

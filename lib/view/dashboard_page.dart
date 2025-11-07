@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:invengo/components/dashboard/activity_tile.dart';
 import 'package:invengo/components/dashboard/info_card.dart';
 import 'package:invengo/components/dashboard/low_stock_card.dart';
@@ -26,6 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Map<String, dynamic>? stockData;
   Map<String, dynamic>? financeData;
   late Future<List<TransactionModel>> transactionFuture;
+  final NumberFormat formatter = NumberFormat("#,###", "id_ID");
 
   @override
   void initState() {
@@ -110,9 +112,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   Expanded(
                     child: InfoCard(
-                      icon: FontAwesomeIcons.dollarSign,
+                      icon: FontAwesomeIcons.rupiahSign,
                       iconBgColor: Color(0xff0EB07B),
-                      value: "Rp ${financeData?['profit']?.toString() ?? '0'}",
+                      value:
+                          "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
                       label: "Profit",
                       percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,

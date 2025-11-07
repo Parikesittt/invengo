@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:invengo/components/page_header.dart';
 import 'package:invengo/components/spacing_helper.dart';
 import 'package:invengo/constant/app_color.dart';
@@ -20,6 +21,7 @@ class StockPage extends StatefulWidget {
 class _StockPageState extends State<StockPage>
     with SingleTickerProviderStateMixin, AutoRouteAwareStateMixin<StockPage> {
   late TabController _tabController;
+  final NumberFormat formatter = NumberFormat("#,###", "id_ID");
   String searchText = "";
   final TextEditingController search = TextEditingController();
   late Future<List<ItemModel>> _listItems;
@@ -597,7 +599,7 @@ class _StockPageState extends State<StockPage>
                                     ),
                                   ),
                                   Text(
-                                    "Rp ${item.sellingPrice}",
+                                    "Rp ${formatter.format(item.sellingPrice)}",
                                     style: TextStyle(color: Color(0xff8B5CF6)),
                                   ),
                                 ],
