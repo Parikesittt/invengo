@@ -114,8 +114,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: InfoCard(
                       icon: FontAwesomeIcons.rupiahSign,
                       iconBgColor: Color(0xff0EB07B),
-                      value:
-                          "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
+                      value: "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
                       label: "Profit",
                       percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
@@ -262,9 +261,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   Expanded(
                     child: LowStockCard(
                       items: [
-                        {'name': 'Product A', 'stock': 5, 'max': 20},
-                        {'name': 'Product B', 'stock': 2, 'max': 15},
-                        {'name': 'Product C', 'stock': 8, 'max': 30},
+                        {'name': 'Indocafe', 'stock': 5, 'max': 20},
+                        {'name': 'Good Day', 'stock': 2, 'max': 15},
+                        {'name': 'Cilok Isi', 'stock': 8, 'max': 30},
                       ],
                     ),
                   ),

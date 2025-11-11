@@ -40,7 +40,11 @@ class LowStockCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(item['name'], style: AppTextStyle.cardTitle(context)),
+                    Text(
+                      item['name'],
+                      style: AppTextStyle.cardTitle(context),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Spacer(),
                     Text(
                       "${item['stock']}/${item['max']}",

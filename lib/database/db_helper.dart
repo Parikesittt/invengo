@@ -4,7 +4,6 @@ import 'package:invengo/model/transaction_model.dart';
 import 'package:invengo/model/user_model.dart';
 import 'package:invengo/model/category_model.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
 
 class DBHelper {

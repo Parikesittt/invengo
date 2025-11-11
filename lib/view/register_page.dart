@@ -1,10 +1,8 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:invengo/components/auth/auth_container.dart';
-import 'package:invengo/components/auth/auth_divider.dart';
 import 'package:invengo/components/auth/auth_footer.dart';
 import 'package:invengo/components/auth/auth_header.dart';
-import 'package:invengo/components/auth/auth_social_button.dart';
 import 'package:invengo/components/custom_button.dart';
 import 'package:invengo/components/custom_input_form.dart';
 import 'package:invengo/components/auth/label_form_auth.dart';
