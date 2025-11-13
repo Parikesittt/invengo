@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'InvenGo',
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(),

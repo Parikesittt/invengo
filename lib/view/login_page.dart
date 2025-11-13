@@ -126,9 +126,8 @@ class _LoginPageState extends State<LoginPage> {
                         password: passwordC.text,
                       );
                       if (data != null) {
-                        PreferenceHandler.
-                        saveUserData(data.id!, data.username);
-                        context.pushRoute(const MainRoute());
+                        PreferenceHandler.saveUserData(data.id!, data.username);
+                        context.router.replace(const MainRoute());
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
