@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:invengo/preferences/preference_handler.dart';
-import 'package:invengo/route.dart';
+import 'package:invengo/core/services/preference_handler.dart';
+import 'package:invengo/core/config/route.dart';
 
 @RoutePage()
 class SplashPage extends StatefulWidget {
@@ -66,7 +66,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       if (isLogin != null && isLogin == true) {
         context.router.replace(const MainRoute());
       } else {
-        context.router.replace(const LoginRoute());
+        context.router.replace(const LoginRouteFirebase());
       }
     });
   }

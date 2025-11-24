@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
 
 class ActivityTile extends StatelessWidget {
   final String title;

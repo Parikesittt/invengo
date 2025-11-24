@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:invengo/components/page_header.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
-import 'package:invengo/database/db_helper.dart';
-import 'package:invengo/model/item_model.dart';
+import 'package:invengo/shared/widgets/page_header.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
+import 'package:invengo/core/services/db_helper.dart';
+import 'package:invengo/data/models/item_model.dart';
 import 'package:invengo/refresh_notifier.dart';
-import 'package:invengo/route.dart';
+import 'package:invengo/core/config/route.dart';
 
 class StockPage extends StatefulWidget {
   const StockPage({super.key});

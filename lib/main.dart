@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:invengo/route.dart';
-import 'package:invengo/theme/theme_provider.dart';
+import 'package:invengo/core/config/route.dart';
+import 'package:invengo/core/theme/theme_provider.dart';
+import 'package:invengo/firebase_options.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => ThemeProvider())],

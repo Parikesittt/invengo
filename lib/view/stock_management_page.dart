@@ -3,13 +3,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/components/app_container.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
-import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/database/db_helper.dart';
-import 'package:invengo/model/item_model.dart';
-import 'package:invengo/route.dart';
+import 'package:invengo/shared/widgets/app_container.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
+import 'package:invengo/core/services/db_helper.dart';
+import 'package:invengo/data/models/item_model.dart';
+import 'package:invengo/core/config/route.dart';
 
 @RoutePage()
 class StockManagementPage extends StatefulWidget {

@@ -2,16 +2,16 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/components/app_container.dart';
-import 'package:invengo/components/button_logo.dart';
-import 'package:invengo/components/page_header.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
-import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/preferences/preference_handler.dart';
-import 'package:invengo/route.dart';
-import 'package:invengo/theme/theme.dart';
-import 'package:invengo/theme/theme_provider.dart';
+import 'package:invengo/shared/widgets/app_container.dart';
+import 'package:invengo/shared/widgets/button_logo.dart';
+import 'package:invengo/shared/widgets/page_header.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
+import 'package:invengo/core/services/preference_handler.dart';
+import 'package:invengo/core/config/route.dart';
+import 'package:invengo/core/theme/theme.dart';
+import 'package:invengo/core/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()

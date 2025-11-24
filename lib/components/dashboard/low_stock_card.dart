@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/constant/app_text_style.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
 
 class LowStockCard extends StatelessWidget {
   final List<Map<String, dynamic>> items;
