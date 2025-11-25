@@ -4,17 +4,17 @@ import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/components/app_container.dart';
-import 'package:invengo/components/auth/label_form_auth.dart';
-import 'package:invengo/components/button_logo.dart';
-import 'package:invengo/components/custom_input_form.dart';
-import 'package:invengo/components/input_form_number.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
-import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/database/db_helper.dart';
-import 'package:invengo/model/category_model.dart';
-import 'package:invengo/model/item_model.dart';
+import 'package:invengo/shared/widgets/app_container.dart';
+import 'package:invengo/features/auth/presentation/widgets/label_form_auth.dart';
+import 'package:invengo/shared/widgets/button_logo.dart';
+import 'package:invengo/shared/widgets/custom_input_form.dart';
+import 'package:invengo/shared/widgets/input_form_number.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
+import 'package:invengo/core/services/db_helper.dart';
+import 'package:invengo/data/models/category_model.dart';
+import 'package:invengo/data/models/item_model.dart';
 import 'package:invengo/refresh_notifier.dart';
 
 @RoutePage()

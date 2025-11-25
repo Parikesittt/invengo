@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
 
 class StockButton extends StatefulWidget {
   const StockButton({

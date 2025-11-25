@@ -1,0 +1,54 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:invengo/data/models/user_firebase_model.dart';
+
+class FirebaseService {
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  static Future<UserFirebaseModel> registerUser({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
+    final cred = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    final user = cred.user!;
+    final model = UserFirebaseModel(
+      uid: user.uid,
+      username: username,
+      email: email,
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
+    );
+    await _firestore.collection('users').doc(user.uid).set(model.toMap());
+    return model;
+  }
+
+  static Future<UserFirebaseModel?> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final cred = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = cred.user;
+      if (user == null) return null;
+      final snap = await _firestore.collection('users').doc(user.uid).get();
+      if (!snap.exists) return null;
+      return UserFirebaseModel.fromMap({'uid': user.uid, ...snap.data()!});
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-credential' ||
+          e.code == 'wrong-password' ||
+          e.code == 'user-not-found') {
+        return null;
+      }
+      print('FirebaseAuthException: ${e.code} = ${e.message}');
+      rethrow;
+    }
+  }
+}

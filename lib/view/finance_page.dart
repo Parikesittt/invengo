@@ -1,14 +1,14 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:invengo/components/app_container.dart';
-import 'package:invengo/components/page_header.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
-import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/constant/rupiah_formatting.dart';
-import 'package:invengo/database/db_helper.dart';
-import 'package:invengo/model/transaction_model.dart';
+import 'package:invengo/shared/widgets/app_container.dart';
+import 'package:invengo/shared/widgets/page_header.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
+import 'package:invengo/core/constant/rupiah_formatting.dart';
+import 'package:invengo/core/services/db_helper.dart';
+import 'package:invengo/data/models/transaction_model.dart';
 
 @RoutePage()
 class FinancePage extends StatefulWidget {

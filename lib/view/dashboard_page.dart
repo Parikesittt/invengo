@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:invengo/components/dashboard/activity_tile.dart';
 import 'package:invengo/components/dashboard/info_card.dart';
 import 'package:invengo/components/dashboard/low_stock_card.dart';
-import 'package:invengo/components/page_header.dart';
-import 'package:invengo/components/spacing_helper.dart';
-import 'package:invengo/constant/app_color.dart';
-import 'package:invengo/constant/app_text_style.dart';
-import 'package:invengo/database/db_helper.dart';
-import 'package:invengo/model/transaction_model.dart';
-import 'package:invengo/preferences/preference_handler.dart';
+import 'package:invengo/shared/widgets/page_header.dart';
+import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/constant/app_color.dart';
+import 'package:invengo/core/constant/app_text_style.dart';
+import 'package:invengo/core/services/db_helper.dart';
+import 'package:invengo/data/models/transaction_model.dart';
+import 'package:invengo/core/services/preference_handler.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

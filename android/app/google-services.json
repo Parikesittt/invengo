@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "451241191068",
+    "project_id": "invengo-project",
+    "storage_bucket": "invengo-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451241191068:android:fc7bf1fab03667e9cd2f59",
+        "android_client_info": {
+          "package_name": "com.ppkd.invengo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdUu0mgeEwJq5dm5eeWVVfBc5nFuy8XH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
