@@ -64,7 +64,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       if (!mounted) return; // mastiin widget masih aktif
 
       if (isLogin != null && isLogin == true) {
-        context.router.replace(const MainRoute());
+        context.router.replace(const MainFirebaseRoute());
       } else {
         context.router.replace(const LoginRouteFirebase());
       }

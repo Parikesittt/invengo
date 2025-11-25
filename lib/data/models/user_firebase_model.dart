@@ -5,12 +5,14 @@ class UserFirebaseModel {
   String? uid;
   String? username;
   String? email;
+  String? phoneNumber;
   String? createdAt;
   String? updatedAt;
   UserFirebaseModel({
     this.uid,
     this.username,
     this.email,
+    this.phoneNumber,
     this.createdAt,
     this.updatedAt,
   });
@@ -20,6 +22,7 @@ class UserFirebaseModel {
       'uid': uid,
       'username': username,
       'email': email,
+      'phoneNumber': phoneNumber,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -30,6 +33,9 @@ class UserFirebaseModel {
       uid: map['uid'] != null ? map['uid'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
+      phoneNumber: map['phoneNumber'] != null
+          ? map['phoneNumber'] as String
+          : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
       updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
     );
@@ -37,5 +43,6 @@ class UserFirebaseModel {
 
   String toJson() => json.encode(toMap());
 
-  factory UserFirebaseModel.fromJson(String source) => UserFirebaseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserFirebaseModel.fromJson(String source) =>
+      UserFirebaseModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

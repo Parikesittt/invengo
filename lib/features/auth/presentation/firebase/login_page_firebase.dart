@@ -139,7 +139,7 @@ class _LoginPageFirebaseState extends State<LoginPageFirebase> {
                           data.uid!,
                           data.username!,
                         );
-                        context.router.replace(const MainRoute());
+                        context.router.replace(const MainFirebaseRoute());
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

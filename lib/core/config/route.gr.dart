@@ -11,6 +11,38 @@
 part of 'route.dart';
 
 /// generated route for
+/// [DashboardFirebasePage]
+class DashboardFirebaseRoute extends PageRouteInfo<void> {
+  const DashboardFirebaseRoute({List<PageRouteInfo>? children})
+    : super(DashboardFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'DashboardFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DashboardFirebasePage();
+    },
+  );
+}
+
+/// generated route for
+/// [EditProfileFirebasePage]
+class EditProfileFirebaseRoute extends PageRouteInfo<void> {
+  const EditProfileFirebaseRoute({List<PageRouteInfo>? children})
+    : super(EditProfileFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'EditProfileFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const EditProfileFirebasePage();
+    },
+  );
+}
+
+/// generated route for
 /// [EditProfilePage]
 class EditProfileRoute extends PageRouteInfo<void> {
   const EditProfileRoute({List<PageRouteInfo>? children})
@@ -22,6 +54,22 @@ class EditProfileRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const EditProfilePage();
+    },
+  );
+}
+
+/// generated route for
+/// [FinanceFirebasePage]
+class FinanceFirebaseRoute extends PageRouteInfo<void> {
+  const FinanceFirebaseRoute({List<PageRouteInfo>? children})
+    : super(FinanceFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'FinanceFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const FinanceFirebasePage();
     },
   );
 }
@@ -91,6 +139,22 @@ class LoginRouteFirebase extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MainFirebaseScaffold]
+class MainFirebaseRoute extends PageRouteInfo<void> {
+  const MainFirebaseRoute({List<PageRouteInfo>? children})
+    : super(MainFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'MainFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MainFirebaseScaffold();
+    },
+  );
+}
+
+/// generated route for
 /// [MainScaffold]
 class MainRoute extends PageRouteInfo<void> {
   const MainRoute({List<PageRouteInfo>? children})
@@ -102,6 +166,22 @@ class MainRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const MainScaffold();
+    },
+  );
+}
+
+/// generated route for
+/// [ProfileFirebasePage]
+class ProfileFirebaseRoute extends PageRouteInfo<void> {
+  const ProfileFirebaseRoute({List<PageRouteInfo>? children})
+    : super(ProfileFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'ProfileFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ProfileFirebasePage();
     },
   );
 }
@@ -171,6 +251,71 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [StockCreateFirebasePage]
+class StockCreateFirebaseRoute
+    extends PageRouteInfo<StockCreateFirebaseRouteArgs> {
+  StockCreateFirebaseRoute({
+    Key? key,
+    bool isUpdate = false,
+    ItemFirebaseModel? item,
+    List<PageRouteInfo>? children,
+  }) : super(
+         StockCreateFirebaseRoute.name,
+         args: StockCreateFirebaseRouteArgs(
+           key: key,
+           isUpdate: isUpdate,
+           item: item,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'StockCreateFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<StockCreateFirebaseRouteArgs>(
+        orElse: () => const StockCreateFirebaseRouteArgs(),
+      );
+      return StockCreateFirebasePage(
+        key: args.key,
+        isUpdate: args.isUpdate,
+        item: args.item,
+      );
+    },
+  );
+}
+
+class StockCreateFirebaseRouteArgs {
+  const StockCreateFirebaseRouteArgs({
+    this.key,
+    this.isUpdate = false,
+    this.item,
+  });
+
+  final Key? key;
+
+  final bool isUpdate;
+
+  final ItemFirebaseModel? item;
+
+  @override
+  String toString() {
+    return 'StockCreateFirebaseRouteArgs{key: $key, isUpdate: $isUpdate, item: $item}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! StockCreateFirebaseRouteArgs) return false;
+    return key == other.key && isUpdate == other.isUpdate && item == other.item;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ isUpdate.hashCode ^ item.hashCode;
+}
+
+/// generated route for
 /// [StockCreatePage]
 class StockCreateRoute extends PageRouteInfo<StockCreateRouteArgs> {
   StockCreateRoute({
@@ -227,6 +372,22 @@ class StockCreateRouteArgs {
 }
 
 /// generated route for
+/// [StockManagementFirebasePage]
+class StockManagementFirebaseRoute extends PageRouteInfo<void> {
+  const StockManagementFirebaseRoute({List<PageRouteInfo>? children})
+    : super(StockManagementFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'StockManagementFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const StockManagementFirebasePage();
+    },
+  );
+}
+
+/// generated route for
 /// [StockManagementPage]
 class StockManagementRoute extends PageRouteInfo<void> {
   const StockManagementRoute({List<PageRouteInfo>? children})
@@ -238,6 +399,22 @@ class StockManagementRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const StockManagementPage();
+    },
+  );
+}
+
+/// generated route for
+/// [StockTransFirebasePage]
+class StockTransFirebaseRoute extends PageRouteInfo<void> {
+  const StockTransFirebaseRoute({List<PageRouteInfo>? children})
+    : super(StockTransFirebaseRoute.name, initialChildren: children);
+
+  static const String name = 'StockTransFirebaseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const StockTransFirebasePage();
     },
   );
 }

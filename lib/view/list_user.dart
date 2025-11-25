@@ -126,7 +126,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
                     itemBuilder: (context, index) {
                       final items = data[index];
                       return ListTile(
-                        title: Text(items.name),
+                        title: Text(items.name!),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

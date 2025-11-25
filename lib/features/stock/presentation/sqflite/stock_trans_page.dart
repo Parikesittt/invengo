@@ -9,7 +9,7 @@ import 'package:invengo/shared/widgets/custom_button.dart';
 import 'package:invengo/shared/widgets/date_picker.dart';
 import 'package:invengo/shared/widgets/input_form_number.dart';
 import 'package:invengo/core/constant/spacing_helper.dart';
-import 'package:invengo/components/stock/stock_button.dart';
+import 'package:invengo/features/stock/presentation/widgets/stock_button.dart';
 import 'package:invengo/core/constant/app_text_style.dart';
 import 'package:invengo/core/services/db_helper.dart';
 import 'package:invengo/data/models/item_model.dart';

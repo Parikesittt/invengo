@@ -85,6 +85,20 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                             },
                           ),
                           h(24),
+                          LabelAuth(title: "Phone Number"),
+                          h(8),
+                          InputForm(
+                            hint: "Enter your phone number",
+                            prefixIcon: Icon(Icons.email_outlined),
+                            controller: phoneC,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Phone number tidak boleh kosong";
+                              }
+                              return null;
+                            },
+                          ),
+                          h(24),
                           LabelAuth(title: "Password"),
                           h(8),
                           InputForm(
@@ -132,6 +146,7 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                                 try {
                                   final result =
                                       await FirebaseService.registerUser(
+                                        phoneNumber: phoneC.text.trim(),
                                         email: emailC.text.trim(),
                                         password: passwordC.text.trim(),
                                         username: usernameC.text.trim(),
@@ -153,7 +168,9 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                                   );
 
                                   // Misal: langsung ke halaman login
-                                  context.router.replace(const LoginRoute());
+                                  context.router.replace(
+                                    const LoginRouteFirebase(),
+                                  );
                                 } catch (e) {
                                   setState(() {
                                     isLoading = false;

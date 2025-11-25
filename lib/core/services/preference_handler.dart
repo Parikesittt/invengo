@@ -50,4 +50,9 @@ class PreferenceHandler {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt(userId);
   }
+
+  static Future<String?> getUserIdFirebase() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(userId);
+  }
 }

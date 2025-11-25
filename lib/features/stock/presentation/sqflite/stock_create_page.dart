@@ -134,7 +134,7 @@ class _StockCreatePageState extends State<StockCreatePage> {
                               (cat) => cat.id == selectedCategoryId,
                               orElse: () => CategoryModel(id: 0, name: ''),
                             );
-                            selectedCategoryName = matched.name.isNotEmpty
+                            selectedCategoryName = matched.name!.isNotEmpty
                                 ? matched.name
                                 : null;
                           }

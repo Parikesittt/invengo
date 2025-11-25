@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:invengo/components/dashboard/activity_tile.dart';
-import 'package:invengo/components/dashboard/info_card.dart';
-import 'package:invengo/components/dashboard/low_stock_card.dart';
+import 'package:invengo/features/dashboard/presentation/widgets/activity_tile.dart';
+import 'package:invengo/features/dashboard/presentation/widgets/info_card.dart';
+import 'package:invengo/features/dashboard/presentation/widgets/low_stock_card.dart';
 import 'package:invengo/shared/widgets/page_header.dart';
 import 'package:invengo/core/constant/spacing_helper.dart';
 import 'package:invengo/core/constant/app_color.dart';
@@ -114,7 +114,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: InfoCard(
                       icon: FontAwesomeIcons.rupiahSign,
                       iconBgColor: Color(0xff0EB07B),
-                      value: "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
+                      value:
+                          "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
                       label: "Profit",
                       percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
@@ -177,98 +178,98 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
               h(32),
-              Row(
-                spacing: 16,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 294,
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Categories",
-                            style: AppTextStyle.sectionTitle(context),
-                          ),
-                          h(36),
-                          Image.asset('assets/images/pie_chart_dummy.png'),
-                          h(24),
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ),
-                                  w(8),
-                                  Text("Test"),
-                                  w(32),
-                                  Text("55%"),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xffEC4899),
-                                    ),
-                                  ),
-                                  w(8),
-                                  Text("Test"),
-                                  w(32),
-                                  Text("55%"),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(0xff06B6D4),
-                                    ),
-                                  ),
-                                  w(8),
-                                  Text("Test"),
-                                  w(32),
-                                  Text("55%"),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: LowStockCard(
-                      items: [
-                        {'name': 'Indocafe', 'stock': 5, 'max': 20},
-                        {'name': 'Good Day', 'stock': 2, 'max': 15},
-                        {'name': 'Cilok Isi', 'stock': 8, 'max': 30},
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   spacing: 16,
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         height: 294,
+              //         padding: EdgeInsets.all(16),
+              //         decoration: BoxDecoration(
+              //           color: Theme.of(context).colorScheme.surface,
+              //           border: Border.all(
+              //             color: Theme.of(context).colorScheme.outline,
+              //           ),
+              //           borderRadius: BorderRadius.circular(14),
+              //         ),
+              //         child: Column(
+              //           children: [
+              //             Text(
+              //               "Categories",
+              //               style: AppTextStyle.sectionTitle(context),
+              //             ),
+              //             h(36),
+              //             Image.asset('assets/images/pie_chart_dummy.png'),
+              //             h(24),
+              //             Column(
+              //               children: [
+              //                 Row(
+              //                   children: [
+              //                     Container(
+              //                       width: 8,
+              //                       height: 8,
+              //                       decoration: BoxDecoration(
+              //                         shape: BoxShape.circle,
+              //                         color: Theme.of(
+              //                           context,
+              //                         ).colorScheme.primary,
+              //                       ),
+              //                     ),
+              //                     w(8),
+              //                     Text("Test"),
+              //                     w(32),
+              //                     Text("55%"),
+              //                   ],
+              //                 ),
+              //                 Row(
+              //                   children: [
+              //                     Container(
+              //                       width: 8,
+              //                       height: 8,
+              //                       decoration: BoxDecoration(
+              //                         shape: BoxShape.circle,
+              //                         color: Color(0xffEC4899),
+              //                       ),
+              //                     ),
+              //                     w(8),
+              //                     Text("Test"),
+              //                     w(32),
+              //                     Text("55%"),
+              //                   ],
+              //                 ),
+              //                 Row(
+              //                   children: [
+              //                     Container(
+              //                       width: 8,
+              //                       height: 8,
+              //                       decoration: BoxDecoration(
+              //                         shape: BoxShape.circle,
+              //                         color: Color(0xff06B6D4),
+              //                       ),
+              //                     ),
+              //                     w(8),
+              //                     Text("Test"),
+              //                     w(32),
+              //                     Text("55%"),
+              //                   ],
+              //                 ),
+              //               ],
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //     Expanded(
+              //       child: LowStockCard(
+              //         items: [
+              //           {'name': 'Indocafe', 'stock': 5, 'max': 20},
+              //           {'name': 'Good Day', 'stock': 2, 'max': 15},
+              //           {'name': 'Cilok Isi', 'stock': 8, 'max': 30},
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Column(
