@@ -36,14 +36,16 @@ class Button extends StatelessWidget {
             ),
             Container(
               child: isLoading
-                  ? const SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.6,
-                        color: Colors.white,
+                  ? Center(
+                    child: SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.6,
+                          color: Colors.white,
+                        ),
                       ),
-                    )
+                  )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

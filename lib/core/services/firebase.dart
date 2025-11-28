@@ -154,6 +154,7 @@ class FirebaseService {
       'transaction_type': 0,
       'total': (item.costPrice ?? 0) * (item.stock ?? 0),
       'quantity': item.stock ?? 0,
+      'date': DateTime.now().toIso8601String(),
       'created_at': DateTime.now().toIso8601String(),
       'updated_at': DateTime.now().toIso8601String(),
     });

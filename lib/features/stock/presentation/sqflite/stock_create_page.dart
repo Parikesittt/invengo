@@ -30,6 +30,7 @@ class StockCreatePage extends StatefulWidget {
 class _StockCreatePageState extends State<StockCreatePage> {
   late Future<List<CategoryModel>> _categoryListFuture;
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
   final TextEditingController nameC = TextEditingController();
   final TextEditingController costPriceC = TextEditingController();
   final TextEditingController sellPriceC = TextEditingController();
@@ -55,6 +56,63 @@ class _StockCreatePageState extends State<StockCreatePage> {
   }
 
   getData() {}
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Semua field harus diisi"),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 80, left: 16, right: 16),
+        ),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+    try {
+      final ItemModel data = ItemModel(
+        id: widget.isUpdate ? widget.item!.id : null,
+        categoryId: selectedCategoryId!,
+        name: nameC.text,
+        costPrice: int.parse(costPriceC.text.replaceAll('.', '')),
+        sellingPrice: int.parse(sellPriceC.text.replaceAll('.', '')),
+        stock: int.parse(stockC.text.replaceAll('.', '')),
+      );
+      if (widget.isUpdate) {
+        await DBHelper.updateItems(data);
+        refreshStockNotifier.value = true;
+
+        Fluttertoast.showToast(
+          msg: "Data berhasil diperbarui",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColor.surfaceLight,
+          textColor: AppColor.textSecondaryLight,
+          fontSize: 12.0,
+        );
+      } else {
+        await DBHelper.createItems(data);
+        refreshStockNotifier.value = true;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Data berhasil ditambahkan"),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(bottom: 80, left: 16, right: 16),
+          ),
+        );
+      }
+
+      if (!mounted) return;
+      setState(() => isLoading = false);
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,69 +296,8 @@ class _StockCreatePageState extends State<StockCreatePage> {
                           iconColor: AppColor.surfaceLight,
                           iconSize: 16,
                           textButton: "Simpan",
-                          onTap: () async {
-                            if (_formKey.currentState!.validate()) {
-                              final ItemModel data = ItemModel(
-                                id: widget.isUpdate ? widget.item!.id : null,
-                                categoryId: selectedCategoryId!,
-                                name: nameC.text,
-                                costPrice: int.parse(
-                                  costPriceC.text.replaceAll('.', ''),
-                                ),
-                                sellingPrice: int.parse(
-                                  sellPriceC.text.replaceAll('.', ''),
-                                ),
-                                stock: int.parse(
-                                  stockC.text.replaceAll('.', ''),
-                                ),
-                              );
-                              if (widget.isUpdate) {
-                                // 🔹 UPDATE DATA
-                                await DBHelper.updateItems(data);
-                                refreshStockNotifier.value = true;
-
-                                Fluttertoast.showToast(
-                                  msg: "Data berhasil diperbarui",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: AppColor.surfaceLight,
-                                  textColor: AppColor.textSecondaryLight,
-                                  fontSize: 12.0,
-                                );
-                              } else {
-                                // 🔹 CREATE DATA BARU
-                                await DBHelper.createItems(data);
-                                refreshStockNotifier.value = true;
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Data berhasil ditambahkan"),
-                                    behavior: SnackBarBehavior.floating,
-                                    margin: EdgeInsets.only(
-                                      bottom: 80,
-                                      left: 16,
-                                      right: 16,
-                                    ),
-                                  ),
-                                );
-                              }
-                              Navigator.pop(context);
-                              // Navigator.pushNamed(context, '/home');
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Semua field harus diisi"),
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: EdgeInsets.only(
-                                    bottom: 80,
-                                    left: 16,
-                                    right: 16,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
+                          onTap: _save,
+                          isLoading: isLoading,
                         ),
                       ),
                     ],

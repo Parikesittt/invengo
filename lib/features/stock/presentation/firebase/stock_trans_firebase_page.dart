@@ -32,6 +32,7 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
 
   List<ItemFirebaseModel> _stockList = [];
   bool isAdd = true;
+  bool isLoading = false;
   ItemFirebaseModel? selectedItems;
 
   final TextEditingController totalC = TextEditingController();
@@ -42,7 +43,7 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
   void initState() {
     super.initState();
     _loadItems();
-    dateC.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    dateC.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
   }
 
   Future<void> _loadItems() async {
@@ -67,95 +68,128 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
   }
 
   Future<void> _submit() async {
-  if (!_formKey.currentState!.validate()) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Semua field harus diisi')));
-    return;
-  }
+    if (!_formKey.currentState!.validate()) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Semua field harus diisi')));
+      return;
+    }
 
-  if (selectedItems == null) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Pilih barang terlebih dahulu')));
-    return;
-  }
+    if (selectedItems == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Pilih barang terlebih dahulu')),
+      );
+      return;
+    }
 
-  final qty = int.tryParse(totalC.text.replaceAll('.', '')) ?? 0;
-  if (qty <= 0) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Jumlah harus lebih dari 0')));
-    return;
-  }
+    final qty = int.tryParse(totalC.text.replaceAll('.', '')) ?? 0;
+    if (qty <= 0) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Jumlah harus lebih dari 0')),
+      );
+      return;
+    }
 
-  // ambil stock terbaru (coba dari server untuk mengurangi kemungkinan stale data)
-  int currentStock;
-  try {
-    final fresh = await FirebaseService.getItemById(selectedItems!.id!);
-    if (fresh != null && fresh.stock != null) {
-      currentStock = fresh.stock!;
-    } else {
+    // ambil stock terbaru (coba dari server untuk mengurangi kemungkinan stale data)
+    int currentStock;
+    try {
+      final fresh = await FirebaseService.getItemById(selectedItems!.id!);
+      if (fresh != null && fresh.stock != null) {
+        currentStock = fresh.stock!;
+      } else {
+        currentStock = selectedItems!.stock ?? 0;
+      }
+    } catch (_) {
+      // fallback aman
       currentStock = selectedItems!.stock ?? 0;
     }
-  } catch (_) {
-    // fallback aman
-    currentStock = selectedItems!.stock ?? 0;
-  }
 
-  // hitung newStock secara lokal (selalu int, tidak null)
-  final int newStock = isAdd ? (currentStock + qty) : (currentStock - qty);
+    // hitung newStock secara lokal (selalu int, tidak null)
+    final int newStock = isAdd ? (currentStock + qty) : (currentStock - qty);
 
-  final parsedPrice = int.tryParse(priceC.text.replaceAll('.', ''));
-  final unitPriceFallback =
-      isAdd ? (selectedItems!.costPrice ?? 0) : (selectedItems!.sellingPrice ?? 0);
-  final usedUnitPrice = parsedPrice ?? unitPriceFallback;
-  final total = usedUnitPrice * qty;
+    final parsedPrice = int.tryParse(priceC.text.replaceAll('.', ''));
+    final unitPriceFallback = isAdd
+        ? (selectedItems!.costPrice ?? 0)
+        : (selectedItems!.sellingPrice ?? 0);
+    final usedUnitPrice = parsedPrice ?? unitPriceFallback;
+    final total = usedUnitPrice * qty;
+    final selectedDate = _parseDateFromController(dateC.text);
+    final isoDate = selectedDate.toIso8601String();
 
-  try {
-    final trans = TransactionFirebaseModel(
-      id: null,
-      itemId: selectedItems!.id!,
-      transactionType: isAdd ? 0 : 1,
-      total: total,
-      quantity: qty,
-      createdAt: DateTime.now().toIso8601String(),
-      updatedAt: DateTime.now().toIso8601String(),
-    );
+    try {
+      final trans = TransactionFirebaseModel(
+        id: null,
+        itemId: selectedItems!.id!,
+        transactionType: isAdd ? 0 : 1,
+        total: total,
+        quantity: qty,
+        createdAt: DateTime.now().toIso8601String(),
+        updatedAt: DateTime.now().toIso8601String(),
+        date: isoDate,
+      );
 
-    // buat transaction (this updates stock atomically inside the service)
-    await FirebaseService.createTransaction(trans);
+      // buat transaction (this updates stock atomically inside the service)
+      await FirebaseService.createTransaction(trans);
 
-    // jika user masukkan harga baru -> update hanya field harga
-    if (parsedPrice != null) {
-      final fields = <String, dynamic>{};
-      if (isAdd) {
-        fields['cost_price'] = parsedPrice;
-      } else {
-        fields['selling_price'] = parsedPrice;
+      // jika user masukkan harga baru -> update hanya field harga
+      if (parsedPrice != null) {
+        final fields = <String, dynamic>{};
+        if (isAdd) {
+          fields['cost_price'] = parsedPrice;
+        } else {
+          fields['selling_price'] = parsedPrice;
+        }
+        await FirebaseService.updateItemFields(selectedItems!.id!, fields);
       }
-      await FirebaseService.updateItemFields(selectedItems!.id!, fields);
+
+      // pastikan dokumen item tidak menyimpan stock null: tulis newStock (int)
+      // ini menulis stock yang kita hitung; createTransaction sudah update stock atomically,
+      // tapi menulis ulang dengan newStock memberikan jaminan doc tidak berisi null.
+      await FirebaseService.updateItemFields(selectedItems!.id!, {
+        'stock': newStock,
+      });
+
+      // refresh local item model dari server supaya UI akurat
+      final refreshed = await FirebaseService.getItemById(selectedItems!.id!);
+      if (refreshed != null) selectedItems = refreshed;
+
+      refreshStockNotifier.value = true;
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Gagal menyimpan transaksi: $e')));
     }
-
-    // pastikan dokumen item tidak menyimpan stock null: tulis newStock (int)
-    // ini menulis stock yang kita hitung; createTransaction sudah update stock atomically,
-    // tapi menulis ulang dengan newStock memberikan jaminan doc tidak berisi null.
-    await FirebaseService.updateItemFields(selectedItems!.id!, {'stock': newStock});
-
-    // refresh local item model dari server supaya UI akurat
-    final refreshed = await FirebaseService.getItemById(selectedItems!.id!);
-    if (refreshed != null) selectedItems = refreshed;
-
-    refreshStockNotifier.value = true;
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  } catch (e) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Gagal menyimpan transaksi: $e')));
   }
-}
 
+  DateTime _parseDateFromController(String text) {
+    if (text.trim().isEmpty) return DateTime.now();
+    // try ISO first
+    try {
+      return DateTime.parse(text);
+    } catch (_) {}
+    // try yyyy-MM-dd
+    try {
+      return DateFormat('yyyy-MM-dd').parseStrict(text);
+    } catch (_) {}
+    // try dd/MM/yyyy
+    try {
+      final parts = text.split('/');
+      if (parts.length == 3) {
+        final d = int.tryParse(parts[0]);
+        final m = int.tryParse(parts[1]);
+        final y = int.tryParse(parts[2]);
+        if (d != null && m != null && y != null) return DateTime(y, m, d);
+      }
+    } catch (_) {}
+    // fallback
+    return DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +198,20 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Transaksi Stok", style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18)),
-            Text("Catat barang masuk atau keluar", style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
+            Text(
+              "Transaksi Stok",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              "Catat barang masuk atau keluar",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),
@@ -181,7 +227,10 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Tipe Transaksi", style: AppTextStyle.sectionTitle(context)),
+                    Text(
+                      "Tipe Transaksi",
+                      style: AppTextStyle.sectionTitle(context),
+                    ),
                     h(24),
                     Row(
                       spacing: 12,
@@ -193,7 +242,9 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                                 setState(() {
                                   isAdd = true;
                                   if (selectedItems != null) {
-                                    priceC.text = formatter.format(selectedItems!.costPrice ?? 0);
+                                    priceC.text = formatter.format(
+                                      selectedItems!.costPrice ?? 0,
+                                    );
                                   }
                                 });
                               }
@@ -211,7 +262,9 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                                 setState(() {
                                   isAdd = false;
                                   if (selectedItems != null) {
-                                    priceC.text = formatter.format(selectedItems!.sellingPrice ?? 0);
+                                    priceC.text = formatter.format(
+                                      selectedItems!.sellingPrice ?? 0,
+                                    );
                                   }
                                 });
                               }
@@ -234,30 +287,43 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.fromBorderSide(BorderSide(color: Theme.of(context).colorScheme.outline)),
+                  border: Border.fromBorderSide(
+                    BorderSide(color: Theme.of(context).colorScheme.outline),
+                  ),
                 ),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Pilih Barang", style: AppTextStyle.sectionSubtitle(context)),
+                      Text(
+                        "Pilih Barang",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: const Color(0xfff9fafb),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.fromBorderSide(BorderSide(color: Theme.of(context).colorScheme.outline)),
+                          border: Border.fromBorderSide(
+                            BorderSide(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: DropdownSearch<ItemFirebaseModel>(
                             items: _stockList,
                             filterFn: (item, filter) {
-                              return item.name?.toLowerCase().contains(filter.toLowerCase()) ?? false;
+                              return item.name?.toLowerCase().contains(
+                                    filter.toLowerCase(),
+                                  ) ??
+                                  false;
                             },
-                            itemAsString: (ItemFirebaseModel? m) => m?.name ?? '',
+                            itemAsString: (ItemFirebaseModel? m) =>
+                                m?.name ?? '',
                             dropdownDecoratorProps: DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
                                 border: InputBorder.none,
@@ -269,15 +335,21 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                               searchFieldProps: TextFieldProps(
                                 decoration: InputDecoration(
                                   hintText: 'Cari barang...',
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
                                 ),
                               ),
                               itemBuilder: (context, item, isSelected) {
                                 return ListTile(
                                   title: Text(item.name ?? ''),
-                                  subtitle: item.categoryName != null ? Text(item.categoryName!) : null,
+                                  subtitle: item.categoryName != null
+                                      ? Text(item.categoryName!)
+                                      : null,
                                   trailing: Text(
-                                    (item.sellingPrice != null) ? 'Rp ${formatter.format(item.sellingPrice)}' : '',
+                                    (item.sellingPrice != null)
+                                        ? 'Rp ${formatter.format(item.sellingPrice)}'
+                                        : '',
                                     style: TextStyle(fontSize: 12),
                                   ),
                                 );
@@ -287,7 +359,9 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                               if (v == null) return;
                               setState(() {
                                 selectedItems = v;
-                                final price = isAdd ? (v.costPrice ?? 0) : (v.sellingPrice ?? 0);
+                                final price = isAdd
+                                    ? (v.costPrice ?? 0)
+                                    : (v.sellingPrice ?? 0);
                                 priceC.text = formatter.format(price);
                               });
                             },
@@ -295,15 +369,31 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                         ),
                       ),
                       h(16),
-                      Text("Jumlah", style: AppTextStyle.sectionSubtitle(context)),
+                      Text(
+                        "Jumlah",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
-                      InputFormNumber(hint: "Masukkan jumlah", controller: totalC),
+                      InputFormNumber(
+                        hint: "Masukkan jumlah",
+                        controller: totalC,
+                      ),
                       h(16),
-                      Text("Harga", style: AppTextStyle.sectionSubtitle(context)),
+                      Text(
+                        "Harga",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
-                      InputFormNumber(hint: "(Opsional jika harga berubah)", controller: priceC, isPrice: true),
+                      InputFormNumber(
+                        hint: "(Opsional jika harga berubah)",
+                        controller: priceC,
+                        isPrice: true,
+                      ),
                       h(16),
-                      Text("Tanggal", style: AppTextStyle.sectionSubtitle(context)),
+                      Text(
+                        "Tanggal",
+                        style: AppTextStyle.sectionSubtitle(context),
+                      ),
                       h(8),
                       DatePickerFormField(controller: dateC),
                       h(16),
@@ -312,6 +402,7 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                         height: 48,
                         width: double.infinity,
                         click: () async => await _submit(),
+                        isLoading: isLoading,
                       ),
                     ],
                   ),

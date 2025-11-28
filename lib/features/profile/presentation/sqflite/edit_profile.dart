@@ -25,6 +25,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
   String? username;
+  bool isLoading = false;
   final TextEditingController usernameC = TextEditingController();
   final TextEditingController nameC = TextEditingController();
   final TextEditingController emailC = TextEditingController();
@@ -59,6 +60,55 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Semua field harus diisi"),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 80, left: 16, right: 16),
+        ),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+    try {
+      final userId = await PreferenceHandler.getUserId();
+      if (userId == null) {
+        setState(() => isLoading = false);
+        return;
+      }
+
+      final UserModel data = UserModel(
+        id: userId,
+        username: usernameC.text,
+        name: nameC.text,
+        email: emailC.text,
+        phoneNumber: phoneC.text,
+        password: passwordC.text,
+      );
+      await DBHelper.updateUser(data);
+
+      Fluttertoast.showToast(
+        msg: "Data berhasil diperbarui",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        textColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        fontSize: 12.0,
+      );
+
+      if (!mounted) return;
+      setState(() => isLoading = false);
+      context.router.pop();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,50 +126,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(
             children: [
-              AppContainer(
-                child: Column(
-                  children: [
-                    InkWell(
-                      child: Stack(
-                        alignment: AlignmentGeometry.bottomRight,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Color(0xfff3e8fa),
-                            radius: 48,
-                            child: Text(
-                              (username ?? 'Guest')[0].toUpperCase(),
-                              style: AppTextStyle.h3(context),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              gradient: LinearGradient(
-                                colors: AppColor.primaryGradient,
-                              ),
-                            ),
-                            child: Icon(
-                              FontAwesomeIcons.camera,
-                              size: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    h(16),
-                    Text(
-                      "Klik icon kamera untuk mengubah avatar",
-                      style: AppTextStyle.cardTitle(context),
-                    ),
-                  ],
-                ),
-              ),
-              h(16),
               AppContainer(
                 child: Form(
                   key: _formKey,
@@ -131,10 +140,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         style: AppTextStyle.sectionTitle(context),
                       ),
                       h(28),
-                      LabelAuth(title: "Nama Lengkap *"),
-                      h(8),
-                      InputForm(controller: nameC),
-                      h(12),
                       LabelAuth(title: "Username *"),
                       h(8),
                       InputForm(controller: usernameC),
@@ -160,9 +165,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        context.pop();
-                      },
+                      onTap: () => context.pop(),
                       child: Container(
                         height: 44,
                         decoration: BoxDecoration(
@@ -182,58 +185,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   Expanded(
                     child: ButtonLogo(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: AppColor.primaryGradient,
                       ),
                       icon: FontAwesomeIcons.floppyDisk,
                       iconColor: Colors.white,
                       iconSize: 16,
                       textButton: "Simpan",
-                      onTap: () async {
-                        if (_formKey.currentState!.validate()) {
-                          final userId = await PreferenceHandler.getUserId();
-                          if (userId == null) return;
-
-                          final UserModel data = UserModel(
-                            id: userId,
-                            username: usernameC.text,
-                            name: nameC.text,
-                            email: emailC.text,
-                            phoneNumber: phoneC.text,
-                            password: passwordC.text,
-                          );
-                          await DBHelper.updateUser(data);
-
-                          Fluttertoast.showToast(
-                            msg: "Data berhasil diperbarui",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.surface,
-                            textColor: Theme.of(
-                              context,
-                            ).colorScheme.onSurfaceVariant,
-                            fontSize: 12.0,
-                          );
-
-                          context.router.pop();
-                          // Navigator.pop(context);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Semua field harus diisi"),
-                              behavior: SnackBarBehavior.floating,
-                              margin: EdgeInsets.only(
-                                bottom: 80,
-                                left: 16,
-                                right: 16,
-                              ),
-                            ),
-                          );
-                        }
-                      },
+                      onTap: _save,
+                      isLoading: isLoading,
                     ),
                   ),
                 ],

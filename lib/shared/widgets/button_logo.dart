@@ -11,7 +11,8 @@ class ButtonLogo extends StatelessWidget {
     this.iconColor,
     this.iconSize,
     required this.textButton,
-    this.bgColor
+    this.bgColor,
+    this.isLoading = false,
   });
 
   final void Function()? onTap;
@@ -21,6 +22,7 @@ class ButtonLogo extends StatelessWidget {
   final Color? iconColor;
   final String textButton;
   final Color? bgColor;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +35,25 @@ class ButtonLogo extends StatelessWidget {
           gradient: gradient,
           color: bgColor,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: iconColor, size: iconSize),
-            w(8),
-            Text(textButton, style: AppTextStyle.button(context)),
-          ],
-        ),
+        child: isLoading
+            ? Center(
+                child: SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.6,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: iconColor, size: iconSize),
+                  w(8),
+                  Text(textButton, style: AppTextStyle.button(context)),
+                ],
+              ),
       ),
     );
   }

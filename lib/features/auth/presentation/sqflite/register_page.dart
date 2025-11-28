@@ -23,6 +23,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   bool rememberMe = false;
+  bool isLoading = false;
   final TextEditingController fullNameC = TextEditingController();
   final TextEditingController usernameC = TextEditingController();
   final TextEditingController emailC = TextEditingController();
@@ -131,26 +132,32 @@ class _RegisterPageState extends State<RegisterPage> {
                             height: 48,
                             width: 295,
                             icon: Icons.arrow_forward,
-                            click: () {
+                            isLoading: isLoading,
+                            click: () async {
                               if (_formKey.currentState!.validate()) {
-                                // ✅ Semua validator sukses
-                                final user = UserModel(
-                                  username: usernameC.text,
-                                  name: fullNameC.text,
-                                  email: emailC.text,
-                                  phoneNumber: phoneC.text,
-                                  password: passwordC.text,
-                                );
-                                DBHelper.createUser(user);
+                                setState(() => isLoading = true);
+                                try {
+                                  final user = UserModel(
+                                    username: usernameC.text,
+                                    name: fullNameC.text,
+                                    email: emailC.text,
+                                    phoneNumber: phoneC.text,
+                                    password: passwordC.text,
+                                  );
+                                  await DBHelper.createUser(user);
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Registrasi berhasil"),
-                                  ),
-                                );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Registrasi berhasil"),
+                                    ),
+                                  );
 
-                                // Misal: langsung ke halaman login
-                                context.router.replace(const LoginRoute());
+                                  // Misal: langsung ke halaman login
+                                  context.router.replace(const LoginRoute());
+                                } finally {
+                                  if (mounted)
+                                    setState(() => isLoading = false);
+                                }
                               } else {
                                 // ❌ Tampilkan pesan kalau input belum valid
                                 ScaffoldMessenger.of(context).showSnackBar(

@@ -27,6 +27,7 @@ class EditProfileFirebasePage extends StatefulWidget {
 class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
   final _formKey = GlobalKey<FormState>();
   String? username;
+  bool isLoading = false;
   final TextEditingController usernameC = TextEditingController();
   final TextEditingController nameC = TextEditingController();
   final TextEditingController emailC = TextEditingController();
@@ -103,6 +104,7 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
       return;
     }
 
+    setState(() => isLoading = true);
     try {
       final updated = UserFirebaseModel(
         uid: uid,
@@ -129,9 +131,11 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
       );
 
       if (!mounted) return;
+      setState(() => isLoading = false);
       context.router.pop();
     } catch (e) {
       if (!mounted) return;
+      setState(() => isLoading = false);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Gagal memperbarui data: $e')));
@@ -262,6 +266,7 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
                       iconSize: 16,
                       textButton: "Simpan",
                       onTap: _save,
+                      isLoading: isLoading,
                     ),
                   ),
                 ],

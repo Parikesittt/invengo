@@ -37,6 +37,7 @@ class _StockTransPageState extends State<StockTransPage> {
   final TextEditingController totalC = TextEditingController();
   final TextEditingController priceC = TextEditingController();
   final TextEditingController dateC = TextEditingController();
+  bool isLoading = false;
 
   final List<String> listCategory = [
     'Elektronik',
@@ -246,8 +247,19 @@ class _StockTransPageState extends State<StockTransPage> {
                         buttonText: isAdd ? "Tambah Stok" : "Kurangi Stok",
                         height: 48,
                         width: double.infinity,
+                        isLoading: isLoading,
                         click: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (!_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Semua field harus diisi"),
+                              ),
+                            );
+                            return;
+                          }
+
+                          setState(() => isLoading = true);
+                          try {
                             final TransactionModel data = TransactionModel(
                               itemId: selectedItems!.id!,
                               transactionType: isAdd ? 0 : 1,
@@ -265,13 +277,10 @@ class _StockTransPageState extends State<StockTransPage> {
                                   : selectedItems!.sellingPrice,
                             );
                             refreshStockNotifier.value = true;
+                            if (!mounted) return;
                             context.router.pop();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Semua field harus diisi"),
-                              ),
-                            );
+                          } finally {
+                            if (mounted) setState(() => isLoading = false);
                           }
                         },
                       ),

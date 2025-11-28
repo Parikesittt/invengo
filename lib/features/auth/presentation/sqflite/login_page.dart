@@ -22,6 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool rememberMe = false;
+  bool isLoading = false;
   final TextEditingController emailC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
   @override
@@ -119,24 +120,30 @@ class _LoginPageState extends State<LoginPage> {
                     height: 48,
                     width: 295,
                     icon: Icons.arrow_forward,
+                    isLoading: isLoading,
                     click: () async {
-                      PreferenceHandler.saveLogin(rememberMe);
-                      final data = await DBHelper.loginUser(
-                        email: emailC.text,
-                        password: passwordC.text,
-                      );
-                      if (data != null) {
-                        PreferenceHandler.saveUserData(
-                          data.id.toString(),
-                          data.username,
+                      setState(() => isLoading = true);
+                      try {
+                        PreferenceHandler.saveLogin(rememberMe);
+                        final data = await DBHelper.loginUser(
+                          email: emailC.text,
+                          password: passwordC.text,
                         );
-                        context.router.replace(const MainRoute());
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Email atau password salah"),
-                          ),
-                        );
+                        if (data != null) {
+                          PreferenceHandler.saveUserData(
+                            data.id.toString(),
+                            data.username,
+                          );
+                          context.router.replace(const MainRoute());
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Email atau password salah"),
+                            ),
+                          );
+                        }
+                      } finally {
+                        if (mounted) setState(() => isLoading = false);
                       }
                     },
                   ),

@@ -9,6 +9,7 @@ class TransactionFirebaseModel {
   int total;
   int quantity;
   String? itemName;
+  String? date;
   String? createdAt;
   String? updatedAt;
 
@@ -19,6 +20,7 @@ class TransactionFirebaseModel {
     required this.total,
     required this.quantity,
     this.itemName,
+    this.date,
     this.createdAt,
     this.updatedAt,
   });
@@ -32,6 +34,7 @@ class TransactionFirebaseModel {
       'total': total,
       'quantity': quantity,
       if (itemName != null) 'item_name': itemName,
+      if (date != null) 'date': date,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     };
@@ -51,6 +54,7 @@ class TransactionFirebaseModel {
     final rawId = read<Object?>('id', 'id');
     final rawItemId = read<Object?>('itemId', 'item_id');
     final rawItemName = read<Object?>('itemName', 'item_name');
+    final rawDate = read<Object?>('date', 'date');
     final rawCreatedAt = read<Object?>('createdAt', 'created_at');
     final rawUpdatedAt = read<Object?>('updatedAt', 'updated_at');
 
@@ -92,6 +96,7 @@ class TransactionFirebaseModel {
       total: total,
       quantity: quantity,
       itemName: rawItemName != null ? rawItemName.toString() : null,
+      date: rawDate != null ? rawDate.toString() : null,
       createdAt: rawCreatedAt != null ? rawCreatedAt.toString() : null,
       updatedAt: rawUpdatedAt != null ? rawUpdatedAt.toString() : null,
     );

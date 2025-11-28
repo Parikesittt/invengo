@@ -31,6 +31,7 @@ class StockCreateFirebasePage extends StatefulWidget {
 class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
   late Future<List<CategoryFirebaseModel>> _categoryListFuture;
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
   final TextEditingController nameC = TextEditingController();
   final TextEditingController costPriceC = TextEditingController();
   final TextEditingController sellPriceC = TextEditingController();
@@ -91,6 +92,7 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
       return;
     }
 
+    setState(() => isLoading = true);
     try {
       final parsedCost = int.tryParse(costPriceC.text.replaceAll('.', '')) ?? 0;
       final parsedSell = int.tryParse(sellPriceC.text.replaceAll('.', '')) ?? 0;
@@ -130,9 +132,13 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
         );
       }
 
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        setState(() => isLoading = false);
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       if (!mounted) return;
+      setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Gagal menyimpan data: $e"),
@@ -200,19 +206,28 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
                     child: FutureBuilder<List<CategoryFirebaseModel>>(
                       future: _categoryListFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(child: Text('No category found.'));
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('No category found.'),
+                          );
                         } else {
                           final categories = snapshot.data!;
                           String? selectedCategoryName;
                           if (selectedCategoryUid != null) {
                             final matched = categories.firstWhere(
                               (cat) => cat.uid == selectedCategoryUid,
-                              orElse: () => CategoryFirebaseModel(uid: '', name: ''),
+                              orElse: () =>
+                                  CategoryFirebaseModel(uid: '', name: ''),
                             );
                             if ((matched.name ?? '').isNotEmpty) {
                               selectedCategoryName = matched.name;
@@ -221,20 +236,30 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
 
                           return DropdownFlutter(
                             decoration: CustomDropdownDecoration(
-                              closedFillColor: Theme.of(context).colorScheme.surface,
-                              expandedFillColor: Theme.of(context).colorScheme.surface,
+                              closedFillColor: Theme.of(
+                                context,
+                              ).colorScheme.surface,
+                              expandedFillColor: Theme.of(
+                                context,
+                              ).colorScheme.surface,
                               listItemStyle: AppTextStyle.p(context),
                               closedBorder: BoxBorder.fromBorderSide(
-                                BorderSide(color: Theme.of(context).colorScheme.outline),
+                                BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                               expandedBorder: BoxBorder.fromBorderSide(
-                                BorderSide(color: Theme.of(context).colorScheme.outline),
+                                BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             ),
                             initialItem: selectedCategoryName,
                             items: categories.map((c) => c.name ?? '').toList(),
                             onChanged: (v) {
-                              final selected = categories.firstWhere((e) => e.name == v);
+                              final selected = categories.firstWhere(
+                                (e) => e.name == v,
+                              );
                               setState(() {
                                 selectedCategoryUid = selected.uid;
                               });
@@ -253,7 +278,8 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
                     hint: "Masukkan harga modal",
                     isPrice: true,
                     validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Harga modal wajib diisi';
+                      if (v == null || v.trim().isEmpty)
+                        return 'Harga modal wajib diisi';
                       return null;
                     },
                   ),
@@ -265,7 +291,8 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
                     hint: "Masukkan harga jual",
                     isPrice: true,
                     validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Harga jual wajib diisi';
+                      if (v == null || v.trim().isEmpty)
+                        return 'Harga jual wajib diisi';
                       return null;
                     },
                   ),
@@ -276,7 +303,8 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
                     controller: stockC,
                     hint: "Masukkan jumlah stok",
                     validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Stok wajib diisi';
+                      if (v == null || v.trim().isEmpty)
+                        return 'Stok wajib diisi';
                       return null;
                     },
                   ),
@@ -294,22 +322,32 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.surface,
                               border: Border.fromBorderSide(
-                                BorderSide(color: Theme.of(context).colorScheme.outline),
+                                BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Center(child: Text("Batal", style: AppTextStyle.p(context))),
+                            child: Center(
+                              child: Text(
+                                "Batal",
+                                style: AppTextStyle.p(context),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
                         child: ButtonLogo(
-                          gradient: LinearGradient(colors: AppColor.primaryGradient),
+                          gradient: LinearGradient(
+                            colors: AppColor.primaryGradient,
+                          ),
                           icon: FontAwesomeIcons.floppyDisk,
                           iconColor: AppColor.surfaceLight,
                           iconSize: 16,
                           textButton: "Simpan",
                           onTap: () async => await _onSave(),
+                          isLoading: isLoading,
                         ),
                       ),
                     ],

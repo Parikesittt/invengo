@@ -27,6 +27,7 @@ class ProfileFirebasePage extends StatefulWidget {
 
 class _ProfileFirebasePageState extends State<ProfileFirebasePage> {
   bool isDark = false;
+  bool isLoading = false;
   String? username;
   String? email;
   String? phone;
@@ -79,11 +80,13 @@ class _ProfileFirebasePageState extends State<ProfileFirebasePage> {
   }
 
   Future<void> _logout() async {
+    setState(() => isLoading = true);
     try {
       await FirebaseAuth.instance.signOut();
     } catch (_) {}
     await PreferenceHandler.removeLogin();
     if (!mounted) return;
+    setState(() => isLoading = false);
     context.router.replace(const LoginRoute());
   }
 
@@ -292,6 +295,7 @@ class _ProfileFirebasePageState extends State<ProfileFirebasePage> {
                 onTap: () async {
                   await _logout();
                 },
+                isLoading: isLoading,
               ),
             ],
           ),

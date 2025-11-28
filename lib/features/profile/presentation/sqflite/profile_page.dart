@@ -24,6 +24,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isDark = false;
+  bool isLoading = false;
   String? username;
   void checkTheme() {
     if (Provider.of<ThemeProvider>(context, listen: false).themeData ==
@@ -244,10 +245,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 iconColor: Colors.white,
                 iconSize: 16,
                 bgColor: Colors.red,
-                onTap: () {
-                  PreferenceHandler.removeLogin();
+                onTap: () async {
+                  setState(() => isLoading = true);
+                  await PreferenceHandler.removeLogin();
+                  if (!mounted) return;
+                  setState(() => isLoading = false);
                   context.router.replace(const LoginRoute());
                 },
+                isLoading: isLoading,
               ),
             ],
           ),
