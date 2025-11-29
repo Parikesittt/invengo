@@ -4,7 +4,6 @@ import 'package:invengo/data/models/category_firebase_model.dart';
 import 'package:invengo/data/models/item_firebase_model.dart';
 import 'package:invengo/data/models/transaction_firebase_model.dart';
 import 'package:invengo/data/models/user_firebase_model.dart';
-import 'package:invengo/data/models/transaction_model.dart';
 
 class FirebaseService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -56,7 +55,6 @@ class FirebaseService {
       if (!snap.exists) return null;
       return UserFirebaseModel.fromMap({'uid': user.uid, ...snap.data()!});
     } on FirebaseAuthException catch (e) {
-      // normalize common auth errors to null like original sqlite implementation
       if (e.code == 'invalid-credential' ||
           e.code == 'wrong-password' ||
           e.code == 'user-not-found') {
@@ -87,12 +85,10 @@ class FirebaseService {
 
   static Future<void> deleteUser(String uid) async {
     await _usersCol.doc(uid).delete();
-    // NOTE: You might want to cascade-delete user-related data (if any).
   }
 
   // ----------------------- CATEGORIES -----------------------
   static Future<void> createCategory(CategoryFirebaseModel category) async {
-    // if category.id exists and is intended to be used as doc id, use it.
     if (category.uid != null && category.uid!.isNotEmpty) {
       await _categoriesCol.doc(category.uid).set(category.toMap());
     } else {
@@ -119,14 +115,12 @@ class FirebaseService {
 
   // ----------------------- ITEMS -----------------------
   static Future<String> createItem(ItemFirebaseModel item) async {
-    // build map from model but don't include id/uid
     final map = Map<String, dynamic>.from(
       item.toMap()
         ..remove('id')
         ..remove('uid'),
     );
 
-    // try to inject category_name if categoryId provided
     final categoryId = map['category_id'] as String?;
     if (categoryId != null && categoryId.isNotEmpty) {
       try {
@@ -137,10 +131,7 @@ class FirebaseService {
             map['category_name'] = catData['name'];
           }
         }
-      } catch (e) {
-        // log or ignore — we still create the item without category_name
-        // print('Failed to resolve category_name: $e');
-      }
+      } catch (e) {}
     }
 
     map['created_at'] = DateTime.now().toIso8601String();
@@ -148,12 +139,11 @@ class FirebaseService {
 
     final docRef = await _itemsCol.add(map);
 
-    // create initial transaction to reflect purchase/stock in (transaction_type = 0)
     await _transactionsCol.add({
       'item_id': docRef.id,
       'transaction_type': 0,
-      'total': (item.costPrice ?? 0) * (item.stock ?? 0),
-      'quantity': item.stock ?? 0,
+      'total': item.costPrice * item.stock,
+      'quantity': item.stock,
       'date': DateTime.now().toIso8601String(),
       'created_at': DateTime.now().toIso8601String(),
       'updated_at': DateTime.now().toIso8601String(),
@@ -166,10 +156,7 @@ class FirebaseService {
     final snap = await _itemsCol.get();
     return snap.docs.map((d) {
       final data = Map<String, dynamic>.from(d.data());
-      // inject document id — do NOT rely on stored 'id' field in doc
       data['id'] = d.id;
-      // keep any stored category_name (already denormalized if present)
-      // fallback: data['category_name'] may be null if older docs exist
       return ItemFirebaseModel.fromMap(data);
     }).toList();
   }
@@ -193,9 +180,7 @@ class FirebaseService {
             map['category_name'] = catData['name'];
           }
         }
-      } catch (e) {
-        // ignore/log
-      }
+      } catch (e) {}
     }
 
     map['updated_at'] = DateTime.now().toIso8601String();
@@ -239,7 +224,6 @@ class FirebaseService {
     final map = Map<String, dynamic>.from(fields);
     map.remove('id');
     map.remove('uid');
-    // remove null values to avoid overwriting fields with null
     map.removeWhere((key, value) => value == null);
     map['updated_at'] = DateTime.now().toIso8601String();
     await _itemsCol.doc(id).update(map);
@@ -247,7 +231,6 @@ class FirebaseService {
 
   static Future<void> deleteItem(String id) async {
     await _itemsCol.doc(id).delete();
-    // note: transactions referencing this item will remain unless you delete them too
   }
 
   // ----------------------- TRANSACTIONS -----------------------
@@ -277,7 +260,6 @@ class FirebaseService {
       final map = trans.toMap();
       map['created_at'] = DateTime.now().toIso8601String();
       map['updated_at'] = DateTime.now().toIso8601String();
-      // remove id if any, Firestore will set its own
       map.remove('id');
       tx.set(_transactionsCol.doc(), map);
     });
@@ -296,7 +278,6 @@ class FirebaseService {
         .orderBy('created_at', descending: true)
         .get();
 
-    // fetch items to map id->name
     final itemsSnap = await _itemsCol.get();
     final Map<String, dynamic> itemsMap = {};
     for (final d in itemsSnap.docs) itemsMap[d.id] = d.data();

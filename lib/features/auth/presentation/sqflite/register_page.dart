@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_container.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_footer.dart';
@@ -152,14 +151,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                   );
 
-                                  // Misal: langsung ke halaman login
                                   context.router.replace(const LoginRoute());
                                 } finally {
                                   if (mounted)
                                     setState(() => isLoading = false);
                                 }
                               } else {
-                                // ❌ Tampilkan pesan kalau input belum valid
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Periksa input kamu"),
@@ -168,10 +165,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                           ),
-                          // h(24),
-                          // AuthDivider(text: "register"),
-                          // h(24),
-                          // AuthSocialButton(),
                         ],
                       ),
                     ),

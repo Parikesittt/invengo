@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:invengo/core/services/firebase.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_container.dart';
@@ -83,13 +82,13 @@ class _LoginPageFirebaseState extends State<LoginPageFirebase> {
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets
-                                  .zero, // 🔹 Hilangin padding horizontal default
+                                  .zero, 
                               minimumSize: Size(
                                 0,
                                 0,
-                              ), // opsional, biar gak nambah space
+                              ),
                               tapTargetSize: MaterialTapTargetSize
-                                  .shrinkWrap, // rapat area klik
+                                  .shrinkWrap,
                             ),
                             child: Text(
                               "Remember Me",
@@ -130,10 +129,6 @@ class _LoginPageFirebaseState extends State<LoginPageFirebase> {
                         email: emailC.text.trim(),
                         password: passwordC.text.trim(),
                       );
-                      // final data = await DBHelper.loginUser(
-                      //   email: emailC.text,
-                      //   password: passwordC.text,
-                      // );
                       if (data != null) {
                         PreferenceHandler.saveUserData(
                           data.uid!,
@@ -149,10 +144,6 @@ class _LoginPageFirebaseState extends State<LoginPageFirebase> {
                       }
                     },
                   ),
-                  // height(24),
-                  // AuthDivider(text: "continue"),
-                  // height(24),
-                  // AuthSocialButton(),
                 ],
               ),
             ),

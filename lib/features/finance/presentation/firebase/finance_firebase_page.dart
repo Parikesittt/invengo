@@ -1,11 +1,9 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:invengo/shared/widgets/app_container.dart';
 import 'package:invengo/shared/widgets/page_header.dart';
-import 'package:invengo/shared/widgets/button_logo.dart';
 import 'package:invengo/core/constant/spacing_helper.dart';
 import 'package:invengo/core/constant/app_color.dart';
 import 'package:invengo/core/constant/app_text_style.dart';
@@ -29,17 +27,14 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
   RangeWindow selectedRange = RangeWindow.week;
   bool loading = true;
 
-  // totals
   int revenue = 0;
   int expenses = 0;
   int profit = 0;
 
-  // aggregated series for chart
   List<String> xLabels = [];
   List<num> incomeSeries = [];
   List<num> expenseSeries = [];
 
-  // recent transactions
   late Future<List<TransactionFirebaseModel>> recentTransFuture;
 
   final NumberFormat compact = NumberFormat.compact(locale: 'en_US');
@@ -55,7 +50,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
     setState(() => loading = true);
     try {
       final totals = await FirebaseService.getTotalTransaction();
-      // parse safely
       revenue = (totals['revenue'] ?? 0) is num
           ? (totals['revenue'] as num).toInt()
           : int.tryParse(totals['revenue']?.toString() ?? '0') ?? 0;
@@ -68,103 +62,190 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
 
       await _aggregateForRange(selectedRange);
     } catch (e) {
-      // ignore, keep defaults
     } finally {
       if (mounted) setState(() => loading = false);
     }
   }
 
   Future<void> _aggregateForRange(RangeWindow range) async {
-    // fetch all transactions and reduce to bins according to range
     final all = await FirebaseService.getAllTransaction();
     final now = DateTime.now();
 
+    DateTime? _parseAnyDate(String? maybeDate, String? maybeCreatedAt) {
+      if (maybeDate != null && maybeDate.isNotEmpty) {
+        final d1 = DateTime.tryParse(maybeDate);
+        if (d1 != null) return d1;
+        try {
+          return DateFormat('dd/MM/yyyy').parseStrict(maybeDate);
+        } catch (_) {}
+        try {
+          return DateFormat('yyyy-MM-dd').parseStrict(maybeDate);
+        } catch (_) {}
+        final millis = int.tryParse(maybeDate);
+        if (millis != null) return DateTime.fromMillisecondsSinceEpoch(millis);
+      }
+      if (maybeCreatedAt != null && maybeCreatedAt.isNotEmpty) {
+        final d2 = DateTime.tryParse(maybeCreatedAt);
+        if (d2 != null) return d2;
+        final millis2 = int.tryParse(maybeCreatedAt);
+        if (millis2 != null)
+          return DateTime.fromMillisecondsSinceEpoch(millis2);
+      }
+      return null;
+    }
+
+    num _safeNum(dynamic v) {
+      if (v == null) return 0;
+      if (v is num) return v;
+      if (v is String) {
+        final cleaned = v.replaceAll(RegExp(r'[^\d\-,.]'), '');
+        if (cleaned.isEmpty) return 0;
+        final noSep = cleaned.replaceAll(RegExp(r'[.,]'), '');
+        final asInt = int.tryParse(noSep);
+        if (asInt != null) return asInt;
+        final norm = cleaned.replaceAll(',', '.');
+        final asDouble = double.tryParse(norm);
+        if (asDouble != null) return asDouble;
+      }
+      return 0;
+    }
+
     if (range == RangeWindow.week) {
-      // last 7 days, label: Mon/Tue...
-      final start = now.subtract(Duration(days: 6));
+      final start = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(Duration(days: 6));
       final Map<String, num> rev = {};
       final Map<String, num> exp = {};
       final List<String> labels = [];
+      final dateKeyFmt = DateFormat('yyyy-MM-dd');
+      final labelFmt = DateFormat('dd/MM');
+
       for (int i = 0; i < 7; i++) {
         final d = start.add(Duration(days: i));
-        final key = DateFormat('yyyy-MM-dd').format(d);
+        final key = dateKeyFmt.format(d);
         rev[key] = 0;
         exp[key] = 0;
-        labels.add(DateFormat('E').format(d)); // Mon, Tue
+        labels.add(labelFmt.format(d));
       }
+
       for (final t in all) {
-        if (t.createdAt == null) continue;
-        final dt = DateTime.tryParse(t.createdAt!);
+        final dt = _parseAnyDate(t.date, t.createdAt);
         if (dt == null) continue;
-        final key = DateFormat('yyyy-MM-dd').format(dt);
+        final local = DateTime(dt.year, dt.month, dt.day);
+        if (local.isBefore(start) ||
+            local.isAfter(DateTime(now.year, now.month, now.day)))
+          continue;
+        final key = dateKeyFmt.format(local);
         if (!rev.containsKey(key)) continue;
+        final totalVal = _safeNum(t.total);
         if (t.transactionType == 1) {
-          rev[key] = rev[key]! + (t.total ?? 0);
+          rev[key] = rev[key]! + totalVal;
         } else {
-          exp[key] = exp[key]! + (t.total ?? 0);
+          exp[key] = exp[key]! + totalVal;
         }
       }
-      setState(() {
-        xLabels = labels;
-        incomeSeries = rev.values.toList();
-        expenseSeries = exp.values.toList();
-      });
+
+      if (mounted) {
+        setState(() {
+          xLabels = labels;
+          incomeSeries = rev.values.toList();
+          expenseSeries = exp.values.toList();
+        });
+      }
     } else if (range == RangeWindow.month) {
-      // last 30 days, group by week (5 buckets) — simpler UX
-      final start = now.subtract(Duration(days: 29));
+      final start = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(Duration(days: 29));
       final int buckets = 5;
       final bucketSize = 30 / buckets;
       final List<num> revB = List.filled(buckets, 0);
       final List<num> expB = List.filled(buckets, 0);
-      final labels = List.generate(buckets, (i) => 'Wk${i + 1}');
+      final labels = List.generate(buckets, (i) {
+        final bucketStart = start.add(Duration(days: (i * bucketSize).floor()));
+        final bucketEnd = start.add(
+          Duration(days: (((i + 1) * bucketSize).floor() - 1)),
+        );
+        return '${DateFormat('dd/MM').format(bucketStart)}';
+      });
+
       for (final t in all) {
-        if (t.createdAt == null) continue;
-        final dt = DateTime.tryParse(t.createdAt!);
+        final dt = _parseAnyDate(t.date, t.createdAt);
         if (dt == null) continue;
         if (dt.isBefore(start) || dt.isAfter(now)) continue;
         final daysFromStart = dt.difference(start).inDays;
         final idx = (daysFromStart / bucketSize).floor().clamp(0, buckets - 1);
+        final totalVal = _safeNum(t.total);
         if (t.transactionType == 1) {
-          revB[idx] = revB[idx] + (t.total ?? 0);
+          revB[idx] = revB[idx] + totalVal;
         } else {
-          expB[idx] = expB[idx] + (t.total ?? 0);
+          expB[idx] = expB[idx] + totalVal;
         }
       }
-      setState(() {
-        xLabels = labels;
-        incomeSeries = revB;
-        expenseSeries = expB;
-      });
+
+      if (mounted) {
+        setState(() {
+          xLabels = labels;
+          incomeSeries = revB;
+          expenseSeries = expB;
+        });
+      }
     } else {
-      // year: group by month (Jan..Dec last 12 months)
-      final List<DateTime> months = List.generate(12, (i) {
-        final dt = DateTime(now.year, now.month - 11 + i, 1);
-        return dt;
+      final months = List.generate(12, (i) {
+        final m = DateTime(now.year, now.month - 11 + i, 1);
+        return m;
       });
       final revM = List<num>.filled(12, 0);
       final expM = List<num>.filled(12, 0);
-      final labels = months.map((m) => DateFormat('MMM').format(m)).toList();
+      final labels = months
+          .map((m) => DateFormat('MM/yyyy').format(m))
+          .toList();
+
       for (final t in all) {
-        if (t.createdAt == null) continue;
-        final dt = DateTime.tryParse(t.createdAt!);
+        final dt = _parseAnyDate(t.date, t.createdAt);
         if (dt == null) continue;
-        // find bucket by year-month
-        final index = months.indexWhere(
+        final idx = months.indexWhere(
           (m) => m.year == dt.year && m.month == dt.month,
         );
-        if (index == -1) continue;
+        if (idx == -1) continue;
+        final totalVal = _safeNum(t.total);
         if (t.transactionType == 1) {
-          revM[index] = revM[index] + (t.total ?? 0);
+          revM[idx] = revM[idx] + totalVal;
         } else {
-          expM[index] = expM[index] + (t.total ?? 0);
+          expM[idx] = expM[idx] + totalVal;
         }
       }
-      setState(() {
-        xLabels = labels;
-        incomeSeries = revM;
-        expenseSeries = expM;
-      });
+
+      if (mounted) {
+        setState(() {
+          xLabels = labels;
+          incomeSeries = revM;
+          expenseSeries = expM;
+        });
+      }
     }
+  }
+
+  String _formatTransactionDate(TransactionFirebaseModel it) {
+    DateTime? dt;
+    if (it.date != null && (it.date as String).isNotEmpty) {
+      dt =
+          DateTime.tryParse(it.date!) ??
+          (DateFormat('dd/MM/yyyy').parseLoose(it.date!, true) as DateTime?);
+    }
+    if (dt == null && it.createdAt != null && it.createdAt!.isNotEmpty) {
+      dt = DateTime.tryParse(it.createdAt!);
+    }
+    if (dt == null) return '';
+    final base = DateFormat('dd/MM/yyyy').format(dt);
+    if (dt.hour != 0 || dt.minute != 0) {
+      final time = DateFormat('HH:mm').format(dt);
+      return '$base $time';
+    }
+    return base;
   }
 
   Widget _rangeButton(String text, RangeWindow r) {
@@ -219,13 +300,8 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
               PageHeader(
                 title: "Finance",
                 subtitle: "Track your revenue & expenses",
-                trailing: IconButton(
-                  icon: Icon(Icons.download),
-                  onPressed: () {},
-                ),
               ),
               h(20),
-              // Summary card
               Container(
                 padding: EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -261,29 +337,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                               ),
                             ),
                           ],
-                        ),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          color: Colors.white24,
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              spacing: 6,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.arrowTrendUp,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  "+31.8%",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                       ],
                     ),
@@ -321,10 +374,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                                     ),
                                   ),
                                   h(4),
-                                  Text(
-                                    "+23.5%",
-                                    style: TextStyle(color: Color(0xff7BF1A8)),
-                                  ),
                                 ],
                               ),
                             ),
@@ -359,18 +408,12 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                                   Text(
                                     'Rp ${formatRupiahWithoutSymbol(expenses)}',
 
-                                    // _dataFinance?['expenses']?.toString() ??
-                                    //     '0',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
                                   ),
                                   h(4),
-                                  Text(
-                                    "-8.2%",
-                                    style: TextStyle(color: Color(0xff7BF1A8)),
-                                  ),
                                 ],
                               ),
                             ),
@@ -382,7 +425,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                 ),
               ),
               h(20),
-              // Range selector
               Row(
                 children: [
                   _rangeButton("Week", RangeWindow.week),
@@ -393,13 +435,11 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                 ],
               ),
               h(20),
-              // Charts block
               AppContainer(
                 child: Column(
                   children: [
                     Row(
                       children: [
-                        // title gets the remaining space and will ellipsize if too long
                         Expanded(
                           child: Text(
                             "Revenue vs Expenses",
@@ -411,7 +451,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
 
                         const SizedBox(width: 12),
 
-                        // legend area: allow it to wrap / shrink if space is tight
                         Flexible(
                           flex: 0,
                           child: Align(
@@ -460,7 +499,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                 ),
               ),
               h(20),
-              // Recent transactions
               SizedBox(
                 height: screenH * 0.6,
                 child: FutureBuilder<List<TransactionFirebaseModel>>(
@@ -477,13 +515,7 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
                       itemBuilder: (context, i) {
                         final it = list[i];
                         final name = it.itemName ?? 'Unknown item';
-                        final date = it.createdAt != null
-                            ? (DateTime.tryParse(it.createdAt!) != null
-                                  ? DateFormat.yMMMd().add_Hm().format(
-                                      DateTime.parse(it.createdAt!),
-                                    )
-                                  : it.createdAt!)
-                            : '';
+                        final date = _formatTransactionDate(it);
                         return Container(
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
@@ -584,8 +616,6 @@ class _FinanceFirebasePageState extends State<FinanceFirebasePage>
   }
 }
 
-/// Very simple bar chart implementation without external libs.
-/// Expects xLabels length == income.length == expense.length
 class SimpleBarChart extends StatelessWidget {
   final List<String> xLabels;
   final List<num> income;
@@ -628,12 +658,10 @@ class SimpleBarChart extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // side-by-side small bars for income & expense
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // income
                       Container(
                         width: barWidth,
                         height: incH,
@@ -643,7 +671,6 @@ class SimpleBarChart extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 6),
-                      // expense
                       Container(
                         width: barWidth,
                         height: expH,
@@ -673,7 +700,6 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-/// Extremely small line chart: draws points and polyline using CustomPaint.
 class SimpleLineChart extends StatelessWidget {
   final List<num> points;
   const SimpleLineChart({Key? key, required this.points}) : super(key: key);
@@ -687,7 +713,6 @@ class SimpleLineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxV = _max();
-    // ensure CustomPaint gets finite size from parent by using LayoutBuilder
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
@@ -738,7 +763,6 @@ class _LinePainter extends CustomPainter {
       else
         path.lineTo(x, y);
     }
-    // draw shadow / area
     final fillPaint = Paint()
       ..color = color.withOpacity(0.12)
       ..style = PaintingStyle.fill;
@@ -747,9 +771,7 @@ class _LinePainter extends CustomPainter {
       ..lineTo(0, h)
       ..close();
     canvas.drawPath(area, fillPaint);
-    // draw line
     canvas.drawPath(path, paintLine);
-    // dots
     for (int i = 0; i < points.length; i++) {
       final x = step * i;
       final y = h - (points[i] / maxV) * (h - 8);

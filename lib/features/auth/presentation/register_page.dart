@@ -1,8 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:invengo/core/services/firebase.dart';
-import 'package:invengo/core/services/preference_handler.dart';
-import 'package:invengo/data/models/user_firebase_model.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_container.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_footer.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_header.dart';
@@ -10,19 +6,20 @@ import 'package:invengo/shared/widgets/custom_button.dart';
 import 'package:invengo/shared/widgets/custom_input_form.dart';
 import 'package:invengo/features/auth/presentation/widgets/label_form_auth.dart';
 import 'package:invengo/core/constant/spacing_helper.dart';
+import 'package:invengo/core/services/db_helper.dart';
+import 'package:invengo/data/models/user_model.dart';
 import 'package:invengo/core/config/route.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class RegisterPageFirebase extends StatefulWidget {
-  const RegisterPageFirebase({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<RegisterPageFirebase> createState() => _RegisterPageFirebaseState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
-  UserFirebaseModel user = UserFirebaseModel();
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   bool rememberMe = false;
   final TextEditingController fullNameC = TextEditingController();
@@ -30,7 +27,6 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
   final TextEditingController emailC = TextEditingController();
   final TextEditingController phoneC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
-  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +51,20 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           h(8),
+                          LabelAuth(title: "Full Name"),
+                          h(8),
+                          InputForm(
+                            hint: "Enter your full name",
+                            prefixIcon: Icon(Icons.person_2_outlined),
+                            controller: fullNameC,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Nama tidak boleh kosong";
+                              }
+                              return null;
+                            },
+                          ),
+                          h(24),
                           LabelAuth(title: "Username"),
                           h(8),
                           InputForm(
@@ -78,20 +88,6 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Email tidak boleh kosong";
-                              }
-                              return null;
-                            },
-                          ),
-                          h(24),
-                          LabelAuth(title: "Phone Number"),
-                          h(8),
-                          InputForm(
-                            hint: "Enter your phone number",
-                            prefixIcon: Icon(Icons.email_outlined),
-                            controller: phoneC,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Phone number tidak boleh kosong";
                               }
                               return null;
                             },
@@ -134,47 +130,28 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                             height: 48,
                             width: 295,
                             icon: Icons.arrow_forward,
-                            isLoading: isLoading,
-                            click: () async {
+                            click: () {
                               if (_formKey.currentState!.validate()) {
-                                setState(() {
-                                  isLoading = true;
-                                });
+                                // ✅ Semua validator sukses
+                                final user = UserModel(
+                                  username: usernameC.text,
+                                  name: fullNameC.text,
+                                  email: emailC.text,
+                                  phoneNumber: phoneC.text,
+                                  password: passwordC.text,
+                                );
+                                DBHelper.createUser(user);
 
-                                try {
-                                  final result =
-                                      await FirebaseService.registerUser(
-                                        phoneNumber: phoneC.text.trim(),
-                                        email: emailC.text.trim(),
-                                        password: passwordC.text.trim(),
-                                        username: usernameC.text.trim(),
-                                      );
-                                  setState(() {
-                                    isLoading = false;
-                                    user = result;
-                                  });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Registrasi berhasil"),
+                                  ),
+                                );
 
-                                  if (user.uid != null) {
-                                    await PreferenceHandler.saveToken(
-                                      user.uid!,
-                                    );
-                                  }
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Registrasi berhasil"),
-                                    ),
-                                  );
-
-                                  context.router.replace(
-                                    const LoginRouteFirebase(),
-                                  );
-                                } catch (e) {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                  Fluttertoast.showToast(msg: e.toString());
-                                }
+                                // Misal: langsung ke halaman login
+                                context.router.replace(const LoginRoute());
                               } else {
+                                // ❌ Tampilkan pesan kalau input belum valid
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Periksa input kamu"),
@@ -183,6 +160,10 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                               }
                             },
                           ),
+                          // h(24),
+                          // AuthDivider(text: "register"),
+                          // h(24),
+                          // AuthSocialButton(),
                         ],
                       ),
                     ),

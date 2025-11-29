@@ -13,7 +13,6 @@ import 'package:invengo/features/stock/presentation/widgets/stock_button.dart';
 import 'package:invengo/core/constant/app_text_style.dart';
 import 'package:invengo/refresh_notifier.dart';
 
-// Firebase service & models
 import 'package:invengo/core/services/firebase.dart';
 import 'package:invengo/data/models/item_firebase_model.dart';
 import 'package:invengo/data/models/transaction_firebase_model.dart';
@@ -93,27 +92,24 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
       return;
     }
 
-    // ambil stock terbaru (coba dari server untuk mengurangi kemungkinan stale data)
     int currentStock;
     try {
       final fresh = await FirebaseService.getItemById(selectedItems!.id!);
       if (fresh != null && fresh.stock != null) {
-        currentStock = fresh.stock!;
+        currentStock = fresh.stock;
       } else {
-        currentStock = selectedItems!.stock ?? 0;
+        currentStock = selectedItems!.stock;
       }
     } catch (_) {
-      // fallback aman
-      currentStock = selectedItems!.stock ?? 0;
+      currentStock = selectedItems!.stock;
     }
 
-    // hitung newStock secara lokal (selalu int, tidak null)
     final int newStock = isAdd ? (currentStock + qty) : (currentStock - qty);
 
     final parsedPrice = int.tryParse(priceC.text.replaceAll('.', ''));
     final unitPriceFallback = isAdd
-        ? (selectedItems!.costPrice ?? 0)
-        : (selectedItems!.sellingPrice ?? 0);
+        ? (selectedItems!.costPrice)
+        : (selectedItems!.sellingPrice);
     final usedUnitPrice = parsedPrice ?? unitPriceFallback;
     final total = usedUnitPrice * qty;
     final selectedDate = _parseDateFromController(dateC.text);
@@ -131,10 +127,8 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
         date: isoDate,
       );
 
-      // buat transaction (this updates stock atomically inside the service)
       await FirebaseService.createTransaction(trans);
 
-      // jika user masukkan harga baru -> update hanya field harga
       if (parsedPrice != null) {
         final fields = <String, dynamic>{};
         if (isAdd) {
@@ -145,14 +139,10 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
         await FirebaseService.updateItemFields(selectedItems!.id!, fields);
       }
 
-      // pastikan dokumen item tidak menyimpan stock null: tulis newStock (int)
-      // ini menulis stock yang kita hitung; createTransaction sudah update stock atomically,
-      // tapi menulis ulang dengan newStock memberikan jaminan doc tidak berisi null.
       await FirebaseService.updateItemFields(selectedItems!.id!, {
         'stock': newStock,
       });
 
-      // refresh local item model dari server supaya UI akurat
       final refreshed = await FirebaseService.getItemById(selectedItems!.id!);
       if (refreshed != null) selectedItems = refreshed;
 
@@ -169,15 +159,12 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
 
   DateTime _parseDateFromController(String text) {
     if (text.trim().isEmpty) return DateTime.now();
-    // try ISO first
     try {
       return DateTime.parse(text);
     } catch (_) {}
-    // try yyyy-MM-dd
     try {
       return DateFormat('yyyy-MM-dd').parseStrict(text);
     } catch (_) {}
-    // try dd/MM/yyyy
     try {
       final parts = text.split('/');
       if (parts.length == 3) {
@@ -187,7 +174,6 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
         if (d != null && m != null && y != null) return DateTime(y, m, d);
       }
     } catch (_) {}
-    // fallback
     return DateTime.now();
   }
 
@@ -243,7 +229,7 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                                   isAdd = true;
                                   if (selectedItems != null) {
                                     priceC.text = formatter.format(
-                                      selectedItems!.costPrice ?? 0,
+                                      selectedItems!.costPrice ,
                                     );
                                   }
                                 });
@@ -263,7 +249,7 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                                   isAdd = false;
                                   if (selectedItems != null) {
                                     priceC.text = formatter.format(
-                                      selectedItems!.sellingPrice ?? 0,
+                                      selectedItems!.sellingPrice ,
                                     );
                                   }
                                 });
@@ -317,10 +303,9 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                           child: DropdownSearch<ItemFirebaseModel>(
                             items: _stockList,
                             filterFn: (item, filter) {
-                              return item.name?.toLowerCase().contains(
+                              return item.name.toLowerCase().contains(
                                     filter.toLowerCase(),
-                                  ) ??
-                                  false;
+                                  );
                             },
                             itemAsString: (ItemFirebaseModel? m) =>
                                 m?.name ?? '',
@@ -360,8 +345,8 @@ class _StockTransFirebasePageState extends State<StockTransFirebasePage> {
                               setState(() {
                                 selectedItems = v;
                                 final price = isAdd
-                                    ? (v.costPrice ?? 0)
-                                    : (v.sellingPrice ?? 0);
+                                    ? (v.costPrice)
+                                    : (v.sellingPrice);
                                 priceC.text = formatter.format(price);
                               });
                             },

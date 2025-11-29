@@ -98,7 +98,6 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text("List User")),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

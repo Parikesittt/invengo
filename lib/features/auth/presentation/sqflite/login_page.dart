@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_container.dart';
 import 'package:invengo/features/auth/presentation/widgets/auth_footer.dart';
@@ -83,13 +82,13 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets
-                                  .zero, // 🔹 Hilangin padding horizontal default
+                                  .zero, 
                               minimumSize: Size(
                                 0,
                                 0,
-                              ), // opsional, biar gak nambah space
+                              ),
                               tapTargetSize: MaterialTapTargetSize
-                                  .shrinkWrap, // rapat area klik
+                                  .shrinkWrap,
                             ),
                             child: Text(
                               "Remember Me",
@@ -147,10 +146,6 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                   ),
-                  // height(24),
-                  // AuthDivider(text: "continue"),
-                  // height(24),
-                  // AuthSocialButton(),
                 ],
               ),
             ),

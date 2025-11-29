@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +45,10 @@ class _StockCreateFirebasePageState extends State<StockCreateFirebasePage> {
 
     if (widget.isUpdate && widget.item != null) {
       final it = widget.item!;
-      nameC.text = it.name ?? '';
-      costPriceC.text = (it.costPrice ?? 0).toString();
-      sellPriceC.text = (it.sellingPrice ?? 0).toString();
-      stockC.text = (it.stock ?? 0).toString();
+      nameC.text = it.name;
+      costPriceC.text = (it.costPrice ).toString();
+      sellPriceC.text = (it.sellingPrice).toString();
+      stockC.text = (it.stock ).toString();
       selectedCategoryUid = it.categoryId;
     }
   }

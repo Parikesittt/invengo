@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +13,6 @@ import 'package:invengo/core/theme/theme.dart';
 import 'package:invengo/core/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:invengo/core/services/firebase.dart';
-import 'package:invengo/data/models/user_firebase_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 @RoutePage()
@@ -34,7 +32,6 @@ class _ProfileFirebasePageState extends State<ProfileFirebasePage> {
 
   Future<void> _loadUserProfile() async {
     try {
-      // try preference first (fast), then refresh from firestore if possible
       final prefName = await PreferenceHandler.getUsername();
       if (!mounted) return;
       setState(() {
@@ -54,8 +51,6 @@ class _ProfileFirebasePageState extends State<ProfileFirebasePage> {
         });
       }
     } catch (e) {
-      // ignore silently or show a non-blocking message
-      // print('Failed to load profile: $e');
     }
   }
 
@@ -87,7 +82,7 @@ class _ProfileFirebasePageState extends State<ProfileFirebasePage> {
     await PreferenceHandler.removeLogin();
     if (!mounted) return;
     setState(() => isLoading = false);
-    context.router.replace(const LoginRoute());
+    context.router.replace(const LoginRouteFirebase());
   }
 
   @override

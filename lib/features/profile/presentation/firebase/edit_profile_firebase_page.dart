@@ -43,14 +43,12 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
   }
 
   Future<void> _initData() async {
-    // load quick preference username (fast)
     final prefName = await PreferenceHandler.getUsername();
     if (!mounted) return;
     setState(() {
       username = prefName ?? 'Guest';
     });
 
-    // try load from firebase if user is signed in
     final uid = FirebaseAuth.instance.currentUser?.uid;
     _uid = uid;
     if (uid != null) {
@@ -61,11 +59,9 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
         usernameC.text = user.username ?? '';
         emailC.text = user.email ?? '';
         phoneC.text = user.phoneNumber ?? '';
-        // don't prefill password (not stored here)
         setState(() {});
       }
     } else {
-      // fallback to preferences only
       final storedUsername = await PreferenceHandler.getUsername();
       if (!mounted) return;
       usernameC.text = storedUsername ?? '';
@@ -95,7 +91,6 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
       return;
     }
 
-    // require signed in user to update Firebase profile
     final uid = _uid ?? FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
       ScaffoldMessenger.of(
@@ -111,14 +106,11 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
         username: usernameC.text.trim(),
         email: emailC.text.trim(),
         phoneNumber: phoneC.text.trim(),
-        // do not store password here; handle auth password separately if needed
         updatedAt: DateTime.now().toIso8601String(),
       );
 
       await FirebaseService.updateUser(updated);
 
-      // update local preference username so other screens read updated name
-      // await PreferenceHandler.setUsername(usernameC.text.trim());
 
       Fluttertoast.showToast(
         msg: "Data berhasil diperbarui",
@@ -167,7 +159,6 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        // TODO: implement avatar change
                       },
                       child: Stack(
                         alignment: Alignment.bottomRight,

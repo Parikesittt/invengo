@@ -1,6 +1,4 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:invengo/features/dashboard/presentation/firebase/dashboard_firebase_page.dart';
 import 'package:invengo/shared/widgets/gradient_fab.dart';
 import 'package:invengo/core/constant/app_color.dart';
 import 'package:invengo/core/config/route.dart';
@@ -24,7 +22,6 @@ class _MainScaffoldState extends State<MainScaffold> {
   int _selectedIndex = 0;
   final List<Widget> _page = [
     DashboardPage(),
-    // DashboardFirebasePage(),
     StockPage(),
     FinancePage(),
     ProfilePage(),

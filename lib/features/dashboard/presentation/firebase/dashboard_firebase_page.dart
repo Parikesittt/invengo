@@ -12,11 +12,8 @@ import 'package:invengo/shared/widgets/page_header.dart';
 import 'package:invengo/core/constant/spacing_helper.dart';
 import 'package:invengo/core/constant/app_color.dart';
 import 'package:invengo/core/constant/app_text_style.dart';
-import 'package:invengo/core/services/db_helper.dart';
-import 'package:invengo/data/models/transaction_model.dart';
 import 'package:invengo/core/services/preference_handler.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'dart:math';
 
 @RoutePage()
 class DashboardFirebasePage extends StatefulWidget {
@@ -43,7 +40,6 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
   void initState() {
     super.initState();
 
-    // safe async: check `mounted` before calling setState
     PreferenceHandler.getUsername()
         .then((value) {
           if (!mounted) return;
@@ -51,48 +47,34 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
             username = value ?? 'Guest';
           });
         })
-        .catchError((e) {
-          // optional: log error, but don't call setState if not mounted
-          // print('Failed to get username: $e');
-        });
+        .catchError((e) {});
 
-    // start loading data (non-blocking)
     transactionFuture = FirebaseService.getAllTransaction();
     _loadDataSafely();
   }
 
-  // keep a separate async function that checks `mounted` before setState
   Future<void> _loadDataSafely() async {
     try {
-      // we already started transactionFuture above, so no need to await it here
       final data = await FirebaseService.getItemsTotal();
       final finance = await FirebaseService.getTotalTransaction();
       await _prepareChartData();
 
-      // important: don't call setState if disposed
       if (!mounted) return;
       setState(() {
         stockData = data;
         financeData = finance;
-        // debug print ok, but keep it outside setState ideally
       });
-    } catch (e, st) {
-      // handle or log error; don't call setState unless mounted
-      // print('Error loading dashboard data: $e\n$st');
+    } catch (e) {
       if (!mounted) return;
-      setState(() {
-        // you might want to set an error state or keep previous values
-      });
+      setState(() {});
     }
   }
 
   @override
   void dispose() {
-    // If you add timers/listeners/subscriptions later, cancel them here.
     super.dispose();
   }
 
-  // You can keep other helper functions but always check mounted before setState
   getUserData() async {
     final name = await PreferenceHandler.getUsername();
     if (!mounted) return;
@@ -103,58 +85,147 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
 
   Future<void> _prepareChartData() async {
     try {
-      final allTrans =
-          await FirebaseService.getAllTransaction(); // returns TransactionFirebaseModel list
-      // focus on last 30 days
-      final now = DateTime.now();
-      final start = now.subtract(const Duration(days: 29)); // 30 days inclusive
+      final allTrans = await FirebaseService.getAllTransaction();
 
-      // initialize daily buckets
+      final now = DateTime.now();
+      final start = now.subtract(const Duration(days: 29));
+      final dailyKeyFormat = DateFormat('dd/MM/yyyy');
+      final labelFormat = DateFormat('dd/MM');
+
       final Map<String, num> revenueByDay = {};
       final Map<String, num> expenseByDay = {};
-
       for (int i = 0; i < 30; i++) {
-        final day = start.add(Duration(days: i));
-        final key = DateFormat('yyyy-MM-dd').format(day);
+        final d = start.add(Duration(days: i));
+        final key = dailyKeyFormat.format(d);
         revenueByDay[key] = 0;
         expenseByDay[key] = 0;
       }
 
-      for (final t in allTrans) {
-        if (t.createdAt == null) continue;
-        DateTime? dt;
+      int parsedCount = 0;
+      int skippedCount = 0;
+      final List<String> sampleLogs = [];
+
+      num _parseTotal(dynamic raw) {
+        if (raw == null) return 0;
+        if (raw is num) return raw;
+        if (raw is String) {
+          final cleaned = raw.replaceAll(RegExp(r'[^\d\-,.]'), '');
+          if (cleaned.isEmpty) return 0;
+          final noSep = cleaned.replaceAll(RegExp(r'[.,]'), '');
+          final asInt = int.tryParse(noSep);
+          if (asInt != null) return asInt;
+          final norm = cleaned.replaceAll(',', '.');
+          final asDouble = double.tryParse(norm);
+          if (asDouble != null) return asDouble;
+        }
+        return 0;
+      }
+
+      DateTime? _tryParseDate(String? dateStr, dynamic createdAt) {
         try {
-          dt = DateTime.parse(t.createdAt!);
-        } catch (_) {
-          // fallback: ignore unparsable timestamps
+          if (dateStr != null && dateStr.isNotEmpty) {
+            final iso = DateTime.tryParse(dateStr);
+            if (iso != null) return iso;
+
+            try {
+              return DateFormat('dd/MM/yyyy').parseStrict(dateStr);
+            } catch (_) {}
+
+            try {
+              return DateFormat('yyyy-MM-dd').parseStrict(dateStr);
+            } catch (_) {}
+
+            final millis = int.tryParse(dateStr);
+            if (millis != null)
+              return DateTime.fromMillisecondsSinceEpoch(millis);
+          }
+
+          if (createdAt != null) {
+            if (createdAt is int)
+              return DateTime.fromMillisecondsSinceEpoch(createdAt);
+            if (createdAt is String) {
+              final iso2 = DateTime.tryParse(createdAt);
+              if (iso2 != null) return iso2;
+              final millis2 = int.tryParse(createdAt);
+              if (millis2 != null)
+                return DateTime.fromMillisecondsSinceEpoch(millis2);
+            }
+          }
+        } catch (_) {}
+        return null;
+      }
+
+      for (int i = 0; i < allTrans.length; i++) {
+        final t = allTrans[i];
+        final rawDate =
+            (t.date != null &&
+                (t.date is String) &&
+                (t.date as String).isNotEmpty)
+            ? (t.date as String)
+            : null;
+        final rawCreated = (t.createdAt != null) ? t.createdAt : null;
+
+        final dt = _tryParseDate(rawDate, rawCreated);
+        if (dt == null) {
+          skippedCount++;
+          if (sampleLogs.length < 6) {
+            sampleLogs.add(
+              'SKIP idx=$i date=${t.date} createdAt=${t.createdAt} total=${t.total}',
+            );
+          }
           continue;
         }
-        if (dt.isBefore(start) || dt.isAfter(now)) continue;
-        final key = DateFormat('yyyy-MM-dd').format(dt);
-        // transactionType: 0 = expense (stock in), 1 = revenue (stock out)
+
+        final localDate = DateTime(dt.year, dt.month, dt.day);
+        final startDay = DateTime(start.year, start.month, start.day);
+        final nowDay = DateTime(now.year, now.month, now.day);
+        if (localDate.isBefore(startDay) || localDate.isAfter(nowDay)) {
+          continue;
+        }
+
+        final key = dailyKeyFormat.format(localDate);
+        final totalVal = _parseTotal(t.total);
+
         if (t.transactionType == 1) {
-          revenueByDay[key] = (revenueByDay[key] ?? 0) + (t.total ?? 0);
+          revenueByDay[key] = (revenueByDay[key] ?? 0) + totalVal;
         } else {
-          expenseByDay[key] = (expenseByDay[key] ?? 0) + (t.total ?? 0);
+          expenseByDay[key] = (expenseByDay[key] ?? 0) + totalVal;
+        }
+
+        parsedCount++;
+        if (sampleLogs.length < 6) {
+          sampleLogs.add(
+            'OK   idx=$i date=${dailyKeyFormat.format(localDate)} total=$totalVal type=${t.transactionType}',
+          );
         }
       }
 
-      // prepare spots (x as day index 0..29)
       final List<FlSpot> revSpots = [];
       final List<FlSpot> expSpots = [];
       final List<String> labels = [];
-
-      int idx = 0;
       for (int i = 0; i < 30; i++) {
-        final day = start.add(Duration(days: i));
-        final key = DateFormat('yyyy-MM-dd').format(day);
-        final rev = (revenueByDay[key] ?? 0) as num;
-        final exp = (expenseByDay[key] ?? 0) as num;
-        revSpots.add(FlSpot(idx.toDouble(), rev.toDouble()));
-        expSpots.add(FlSpot(idx.toDouble(), exp.toDouble()));
-        // label only few to avoid crowding
-        labels.add(DateFormat('MM/dd').format(day));
-        idx++;
+        final d = start.add(Duration(days: i));
+        final key = dailyKeyFormat.format(d);
+        final rev = (revenueByDay[key] ?? 0).toDouble();
+        final exp = (expenseByDay[key] ?? 0).toDouble();
+        revSpots.add(FlSpot(i.toDouble(), rev));
+        expSpots.add(FlSpot(i.toDouble(), exp));
+        labels.add(labelFormat.format(d));
+      }
+
+      print(
+        'Chart prepare: parsed=$parsedCount skipped=$skippedCount totalTransactions=${allTrans.length}',
+      );
+      for (final s in sampleLogs) {
+        print(s);
+      }
+
+      if (parsedCount == 0) {
+        print(
+          'No parsed transactions within window. Injecting debug sample for visualization.',
+        );
+        revSpots[28] = FlSpot(28, 1000);
+        expSpots[26] = FlSpot(26, 500);
       }
 
       if (!mounted) return;
@@ -163,9 +234,8 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
         expenseSpots = expSpots;
         chartLabels = labels;
       });
-    } catch (e) {
-      // ignore or log
-      // print('chart preparation error: $e');
+    } catch (e, st) {
+      print('prepareChartData error: $e\n$st');
     }
   }
 
@@ -210,7 +280,6 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                       iconBgColor: AppColor.primary,
                       value: stockData?['Total Product']?.toString() ?? '0',
                       label: "Total Product",
-                      percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
@@ -220,7 +289,6 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                       iconBgColor: Color(0xffEF9509),
                       value: stockData?['Low Stock']?.toString() ?? '0',
                       label: "Low Stock",
-                      percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
@@ -231,7 +299,6 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                       value:
                           "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
                       label: "Profit",
-                      percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
@@ -272,23 +339,10 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.trending_up,
-                              color: AppColor.iconTrendUp,
-                            ),
-                            Text(
-                              "+12%",
-                              style: TextStyle(color: AppColor.iconTrendUp),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                     SizedBox(
-                      height: 140, // tune as needed
+                      height: 140,
                       child: revenueSpots.isEmpty && expenseSpots.isEmpty
                           ? Center(child: Text('No chart data'))
                           : Padding(
@@ -315,7 +369,6 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                                         reservedSize: 48,
                                         getTitlesWidget:
                                             (double value, TitleMeta meta) {
-                                              // meta.axisSide tersedia di TitleMeta
                                               final txt = NumberFormat.compact(
                                                 locale: 'en_US',
                                               ).format(value);
@@ -417,7 +470,7 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
                 child: Column(
                   children: [
                     Row(
@@ -426,26 +479,8 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
                           "Recent Activity",
                           style: AppTextStyle.sectionTitle(context),
                         ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                "View All",
-                                style: TextStyle(color: AppColor.primary),
-                              ),
-                            ),
-                            Icon(
-                              Icons.arrow_outward,
-                              color: AppColor.primary,
-                              size: 16,
-                            ),
-                          ],
-                        ),
                       ],
                     ),
-                    // height(12),
                     FutureBuilder(
                       future: transactionFuture,
                       builder: (context, snapshot) {
@@ -515,13 +550,11 @@ class _DashboardFirebasePageState extends State<DashboardFirebasePage> {
     double maxVal = 0;
     for (final s in a) if (s.y > maxVal) maxVal = s.y;
     for (final s in b) if (s.y > maxVal) maxVal = s.y;
-    // add a headroom
     if (maxVal <= 0) return 10;
     return (maxVal * 1.25).ceilToDouble();
   }
 
   double _calcNiceInterval() {
-    // crude interval pick for left axis labels
     final maxY = _calcMaxY(revenueSpots, expenseSpots);
     final nice = (maxY / 3).ceilToDouble();
     return nice > 0 ? nice : 1;

@@ -9,7 +9,6 @@ class AuthContainer extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(24),
       width: 343,
-      // height: 453,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),

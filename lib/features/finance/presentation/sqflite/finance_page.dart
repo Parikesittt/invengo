@@ -43,7 +43,6 @@ class _FinancePageState extends State<FinancePage>
   Future<void> getData() async {
     _listTrans = DBHelper.getAllTransaction();
     _dataFinance = await DBHelper.getTotalTransaction();
-    print(_dataFinance);
     if (_dataFinance != null) {
       expenses = int.tryParse(_dataFinance!['expenses'].toString()) ?? 0;
       revenue = int.tryParse(_dataFinance!['revenue'].toString()) ?? 0;
@@ -201,8 +200,6 @@ class _FinancePageState extends State<FinancePage>
                                   Text(
                                     'Rp ${formatRupiahWithoutSymbol(expenses)}',
 
-                                    // _dataFinance?['expenses']?.toString() ??
-                                    //     '0',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -294,7 +291,6 @@ class _FinancePageState extends State<FinancePage>
                   children: [_tabContent(), _tabContent(), _tabContent()],
                 ),
               ),
-              // height(4),
               SizedBox(
                 height: screenHeight * 0.73,
                 child: Column(
@@ -444,7 +440,6 @@ class _FinancePageState extends State<FinancePage>
   }
 
   Widget _tabContent() {
-    // Scroll masing-masing tab
     return Column(
       spacing: 32,
       children: [

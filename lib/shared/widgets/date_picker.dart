@@ -16,7 +16,7 @@ class _DatePickerFormFieldState extends State<DatePickerFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      readOnly: true, // biar user gak bisa ngetik manual
+      readOnly: true, 
       decoration: InputDecoration(
         hintText: 'Pilih tanggal',
         prefixIcon: const Icon(Icons.calendar_today),

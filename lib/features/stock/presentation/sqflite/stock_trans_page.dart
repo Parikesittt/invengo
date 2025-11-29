@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,6 @@ class StockTransPage extends StatefulWidget {
 }
 
 class _StockTransPageState extends State<StockTransPage> {
-  // late Future<List<StockDropdownModel>> _stockListFuture;
   final NumberFormat formatter = NumberFormat("#,###", "id_ID");
   final _formKey = GlobalKey<FormState>();
   List<ItemModel> _stockList = [];
@@ -55,7 +53,6 @@ class _StockTransPageState extends State<StockTransPage> {
           ? selectedItems!.sellingPrice
           : selectedItems!.costPrice;
 
-      // Format langsung di sini (biar TextField-nya sudah bertitik)
       final formatted = formatter.format(price);
       priceC.text = formatted;
     }
@@ -65,7 +62,6 @@ class _StockTransPageState extends State<StockTransPage> {
     final items = await DBHelper.getAllItems();
     setState(() {
       _stockList = items;
-      print(_stockList);
     });
   }
 

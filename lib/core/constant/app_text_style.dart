@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// ✅ AppTextStyle
-/// Semua style otomatis menyesuaikan warna berdasarkan theme (light/dark)
-/// Gunakan dengan cara: `AppTextStyle.h1(context)`
 class AppTextStyle {
-  /// Header besar, misal "Invengo"
   static TextStyle header(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -14,7 +10,6 @@ class AppTextStyle {
     );
   }
 
-  /// Subheader, misal "Welcome back, Admin"
   static TextStyle subHeader(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -24,7 +19,6 @@ class AppTextStyle {
     );
   }
 
-  /// Judul kecil di dalam card
   static TextStyle cardTitle(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -34,7 +28,6 @@ class AppTextStyle {
     );
   }
 
-  /// Nilai utama di card (angka besar)
   static TextStyle cardValue(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -44,16 +37,14 @@ class AppTextStyle {
     );
   }
 
-  /// Teks pertumbuhan, misal "+12%"
   static TextStyle growth(BuildContext context) {
     return const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w500,
-      color: Color(0xFF12B76A), // hijau growth (tetap sama di kedua mode)
+      color: Color(0xFF12B76A), 
     );
   }
 
-  /// Section title, misal “Revenue Overview”
   static TextStyle sectionTitle(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -63,7 +54,6 @@ class AppTextStyle {
     );
   }
 
-  /// Section subtitle, misal “Last 30 days”
   static TextStyle sectionSubtitle(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -73,7 +63,6 @@ class AppTextStyle {
     );
   }
 
-  /// Heading 1
   static TextStyle h1(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -83,7 +72,6 @@ class AppTextStyle {
     );
   }
 
-  /// Heading 2
   static TextStyle h2(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -93,7 +81,6 @@ class AppTextStyle {
     );
   }
 
-  /// Heading 3
   static TextStyle h3(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -103,7 +90,6 @@ class AppTextStyle {
     );
   }
 
-  /// Heading 4
   static TextStyle h4(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -113,7 +99,6 @@ class AppTextStyle {
     );
   }
 
-  /// Paragraf umum
   static TextStyle p(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -122,7 +107,6 @@ class AppTextStyle {
     );
   }
 
-  /// Harga atau teks dengan warna utama
   static TextStyle pPrice(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -132,7 +116,6 @@ class AppTextStyle {
     );
   }
 
-  /// Label kecil (seperti caption)
   static TextStyle label(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
@@ -141,7 +124,6 @@ class AppTextStyle {
     );
   }
 
-  /// Tombol (teks di atas button)
   static TextStyle button(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(

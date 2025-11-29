@@ -50,7 +50,6 @@ class _StockPageState extends State<StockPage>
 
   @override
   void didPopNext() {
-    // Dipanggil setiap kali user balik ke halaman ini dari halaman lain
     getData();
     super.didPopNext();
   }
@@ -228,11 +227,9 @@ class _StockPageState extends State<StockPage>
                                         ],
                                       ),
                                     ),
-                                    // color: Color(0x207c3aed),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 12.0,
-                                        // horizontal: 24,
                                       ),
                                       child: Column(
                                         children: [
@@ -276,11 +273,9 @@ class _StockPageState extends State<StockPage>
                                         ],
                                       ),
                                     ),
-                                    // color: Color(0x207c3aed),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 12.0,
-                                        // horizontal: 24,
                                       ),
                                       child: Column(
                                         children: [
@@ -324,11 +319,9 @@ class _StockPageState extends State<StockPage>
                                         ],
                                       ),
                                     ),
-                                    // color: Color(0x207c3aed),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 12.0,
-                                        // horizontal: 24,
                                       ),
                                       child: Column(
                                         children: [
@@ -372,11 +365,9 @@ class _StockPageState extends State<StockPage>
                                         ],
                                       ),
                                     ),
-                                    // color: Color(0x207c3aed),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 12.0,
-                                        // horizontal: 24,
                                       ),
                                       child: Column(
                                         children: [
@@ -418,7 +409,7 @@ class _StockPageState extends State<StockPage>
                           ],
                         ),
                         SizedBox(
-                          height: screenHeight * 0.4, // misal 70% tinggi layar
+                          height: screenHeight * 0.4, 
                           child: TabBarView(
                             physics: NeverScrollableScrollPhysics(),
                             controller: _tabController,
@@ -429,7 +420,6 @@ class _StockPageState extends State<StockPage>
                             ],
                           ),
                         ),
-                        // h(24),
                       ],
                     );
                   }
@@ -443,7 +433,6 @@ class _StockPageState extends State<StockPage>
   }
 
   Widget _tabContent(String text) {
-    // Scroll masing-masing tab
     return FutureBuilder(
       future: _listItems,
       builder: (context, snapshot) {
@@ -519,18 +508,17 @@ class _StockPageState extends State<StockPage>
                                           onPressed: () {
                                             Navigator.of(
                                               context,
-                                            ).pop(); // Dismiss the dialog
+                                            ).pop(); 
                                           },
                                           child: const Text('Cancel'),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            // Perform action on confirmation
                                             DBHelper.deleteItems(item.id!);
                                             refreshStockNotifier.value = true;
                                             Navigator.of(
                                               context,
-                                            ).pop(); // Dismiss the dialog
+                                            ).pop(); 
                                           },
                                           child: const Text('OK'),
                                         ),

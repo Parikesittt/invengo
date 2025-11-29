@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 class AppColor {
   static const primaryGradient = [Color(0xff8B5CF6), Color(0xffEC4899)];
 
-  // static const primary = Color(0xff8B5CF6);
-  // static const secondary = Color(0xffec4899);
   static const error = Color(0xffef4444);
   static const primaryTextLight = Color(0xff101828);
   static const primaryTextLightOpacity80 = Color(0x80101828);

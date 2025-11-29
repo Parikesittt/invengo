@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +140,6 @@ class _StockCreatePageState extends State<StockCreatePage> {
             child: Form(
               key: _formKey,
               child: Column(
-                // spacing: 12,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   LabelAuth(title: "Nama Barang"),
@@ -184,7 +182,6 @@ class _StockCreatePageState extends State<StockCreatePage> {
                             child: Text('No category found.'),
                           );
                         } else {
-                          // Data has been successfully loaded
                           List<CategoryModel> categories = snapshot.data!;
                           String? selectedCategoryName;
                           if (selectedCategoryId != null) {

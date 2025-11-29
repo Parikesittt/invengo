@@ -1,7 +1,5 @@
-// file: widgets/category_pie_chart.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart';
 import 'package:invengo/core/services/firebase.dart';
 import 'package:invengo/data/models/category_firebase_model.dart';
 import 'package:invengo/data/models/item_firebase_model.dart';
@@ -33,9 +31,7 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
     final cats = widget.categories ?? await FirebaseService.getAllCategory();
     final its = widget.items ?? await FirebaseService.getAllItems();
 
-    // safety: build counts keyed by a stable key (prefer uid, fallback to name)
     final Map<String, int> counts = {};
-    // keep a map from stableKey -> Category object for later use
     final Map<String, CategoryFirebaseModel> keyToCategory = {};
 
     for (final c in cats) {
@@ -48,19 +44,16 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
       keyToCategory[key] = c;
     }
 
-    // helper to find the category key for an item (try uid first, then name)
     String? findCategoryKeyForItem(ItemFirebaseModel it) {
-      final cid = (it.categoryId ?? '').toString();
+      final cid = (it.categoryId).toString();
       if (cid.isEmpty) return null;
 
-      // direct match uid
       final matchByUid = keyToCategory.entries.firstWhere(
         (e) => (e.value.uid != null && e.value.uid == cid),
         orElse: () => MapEntry('', CategoryFirebaseModel(uid: '', name: '')),
       );
       if (matchByUid.key != '') return matchByUid.key;
 
-      // match by name (some DB may store name instead of id)
       final matchByName = keyToCategory.entries.firstWhere(
         (e) => (e.value.name != null && e.value.name == cid),
         orElse: () => MapEntry('', CategoryFirebaseModel(uid: '', name: '')),
@@ -70,18 +63,14 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
       return null;
     }
 
-    // count items per category
     for (final it in its) {
       final key = findCategoryKeyForItem(it);
       if (key != null && counts.containsKey(key)) {
         counts[key] = counts[key]! + 1;
       } else {
-        // optional: try fuzzy match by trimming/normalizing
-        // ignore items that truly have no matching category
       }
     }
 
-    // Build display list: prefer categories that have >0, otherwise show all
     final filtered = keyToCategory.keys
         .where((k) => (counts[k] ?? 0) > 0)
         .toList();
@@ -224,24 +213,6 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
                         ),
                       ),
 
-                      // if (showCenterLabel)
-                      //   Column(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     children: [
-                      //       Text(
-                      //         '${_legend.first['percent'].toStringAsFixed(0)}%',
-                      //         style: const TextStyle(
-                      //           fontSize: 20,
-                      //           fontWeight: FontWeight.bold,
-                      //         ),
-                      //       ),
-                      //       const SizedBox(height: 4),
-                      //       Text(
-                      //         _legend.first['name'] as String,
-                      //         style: const TextStyle(fontSize: 12),
-                      //       ),
-                      //     ],
-                      //   ),
                     ],
                   ),
                 ),

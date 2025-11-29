@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:invengo/features/dashboard/presentation/widgets/activity_tile.dart';
 import 'package:invengo/features/dashboard/presentation/widgets/info_card.dart';
-import 'package:invengo/features/dashboard/presentation/widgets/low_stock_card.dart';
 import 'package:invengo/shared/widgets/page_header.dart';
 import 'package:invengo/core/constant/spacing_helper.dart';
 import 'package:invengo/core/constant/app_color.dart';
@@ -51,7 +50,6 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {
       stockData = data;
       financeData = finance;
-      print(financeData);
     });
   }
 
@@ -96,7 +94,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       iconBgColor: AppColor.primary,
                       value: stockData?['Total Product']?.toString() ?? '0',
                       label: "Total Product",
-                      percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
@@ -106,7 +103,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       iconBgColor: Color(0xffEF9509),
                       value: stockData?['Low Stock']?.toString() ?? '0',
                       label: "Low Stock",
-                      percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
@@ -117,7 +113,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       value:
                           "Rp ${formatter.format(num.tryParse(financeData?['profit']?.toString() ?? '0') ?? 0)}",
                       label: "Profit",
-                      percentage: "+12%",
                       percentageColor: AppColor.iconTrendUp,
                     ),
                   ),
@@ -299,7 +294,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                       ],
                     ),
-                    // height(12),
                     FutureBuilder(
                       future: transactionFuture,
                       builder: (context, snapshot) {

@@ -1,4 +1,3 @@
-// file: widgets/low_stock_card.dart
 import 'package:flutter/material.dart';
 import 'package:invengo/core/services/firebase.dart';
 import 'package:invengo/data/models/item_firebase_model.dart';
@@ -30,9 +29,10 @@ class _LowStockCardState extends State<LowStockCard> {
 
   Future<void> _loadLowItems() async {
     final items = widget.items ?? await FirebaseService.getAllItems();
-    final low = items.where((it) => (it.stock ?? 0) > 0 && (it.stock ?? 0) < widget.lowThreshold).toList();
-    // sort by lowest stock first
-    low.sort((a, b) => (a.stock ?? 0).compareTo(b.stock ?? 0));
+    final low = items
+        .where((it) => it.stock > 0 && it.stock < widget.lowThreshold)
+        .toList();
+    low.sort((a, b) => (a.stock.compareTo(b.stock)));
     setState(() {
       _lowItems = low.take(widget.maxDisplay).toList();
     });
@@ -50,7 +50,10 @@ class _LowStockCardState extends State<LowStockCard> {
               color: Color(0xfffff6e5),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: SizedBox(height: 120, child: Center(child: CircularProgressIndicator())),
+            child: SizedBox(
+              height: 120,
+              child: Center(child: CircularProgressIndicator()),
+            ),
           );
         }
 
@@ -67,18 +70,23 @@ class _LowStockCardState extends State<LowStockCard> {
                 children: [
                   Icon(Icons.warning_amber_rounded, color: Colors.orange),
                   SizedBox(width: 8),
-                  Text('Low Stock', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Low Stock',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               SizedBox(height: 12),
               if (_lowItems.isEmpty)
-                Text('No low stock items', style: TextStyle(color: Colors.black54))
+                Text(
+                  'No low stock items',
+                  style: TextStyle(color: Colors.black54),
+                )
               else
                 Column(
                   children: _lowItems.map((it) {
-                    final stock = it.stock ?? 0;
-                    // use a friendly "max" — if you have explicit max in model use it, else use stock + some buffer
-                    final max = (it.stock ?? 0) + 20; // fallback
+                    final stock = it.stock;
+                    final max = (it.stock) + 20;
                     final ratio = max > 0 ? (stock / max).clamp(0.0, 1.0) : 0.0;
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -89,13 +97,19 @@ class _LowStockCardState extends State<LowStockCard> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  it.name ?? 'Unnamed',
+                                  it.name,
                                   style: TextStyle(fontWeight: FontWeight.w600),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               SizedBox(width: 8),
-                              Text('$stock/$max', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                              Text(
+                                '$stock/$max',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(height: 6),
@@ -105,7 +119,13 @@ class _LowStockCardState extends State<LowStockCard> {
                               minHeight: 6,
                               value: ratio,
                               backgroundColor: Colors.white,
-                              valueColor: AlwaysStoppedAnimation<Color>(ratio < 0.3 ? Colors.red : (ratio < 0.6 ? Colors.orange : Colors.green)),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                ratio < 0.3
+                                    ? Colors.red
+                                    : (ratio < 0.6
+                                          ? Colors.orange
+                                          : Colors.green),
+                              ),
                             ),
                           ),
                         ],

@@ -9,10 +9,8 @@ import 'package:invengo/core/constant/app_color.dart';
 import 'package:invengo/refresh_notifier.dart';
 import 'package:invengo/core/config/route.dart';
 
-// Firebase service + models
 import 'package:invengo/core/services/firebase.dart';
 import 'package:invengo/data/models/item_firebase_model.dart';
-import 'package:invengo/data/models/transaction_firebase_model.dart';
 
 class StockFirebasePage extends StatefulWidget {
   const StockFirebasePage({super.key});
@@ -31,6 +29,7 @@ class _StockFirebasePageState extends State<StockFirebasePage>
   final TextEditingController search = TextEditingController();
   late Future<List<ItemFirebaseModel>> _listItems;
   late VoidCallback _refreshListener;
+
   Map<String, dynamic> _dataTotal = {
     'Total Product': 0,
     'Low Stock': 0,
@@ -43,11 +42,15 @@ class _StockFirebasePageState extends State<StockFirebasePage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // start loading data
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {});
+      }
+    });
+
     _listItems = FirebaseService.getAllItems();
     _loadTotalsSafely();
 
-    // refresh listener
     _refreshListener = () {
       if (refreshStockNotifier.value) {
         _refreshFromNotifier();
@@ -58,7 +61,6 @@ class _StockFirebasePageState extends State<StockFirebasePage>
   }
 
   Future<void> _refreshFromNotifier() async {
-    // refresh both list and totals
     _listItems = FirebaseService.getAllItems();
     await _loadTotalsSafely();
     if (!mounted) return;
@@ -73,14 +75,11 @@ class _StockFirebasePageState extends State<StockFirebasePage>
         _dataTotal = totals;
       });
     } catch (e) {
-      // optionally log error
-      // print('Failed to load totals: $e');
     }
   }
 
   @override
   void didPopNext() {
-    // called when user comes back to this page
     _listItems = FirebaseService.getAllItems();
     _loadTotalsSafely();
     if (mounted) setState(() {});
@@ -89,10 +88,66 @@ class _StockFirebasePageState extends State<StockFirebasePage>
 
   @override
   void dispose() {
+    _tabController.removeListener(() {});
     _tabController.dispose();
     refreshStockNotifier.removeListener(_refreshListener);
     search.dispose();
     super.dispose();
+  }
+
+  bool _isTabSelected(int idx) => _tabController.index == idx;
+
+  Widget _buildTabButton({
+    required int index,
+    required String label,
+    required int count,
+    required VoidCallback onTap,
+  }) {
+    final bool selected = _isTabSelected(index);
+    if (selected) {
+      return Container(
+        width: 120,
+        height: 38,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          gradient: const LinearGradient(colors: AppColor.primaryGradient),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.primaryGradient.first.withOpacity(0.18),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: TextButton(
+          onPressed: onTap,
+          child: Text(
+            "$label ($count)",
+            style: const TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    } else {
+      return SizedBox(
+        height: 38,
+        child: ElevatedButton(
+          onPressed: onTap,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            side: BorderSide(color: Theme.of(context).colorScheme.outline),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28),
+            ),
+            elevation: 0,
+          ),
+          child: Text(
+            "$label ($count)",
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -130,12 +185,10 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                   Expanded(
                     child: CupertinoSearchTextField(
                       backgroundColor: Theme.of(context).colorScheme.surface,
-                      // prefixInsets/borderRadius getters require concrete types
                       prefixInsets: const EdgeInsets.all(12),
                       borderRadius: BorderRadius.circular(12),
                       controller: search,
                       onChanged: (v) {
-                        // simple local filter: update searchText and rebuild
                         searchText = v;
                         if (mounted) setState(() {});
                       },
@@ -166,7 +219,6 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(child: Text("Tidak ada data"));
                   } else {
-                    // apply simple search filter if provided
                     final origData = snapshot.data!;
                     final data = searchText.trim().isEmpty
                         ? origData
@@ -182,6 +234,11 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                               )
                               .toList();
 
+                    final totalProducts =
+                        (_dataTotal['Total Product'] ?? origData.length) as int;
+                    final lowCount = (_dataTotal['Low Stock'] ?? 0) as int;
+                    final outCount = (_dataTotal['Out of Stock'] ?? 0) as int;
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -189,68 +246,34 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                         Row(
                           spacing: 8,
                           children: [
-                            Container(
-                              width: 66,
-                              height: 38,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(28),
-                                gradient: const LinearGradient(
-                                  colors: AppColor.primaryGradient,
-                                ),
-                              ),
-                              child: TextButton(
-                                onPressed: () {
-                                  _tabController.animateTo(0);
-                                },
-                                child: Text(
-                                  "All (${_dataTotal['Total Product'].toString()})",
-                                  style: const TextStyle(
-                                    color: Color(0xffffffff),
-                                  ),
-                                ),
-                              ),
+                            _buildTabButton(
+                              index: 0,
+                              label: "All",
+                              count: totalProducts,
+                              onTap: () {
+                                _tabController.animateTo(0);
+                                setState(
+                                  () {},
+                                ); 
+                              },
                             ),
-                            ElevatedButton(
-                              onPressed: () {
+                            _buildTabButton(
+                              index: 1,
+                              label: "Low Stock",
+                              count: lowCount,
+                              onTap: () {
                                 _tabController.animateTo(1);
+                                setState(() {});
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.surface,
-                                side: BorderSide(
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                              ),
-                              child: Text(
-                                "Low Stock (${_dataTotal['Low Stock'].toString()})",
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                ),
-                              ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
+                            _buildTabButton(
+                              index: 2,
+                              label: "Out",
+                              count: outCount,
+                              onTap: () {
                                 _tabController.animateTo(2);
+                                setState(() {});
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.surface,
-                                side: BorderSide(
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                              ),
-                              child: Text(
-                                "Out (${_dataTotal['Out of Stock'].toString()})",
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                ),
-                              ),
                             ),
                           ],
                         ),
@@ -264,10 +287,10 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                                 Expanded(
                                   child: Container(
                                     decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color: const Color(0x208b5cf6),
                                       ),
-                                      borderRadius: BorderRadius.circular(12),
                                       gradient: const LinearGradient(
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
@@ -284,7 +307,7 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            data.length.toString(),
+                                            totalProducts.toString(),
                                             style: TextStyle(
                                               fontSize: 24,
                                               color: Theme.of(
@@ -469,20 +492,19 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                                 data
                                     .where(
                                       (e) =>
-                                          (e.stock ?? 0) < 5 &&
-                                          (e.stock ?? 0) > 0,
+                                          (e.stock) < 5 &&
+                                          (e.stock) > 0,
                                     )
                                     .toList(),
                                 1,
                               ),
                               _tabContent(
-                                data.where((e) => (e.stock ?? 0) == 0).toList(),
+                                data.where((e) => (e.stock) == 0).toList(),
                                 2,
                               ),
                             ],
                           ),
                         ),
-                        // h(24),
                       ],
                     );
                   }
@@ -496,7 +518,6 @@ class _StockFirebasePageState extends State<StockFirebasePage>
   }
 
   Widget _tabContent(List<ItemFirebaseModel> data, int tabIndex) {
-    // Scroll masing-masing tab
     final list = data;
     if (list.isEmpty) return const Center(child: Text("Tidak ada data"));
 
@@ -548,7 +569,6 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                                 ),
                               )
                               .then((_) {
-                                // refresh after returning from edit
                                 if (mounted) {
                                   _listItems = FirebaseService.getAllItems();
                                   _loadTotalsSafely();
@@ -569,22 +589,19 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                                     onPressed: () {
                                       Navigator.of(
                                         context,
-                                      ).pop(); // Dismiss the dialog
+                                      ).pop(); 
                                     },
                                     child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      // delete item from firebase
                                       Navigator.of(
                                         context,
-                                      ).pop(); // close dialog first
+                                      ).pop(); 
                                       await FirebaseService.deleteItem(
                                         item.id!,
                                       );
-                                      // trigger the notifier so other pages can respond
                                       refreshStockNotifier.value = true;
-                                      // local refresh
                                       _listItems =
                                           FirebaseService.getAllItems();
                                       await _loadTotalsSafely();
@@ -630,7 +647,7 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                               ),
                             ),
                             Text(
-                              (item.stock ?? 0).toString(),
+                              (item.stock).toString(),
                               style: TextStyle(
                                 color: Theme.of(
                                   context,
@@ -652,22 +669,11 @@ class _StockFirebasePageState extends State<StockFirebasePage>
                               ),
                             ),
                             Text(
-                              "Rp ${formatter.format(item.sellingPrice ?? 0)}",
+                              "Rp ${formatter.format(item.sellingPrice)}",
                               style: const TextStyle(color: Color(0xff8B5CF6)),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      spacing: 4,
-                      children: const [
-                        Icon(
-                          FontAwesomeIcons.arrowTrendUp,
-                          color: Color(0xff00c950),
-                          size: 16,
-                        ),
-                        Text("+12", style: TextStyle(color: Color(0xff00c950))),
                       ],
                     ),
                   ],

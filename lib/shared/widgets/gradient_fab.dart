@@ -16,7 +16,7 @@
       Widget build(BuildContext context) {
         return Container(
           decoration: BoxDecoration(
-            shape: BoxShape.circle, // For a circular FAB
+            shape: BoxShape.circle, 
             gradient: LinearGradient(
               colors: gradientColors,
               begin: Alignment.topLeft,
@@ -31,12 +31,12 @@
             ],
           ),
           child: Material(
-            color: Colors.transparent, // Important for the gradient to show
+            color: Colors.transparent, 
             child: InkWell(
               onTap: onPressed,
-              borderRadius: BorderRadius.circular(56 / 2), // Half of FAB size for perfect circle
+              borderRadius: BorderRadius.circular(56 / 2), 
               child: Padding(
-                padding: const EdgeInsets.all(16.0), // Adjust padding as needed
+                padding: const EdgeInsets.all(16.0),
                 child: child,
               ),
             ),

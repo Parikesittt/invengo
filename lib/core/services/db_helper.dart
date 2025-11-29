@@ -1,4 +1,3 @@
-// import 'package:belajar_ppkd/day_19/model/user_model.dart';
 import 'package:invengo/data/models/item_model.dart';
 import 'package:invengo/data/models/transaction_model.dart';
 import 'package:invengo/data/models/user_model.dart';
@@ -91,7 +90,6 @@ class DBHelper {
       whereArgs: [email, password],
     );
     if (results.isNotEmpty) {
-      print(UserModel.fromMap(results.first));
       return UserModel.fromMap(results.first);
     }
     return null;
@@ -144,7 +142,6 @@ class DBHelper {
   static Future<List<CategoryModel>> getAllCategory() async {
     final dbs = await db();
     final List<Map<String, dynamic>> results = await dbs.query(tableCategories);
-    print(results);
     return results.map((e) => CategoryModel.fromMap(e)).toList();
   }
 
@@ -187,7 +184,6 @@ class DBHelper {
     FROM items
     LEFT JOIN categories ON items.category_id = categories.id
   ''');
-    print(results);
     return results.map((e) => ItemModel.fromMap(e)).toList();
   }
 
@@ -204,7 +200,6 @@ class DBHelper {
 
     if (results.isNotEmpty) {
       final row = results.first;
-      print(row);
       return {
         'Total Product': row['total_product'],
         'In Stock': row['in_stock'],
@@ -286,8 +281,6 @@ class DBHelper {
     LEFT JOIN $tableItems ON $tableTransactions.item_id = $tableItems.id
     ORDER BY id DESC
   ''');
-    print(results);
-    print(results.map((e) => TransactionModel.fromMap(e)).toList());
     return results.map((e) => TransactionModel.fromMap(e)).toList();
   }
 
@@ -304,7 +297,6 @@ class DBHelper {
       final revenue = (row['revenue'] ?? 0) as num;
       final expenses = (row['expenses'] ?? 0) as num;
       final profit = revenue - expenses;
-      print(row);
       return {'revenue': revenue, 'expenses': expenses, 'profit': profit};
     } else {
       return {'revenue': 0, 'expenses': 0, 'profit': 0};

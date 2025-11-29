@@ -73,21 +73,18 @@ class _InputFormNumberState extends State<InputFormNumber> {
       validator: widget.validator,
       autovalidateMode: AutovalidateMode.onUnfocus,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // biar cuma angka
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), 
         if (widget.isPrice)
           TextInputFormatter.withFunction((oldValue, newValue) {
             if (newValue.text.isEmpty) return newValue;
 
-            // hapus titik lama
             final newText = newValue.text.replaceAll('.', '');
 
-            // parse angka (jangan bikin crash kalau bukan angka valid)
             final number = int.tryParse(newText);
             if (number == null) return oldValue;
 
             final formatted = _formatter.format(number);
 
-            // pindahin cursor ke posisi akhir
             return TextEditingValue(
               text: formatted,
               selection: TextSelection.collapsed(offset: formatted.length),

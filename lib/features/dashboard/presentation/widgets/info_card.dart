@@ -6,7 +6,6 @@ class InfoCard extends StatelessWidget {
   final Color iconBgColor;
   final String value;
   final String label;
-  final String percentage;
   final Color percentageColor;
 
   const InfoCard({
@@ -14,7 +13,6 @@ class InfoCard extends StatelessWidget {
     required this.iconBgColor,
     required this.value,
     required this.label,
-    required this.percentage,
     required this.percentageColor,
     super.key,
   });
@@ -29,7 +27,7 @@ class InfoCard extends StatelessWidget {
         border: Border.all(color: theme.colorScheme.outline),
         borderRadius: BorderRadius.circular(12),
       ),
-      height: 202,
+      height: 168,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,13 +48,6 @@ class InfoCard extends StatelessWidget {
           ),
           SizedBox(height: 24),
           Text(label, style: AppTextStyle.label(context)),
-          SizedBox(height: 24),
-          Row(
-            children: [
-              Icon(Icons.trending_up, color: percentageColor),
-              Text(percentage, style: AppTextStyle.growth(context)),
-            ],
-          ),
         ],
       ),
     );

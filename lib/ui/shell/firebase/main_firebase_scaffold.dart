@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:invengo/features/dashboard/presentation/firebase/dashboard_firebase_page.dart';
 import 'package:invengo/features/finance/presentation/firebase/finance_firebase_page.dart';
@@ -7,10 +6,6 @@ import 'package:invengo/features/stock/presentation/firebase/stock_firebase_page
 import 'package:invengo/shared/widgets/gradient_fab.dart';
 import 'package:invengo/core/constant/app_color.dart';
 import 'package:invengo/core/config/route.dart';
-import 'package:invengo/features/dashboard/presentation/sqflite/dashboard_page.dart';
-import 'package:invengo/features/finance/presentation/sqflite/finance_page.dart';
-import 'package:invengo/features/profile/presentation/sqflite/profile_page.dart';
-import 'package:invengo/features/stock/presentation/sqflite/stock_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
@@ -26,9 +21,7 @@ class MainFirebaseScaffold extends StatefulWidget {
 class _MainFirebaseScaffoldState extends State<MainFirebaseScaffold> {
   int _selectedIndex = 0;
   final List<Widget> _page = [
-    // DashboardPage(),
     DashboardFirebasePage(),
-    // StockPage(),
     StockFirebasePage(),
     FinanceFirebasePage(),
     ProfileFirebasePage(),

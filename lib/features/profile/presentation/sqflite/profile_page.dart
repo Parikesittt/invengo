@@ -45,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkTheme();
-      setState(() {}); // update UI setelah checkTheme jalan
+      setState(() {}); 
     });
   }
 
