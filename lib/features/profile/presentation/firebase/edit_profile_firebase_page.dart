@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,6 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
       if (user != null) {
         username = user.username ?? username;
         usernameC.text = user.username ?? '';
-        emailC.text = user.email ?? '';
         phoneC.text = user.phoneNumber ?? '';
         setState(() {});
       }
@@ -104,13 +102,11 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
       final updated = UserFirebaseModel(
         uid: uid,
         username: usernameC.text.trim(),
-        email: emailC.text.trim(),
         phoneNumber: phoneC.text.trim(),
         updatedAt: DateTime.now().toIso8601String(),
       );
 
       await FirebaseService.updateUser(updated);
-
 
       Fluttertoast.showToast(
         msg: "Data berhasil diperbarui",
@@ -155,49 +151,6 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
           child: Column(
             children: [
               AppContainer(
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                      },
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: const Color(0xfff3e8fa),
-                            radius: 48,
-                            child: Text(
-                              (username ?? 'G')[0].toUpperCase(),
-                              style: AppTextStyle.h3(context),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              gradient: const LinearGradient(
-                                colors: AppColor.primaryGradient,
-                              ),
-                            ),
-                            child: const Icon(
-                              FontAwesomeIcons.camera,
-                              size: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    h(16),
-                    Text(
-                      "Klik icon kamera untuk mengubah avatar",
-                      style: AppTextStyle.cardTitle(context),
-                    ),
-                  ],
-                ),
-              ),
-              h(16),
-              AppContainer(
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -211,10 +164,6 @@ class _EditProfileFirebasePageState extends State<EditProfileFirebasePage> {
                       LabelAuth(title: "Username *"),
                       h(8),
                       InputForm(controller: usernameC),
-                      h(12),
-                      LabelAuth(title: "Email *"),
-                      h(8),
-                      InputForm(controller: emailC),
                       h(12),
                       LabelAuth(title: "Nomor Telepon *"),
                       h(8),

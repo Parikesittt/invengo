@@ -87,7 +87,7 @@ class _RegisterPageFirebaseState extends State<RegisterPageFirebase> {
                           h(8),
                           InputForm(
                             hint: "Enter your phone number",
-                            prefixIcon: Icon(Icons.email_outlined),
+                            prefixIcon: Icon(Icons.phone),
                             controller: phoneC,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
